@@ -1,0 +1,1 @@
+# Some usefull scripts for Kali Linux
