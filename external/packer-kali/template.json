@@ -1,0 +1,37 @@
+{
+  "builders": [
+    {
+      "boot_command": [
+        "<esc><wait>",
+        "/install/vmlinuz initrd=/install/initrd.gz append vga=788 -- quiet url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg locale=en_US keymap=us hostname=kali domain=local.lan<enter>"
+      ],
+      "boot_wait": "5s",
+      "guest_os_type": "Debian_64",
+      "http_directory": "http",
+      "iso_checksum": "281ddb3d14619a973e254b8f484b7fe27defa822",
+      "iso_checksum_type": "sha1",
+      "iso_url": "http://cdimage.kali.org/kali-images/kali-1.0.6/kali-linux-1.0.6-amd64.iso",
+      "shutdown_command": "halt -p",
+      "ssh_password": "toor",
+      "ssh_username": "root",
+      "ssh_wait_timeout": "10000s",
+      "type": "virtualbox-iso"
+    }
+  ],
+  "post-processors": [
+    "vagrant"
+  ],
+  "provisioners": [
+    {
+      "scripts": [
+        "scripts/upgradepackages.sh",
+        "scripts/dev.sh",
+        "scripts/virtualbox.sh",
+        "scripts/ssh.sh",
+        "scripts/user.sh"
+      ],
+      "type": "shell"
+    }
+  ]
+}
+

@@ -1,0 +1,3 @@
+[submodule "packer"]
+	path = packer
+	url = https://github.com/SocialGeeks/packer-boxes.git
