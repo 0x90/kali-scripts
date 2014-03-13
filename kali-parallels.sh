@@ -1,7 +1,7 @@
-#!/bin/sh
+#!/bin/bash
 # Parallels 9 + Kali Linux 1.0.6 (kernel 3.12)
 #
-. ask.sh
+. helper.sh
 
 echo "Preparing environment"
 apt-get install -y gcc dkms make linux-headers-$(uname -r)
