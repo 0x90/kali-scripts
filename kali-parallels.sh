@@ -11,7 +11,7 @@ cp -R /media/cdrom0 /tmp/
 cd /tmp/cdrom0/kmods
 
 # Patch
-tee /tmp/parallels-tools-linux-3.12-prl-fs-9.0.23350.941886.patch <<EOF
+cat > /tmp/parallels-tools-linux-3.12-prl-fs-9.0.23350.941886.patch <<EOF
 diff -Nru prl_fs.orig/SharedFolders/Guest/Linux/prl_fs/inode.c prl_fs/SharedFolders/Guest/Linux/prl_fs/inode.c
 --- prl_fs.orig/SharedFolders/Guest/Linux/prl_fs/inode.c	2013-11-11 17:56:58.000000000 +0200
 +++ prl_fs/SharedFolders/Guest/Linux/prl_fs/inode.c	2013-11-29 20:41:53.689167040 +0200
