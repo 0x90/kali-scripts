@@ -1,7 +1,6 @@
 #!/bin/bash
 # Parallels 9 + Kali Linux 1.0.6 (kernel 3.12)
 #
-. helper.sh
 
 echo "Preparing environment"
 apt-get install -y gcc dkms make linux-headers-$(uname -r)
@@ -21,4 +20,3 @@ tar -czf prl_mod.tar.gz prl_eth prl_fs prl_fs_freeze prl_tg Makefile.kmods dkms.
 echo "Launching install"
 /tmp/cdrom0/install
 
-ask "Do you want to reboot? " Y | reboot

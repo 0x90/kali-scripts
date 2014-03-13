@@ -1,4 +1,5 @@
-#!/bin/sh
+#!/bin/bash
+. helper.sh
 
 apt-get install gcc-arm-linux-gnueabi libc6-dev-armel-cross qemu git-core gnupg flex bison gperf \
  libesd0-dev build-essential zip curl libncurses5-dev zlib1g-dev libncurses5-dev gcc-multilib g++-multilib
@@ -18,6 +19,6 @@ mkdir -p arm-stuff/kernel/toolchains
 cd arm-stuff/kernel/toolchains
 git clone git://github.com/offensive-security/arm-eabi-linaro-4.6.2.git
 
-#
-export ARCH=arm
-export CROSS_COMPILE=~/arm-stuff/kernel/toolchains/arm-eabi-linaro-4.6.2/bin/arm-eabi-
+echo "USE following"
+echo "export ARCH=arm"
+echo "export CROSS_COMPILE=~/arm-stuff/kernel/toolchains/arm-eabi-linaro-4.6.2/bin/arm-eabi-linaro-4.6.2"
