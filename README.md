@@ -1,10 +1,9 @@
 # EZ Kali scripts [UNTESTED]
 
 Welcome to Kali Linux dirty script rip off
-
 Every script can be launched separately, except helper.sh - functions module
 
-ezkali.sh - Main script to launch.
+# READ SCRIPT BEFORE EXECUTING!
 
 # Half tested and working:
     kali-mobile.sh
