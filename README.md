@@ -1,3 +1,45 @@
+# EZ Kali scripts [UNTESTED]
+
+Welcome to Kali Linux dirty script rip off
+
+Every script can be launched separately, except helper.sh - functions module
+
+ezkali.sh - Main script to launch.
+
+# Half tested and working:
+    kali-mobile.sh
+    kali-tweaks.sh
+    kali-embedded.sh
+    kali-post-install.sh
+    kali-update.sh
+    kali-build-live.sh
+    kali-gnome.sh
+    kali-xfce.sh
+    kali-sec-tools.sh
+
+# Description & ideas
+
+Short description. Please review before launching. Feel free to commit.
+
+    ezkali.sh - main launcher with args
+    helper.sh - misc functions
+    kali-build-live.sh - build your own kali live iso
+    kali-embedded.sh - installation script for ARM/MIPS crossdev + linaro toolchains
+    kali-gnome.sh - gnome3 tweaks. Does't work over ssh coz of X11 session
+    kali-kernel.sh - kernel recompilation script NOT READY!
+    kali-mirror.sh - create mirror NOT READY!
+    kali-mobile.sh - tools for iOS/Android hacking
+    kali-post-install.sh - post install of basic and useful stuff
+    kali-sec-tools.sh - various security tools from bin and src
+    kali-tweaks.sh - Kali Linux tweaks (autologin, grub) + .bash_aliases speed hacks
+    kali-update.sh - update + upgrade + switch to bleeding edge
+    kali-video.sh - nVidia/ATI drivers installation. NOT READY!
+    kali-vm.sh - detect VM 8) and install VM tools (vbox, vmware, parallels) NOT READY!
+    kali-wipe.sh - logz wiping (wifi, auth, history, etc, wtf) NOT READY!
+    kali-xfce.sh - XFCE4 installation and tune up script. Do you realy need Gnome 3 on VM?
+    ubuntu2kali.sh - make Kali from Ubuntu. NOT READY!
+
+
 # Some usefull scripts for Kali Linux
 
 
