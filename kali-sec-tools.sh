@@ -1,3 +1,32 @@
+#!/bin/sh
+# Kali Linux additional tools installation script
+
+if [[ $EUID -ne 0 ]]; then
+   echo "You must be root to do this." 1>&2
+   exit 1
+fi
+
+echo "Step 0: Fresh the system"
+apt-get update && apt-get upgrade
+
+
+echo "Step 4: OWASP Tools"
+apt-get install zaproxy owasp-mantra-ff
+
+echo "Step 5: OWTF"
+cd /root
+git clone https://github.com/7a/owtf/
+cd owtf
+python install/install.py
+
+echo "Step 6: Installing Kali Lazy.."
+curl https://lazykali.googlecode.com/git/lazykali.sh > /usr/bin/lazykali
+lazykali
+#cd /root
+#git clone https://code.google.com/p/lazykali/
+#lazykali/lazykali.sh
+
+
 #!/bin/bash
 . helper.sh
 

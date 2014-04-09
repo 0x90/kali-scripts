@@ -1,19 +1,6 @@
 #!/bin/bash
 . helper.sh
 
-install_devel(){
-
-    print_status "Installing development tools and environment"
-    apt-get install -y git git-core subversion mercurialm-a prepare build-essential module-assistantlibncurses5-dev zlib1g-dev gawk flex gettext \
-    gcc gcc-multilib dkms make linux-headers-$(uname -r) autoconf automake libssl-dev \
-    kernel-package ncurses-dev fakeroot bzip2 linux-source
-    success_check
-
-
-    if ask "Install MinGW compiler+tools?" Y; then
-        apt-get install -y binutils-mingw-w64 gcc-mingw-w64 mingw-w64 mingw-w64-dev
-    fi
-}
 
 install_packages(){
     if ask "Install common tools (mostly fixes and essentials) ?" Y; then
@@ -50,32 +37,6 @@ install_packages(){
         apt-get -y install unace rar unrar p7zip zip unzip p7zip-full p7zip-rar sharutils uudeview mpack arj cabextract file-roller
     fi
 
-    if ask "Install pip & python modules" Y; then
-        apt-get -y install python-setuptools python-pip python-twisted python-virtualenv idle idle3 python-qt4
-        pip install shodan mysql-python python-ntlm
-    fi
-
-    if ask "Do you want to install RVM ands set ruby-1.9.3 to default?" Y; then
-        curl -L https://get.rvm.io | bash -s stable
-        source /usr/local/rvm/scripts/rvm
-        rvm install 1.9.3
-        rvm use 1.9.3 --default
-
-        # This loads RVM into a shell session.
-        #echo [[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm" >> ~/.bashrc
-        echo source /usr/local/rvm/scripts/rvm >> ~/.bashrc
-    fi
-
-    if ask "Do you want to install ruby and extras?" Y; then
-        # This tells RubyGems to not generate documentation for every library it installs.
-        echo "gem: --no-rdoc --no-ri" > ~/.gemrc
-
-        apt-get -y install ruby-full ruby-dev libpcap-ruby libpcap-dev libsp-gxmlcpp-dev libsp-gxmlcpp1 libxslt1.1 libxslt1-dev libxrandr-dev libfox-1.6-dev
-        update-alternatives --config ruby
-
-        gem install bundler risu ffi multi_json childprocess selenium-webdriver mechanize fxruby net-http-digest_auth pcaprub \
-        net-http-persistent nokogiri domain_name unf webrobots ntlm-http net-http-pipeline nfqueue pry colorize mechanize
-    fi
 
     if ask "Do you want to install chromium (and allowing run as root) ?" Y; then
         apt-get install -y chromium
@@ -154,25 +115,6 @@ install_packages(){
     fi
 }
 
-install_misc(){
-
-
-    if ask "Install Jetbrains PyCharm Community Edition?" N; then
-        wget http://download.jetbrains.com/python/pycharm-community-3.1.1.tar.gz -O /tmp/pycharm-community-3.1.1.tar.gz
-        cd /opt
-        tar xzvf /tmp/pycharm-community-3.1.1.tar.gz
-
-        #TODO: add java -version check
-        print_status "Not complete yet..."
-        pause
-    fi
-
-
-    if ask "Install Dropbox? " Y; then
-        apt-get install -y nautilus-dropbox
-    fi
-
-}
 
 cleanup(){
     if ask "Clean up?" Y; then
@@ -186,3 +128,4 @@ install_devel
 install_packages
 install_misc
 cleanup
+
