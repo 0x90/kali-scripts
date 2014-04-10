@@ -1,3 +1,78 @@
+#!/bin/bash
+#TODO: add check for hg
+. helper.sh
+
+if ask "Install pip & python modules" Y; then
+    echo "Step 2: PIP & Python modules"
+    apt-get -y install python-setuptools python-pip python-twisted python-virtualenv idle idle3 python-qt4
+
+    echo "Step 2: PIP & Python modules"
+    easy_install pip
+
+    echo "Step 2: PIP & Python modules"
+    pip install shodan mysql-python python-ntlm scipy selenium tornado netaddr matplotlib paramiko lxml pcapy \
+    GitPython PyGithub SOAPpy SQLAlchemy Jinja2
+
+fi
+
+
+if ask "Install scapy?" Y; then
+    pip install -e hg+https://bb.secdev.org/scapy
+fi
+
+if ask "Install scapytain?" Y; then
+    apt-get install -y python-cherrypy3 graphviz python-genshi python-sqlobject python-formencode python-pyopenssl highlight python-trml2pdf python-pip
+    pip install pyopenssl
+    pip install -e hg+https://bb.secdev.org/scapytain
+
+    mcedit /etc/scapytainrc
+    mkdir /var/lib/scapytain
+    scapytain_dbutil -c
+fi
+
+# Latest version of Pylorcon2 https://github.com/tom5760/pylorcon2
+#
+if ask "Install Lorcon?" Y; then
+
+    print_status "Installing Lorcon dependecies"
+    apt-get install libpcap0.8-dev libnl-dev
+
+    #Requires lorcon2:
+    print_status "Installing Lorcon"
+    cd /usr/src
+    git clone https://code.google.com/p/lorcon
+    cd lorcon
+    ./configure
+    make
+    make install
+
+    # install pylorcon. Deprecated?
+    #echo "Install pylorcon"
+    #cd /usr/src
+    #svn checkout http://pylorcon.googlecode.com/svn/trunk/ pylorcon
+    #cd pylorcon
+    #python setup.py build
+    #python setup.py install
+
+
+    # install pylorcon2
+    print_status "Install pylorcon2"
+    cd /usr/src
+    svn checkout http://pylorcon2.googlecode.com/svn/trunk/ pylorcon2
+    cd pylorcon2
+    python setup.py build
+    python setup.py install
+
+    # to make lorcon available to metasploit
+    #cd ../ruby-lorcon/
+    #ruby extconf.rb
+    #make
+    #make install
+
+fi
+
+
+
 #!/bin/sh
 PYTHON='/usr/bin/python'
 GIT_FILENAME='git-1.7.7.3-intel-universal-snow-leopard'

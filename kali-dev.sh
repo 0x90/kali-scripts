@@ -3,8 +3,6 @@
 
 
 install_misc(){
-
-
     if ask "Install Jetbrains PyCharm Community Edition?" N; then
         wget http://download.jetbrains.com/python/pycharm-community-3.1.1.tar.gz -O /tmp/pycharm-community-3.1.1.tar.gz
         cd /opt
@@ -36,32 +34,8 @@ install_devel(){
     fi
 }
 
- if ask "Install pip & python modules" Y; then
-        apt-get -y install python-setuptools python-pip python-twisted python-virtualenv idle idle3 python-qt4
-        pip install shodan mysql-python python-ntlm
-    fi
 
-    if ask "Do you want to install RVM ands set ruby-1.9.3 to default?" Y; then
-        curl -L https://get.rvm.io | bash -s stable
-        source /usr/local/rvm/scripts/rvm
-        rvm install 1.9.3
-        rvm use 1.9.3 --default
 
-        # This loads RVM into a shell session.
-        #echo [[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm" >> ~/.bashrc
-        echo source /usr/local/rvm/scripts/rvm >> ~/.bashrc
-    fi
-
-    if ask "Do you want to install ruby and extras?" Y; then
-        # This tells RubyGems to not generate documentation for every library it installs.
-        echo "gem: --no-rdoc --no-ri" > ~/.gemrc
-
-        apt-get -y install ruby-full ruby-dev libpcap-ruby libpcap-dev libsp-gxmlcpp-dev libsp-gxmlcpp1 libxslt1.1 libxslt1-dev libxrandr-dev libfox-1.6-dev
-        update-alternatives --config ruby
-
-        gem install bundler risu ffi multi_json childprocess selenium-webdriver mechanize fxruby net-http-digest_auth pcaprub \
-        net-http-persistent nokogiri domain_name unf webrobots ntlm-http net-http-pipeline nfqueue pry colorize mechanize
-    fi
 
 echo "Step 1: System Pre-requirements"
 apt-get install -y mc gcc screen python-setuptools python-pip python-twisted git subversion mercurial curl build-essential \
@@ -69,16 +43,6 @@ apt-get install -y mc gcc screen python-setuptools python-pip python-twisted git
  libxslt-dev autoconf libc6-dev ncurses-dev automake libtool bison subversion libmysqlclient-dev libmagickcore-dev \
  libmagick++-dev libmagickwand-dev libnetfilter-queue-dev
 
-echo "Step 2: PIP & Python modules"
-easy_install pip
-pip install shodan scapy scipy selenium tornado netaddr matplotlib paramiko lxml pcapy GitPython PyGithub SOAPpy SQLAlchemy Jinja2
-
-echo "Step 3: RVM & Ruby modules & watobo"
-curl -L https://get.rvm.io | bash -s stable
-source /usr/local/rvm/scripts/rvm
-rvm install 1.9.3
-rvm use 1.9.3 --default
-gem install bundler risu ffi multi_json childprocess selenium-webdriver mechanize fxruby net-http-digest_auth net-http-persistent nokogiri domain_name unf webrobots ntlm-http net-http-pipeline nfqueue watobo
 
 
 #!/bin/bash
