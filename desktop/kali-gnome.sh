@@ -3,8 +3,7 @@
 
 
 #TODO: check bugs with dconf, add check for X11 session
-
-gnome(){
+gnome_tweaks(){
     if ask "Do you want to change some Gnome 3 settings?" Y; then
 
         if ask "Do you want to install some terminal changes and tweaks?" Y; then

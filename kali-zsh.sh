@@ -1,24 +1,26 @@
 #!/bin/bash
-.helper.sh
+. helper.sh
 
-if ask
-https://github.com/robbyrussell/oh-my-zsh
 
-via `curl`
+install_zsh(){
+    if ask "Do you want to install zsh?" Y; then
+        apt-get install zsh -y
+    fi
 
-curl -L https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh | sh
+    # https://github.com/robbyrussell/oh-my-zsh
+    if ask "Do you want to install oh-my-zsh?" Y; then
 
-via `wget`
+        if command_exists curl ; then
+            curl -L https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh | sh
+        elif command_exists wget ; then
+            wget --no-check-certificate https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O - | sh
+        fi
 
-wget --no-check-certificate https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O - | sh
+    fi
+}
 
-https://github.com/robbyrussell/oh-my-zsh
 
-via `curl`
 
-curl -L https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh | sh
 
-via `wget`
 
-wget --no-check-certificate https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O - | sh
 

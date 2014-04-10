@@ -67,3 +67,13 @@ check_euid(){
         print_good "w00t w00t we are root!"
     fi
 }
+
+cleanup(){
+    if ask "Clean up?" Y; then
+        apt-get -y autoremove && apt-get -y clean
+    fi
+}
+
+command_exists () {
+    type "$1" &> /dev/null ;
+}

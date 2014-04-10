@@ -1,8 +1,8 @@
 #!/bin/bash
-. helper.sh
-
 #TODO: add multiple repo support
 # http://lgogua.blogspot.ru/2013/07/all-goodies-repository-for-kali-linux.html
+. helper.sh
+
 
 install_embedded(){
     if [ `getconf LONG_BIT` = "64" ] ; then
@@ -110,26 +110,6 @@ install_embedded(){
         fi
     fi
 
-    # OpenWRT buildroot installation based on http://wiki.openwrt.org/ru/doc/howto/build
-    if ask "OpenWRT buildroot installation" Y; then
-        print_status "Cloning OpenWRT.."
-        mkdir ~/openwrt
-        cd ~/openwrt
-        svn co svn://svn.openwrt.org/openwrt/trunk/
-        cd trunk
-
-        if ask "Download and install feeds using feeds script. (optional)" Y ; then
-            ./scripts/feeds update -a
-            ./scripts/feeds install -a
-        fi
-
-        #Use one of the following commands to check for missing packages on the system you want to build OpenWrt on:
-        if ask "Run OpenWRT configuration immidiately" N; then
-            make defconfig
-            make prereq
-            make menuconfig
-        fi
-    fi
 }
 
 install_embedded
