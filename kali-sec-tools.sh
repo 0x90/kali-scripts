@@ -1,34 +1,25 @@
-#!/bin/sh
-# Kali Linux additional tools installation script
-
-if [[ $EUID -ne 0 ]]; then
-   echo "You must be root to do this." 1>&2
-   exit 1
-fi
-
-echo "Step 0: Fresh the system"
-apt-get update && apt-get upgrade
-
-
-echo "Step 4: OWASP Tools"
-apt-get install zaproxy owasp-mantra-ff
-
-echo "Step 5: OWTF"
-cd /root
-git clone https://github.com/7a/owtf/
-cd owtf
-python install/install.py
-
-echo "Step 6: Installing Kali Lazy.."
-curl https://lazykali.googlecode.com/git/lazykali.sh > /usr/bin/lazykali
-lazykali
-#cd /root
-#git clone https://code.google.com/p/lazykali/
-#lazykali/lazykali.sh
-
-
 #!/bin/bash
+# Kali Linux additional tools installation script
+#
 . helper.sh
+
+
+
+android_tools(){
+    if ask "Install tools for Andoid hacking?" Y; then
+        apt-get install -y abootimg smali android-sdk apktool dex2jar
+
+        #TODO: check if file exists
+        add-apt-repository ppa:nilarimogard/webupd8
+        apt-get update -y && apt-get install android-tools-adb android-tools-fastboot
+    fi
+}
+
+ios_tools(){
+    if ask "Install tools for iOS hacking?" Y; then
+        apt-get install -y ifuse ipheth-utils iphone-backup-analyzer libimobiledevice-utils libimobiledevice2 python-imobiledevice usbmuxd
+    fi
+}
 
 security_tools(){
 
@@ -59,6 +50,10 @@ security_tools(){
     if ask "Do you want to install OWTF?" Y; then
         git clone https://github.com/7a/owtf/ /tmp/owtf
         python /tmp/owtf/install/install.py
+#        cd /root
+#        git clone https://github.com/7a/owtf/
+#        cd owtf
+#        python install/install.py
     fi
 
     # http://seclist.us/2013/12/update-watobo-v-0-9-13-semi-automated-web-application-security-audits.html
@@ -225,12 +220,140 @@ security_tools(){
     fi
 
     if ask "Install Kali Lazy?" Y; then
+        #TODO: check if wget installed
         wget -q http://yourgeekonthego.com/scripts/lazykali/lazykali.sh -O /usr/bin/lazykali
         chmod +x /usr/bin/lazykali
         lazykali
+
+#        curl https://lazykali.googlecode.com/git/lazykali.sh > /usr/bin/lazykali
+#        lazykali
+#        cd /root
+#        git clone https://code.google.com/p/lazykali/
+#        lazykali/lazykali.sh
     fi
 }
 
+########################################
+
+#This portion of the script checks to see if the flash player package is located in "/" (the root directory)
+#If it's there, untar it, and install it. If not, move on to the next section.
+
+if [ -e /install_flash_player_*_linux.x86_64.tar.gz ]; then
+	print_status "Installing Flash Player for Linux (required for nessus console).."
+	print_status "Untarring package.."
+	tar -xzvf install_flash_player_*_linux.x86_64.tar.gz &>> $logfile
+	success_check
+	print_status "Copying plugin to /usr/lib/mozilla/plugins/.."
+	cp libflashplayer.so /usr/lib/mozilla/plugins/ &>> $logfile
+	success_check
+else
+	print_notification "Flash Player installation package not found in /, moving on."
+fi
+
+########################################
+
+#This portion of the script checks to see if a nessus .deb package exists in "/" (again, the root directory)
+#If it does, dpkg installs it and it is configured to start up on boot.
+#If you have a valid product key, uncomment the line nessus_key= and put your nessus key here
+#Uncomment all the commented lines below that, and nessus will auto-register and auto-update all its plugins.
+
+if [ -e /Nessus-*-debian*_amd64.deb ]; then
+	print_status "Installing Nessus.."
+	dpkg -i Nessus-*-debian*_amd64.deb &>> $logfile
+	success_check
+	##Insert your nessus product key here (dashes and all)
+	#The key will look something like:
+	#xxxx-xxxx-xxxx-xxxx-xxxx
+	#if you have a nessus key already, you can enable this part by removing the comments (hash marks[#])
+	#nessus_key=
+	#print_status "Registering Nessus."
+	#print_notification "Make sure you included a valid Corporate or Home feed license in this script!"
+	#/opt/nessus/bin/nessus-fetch --register $nessus_key &>> $logfile
+	#success_check
+	print_status "Added nessusd to default run-levels."
+	update-rc.d -f nessusd defaults &>> $logfile
+	success_check
+	print_notification "Don't forget! you NEED to register nessus before attempting to use it.. if you didn't uncomment that part of the script and did that already."
+	print_notification "This can be done via:"
+	print_notification "/opt/nessus/bin/nessus-fetch --register [your nessus key here]"
+else
+	print_notification "nessus installer package not found in /, moving on."
+fi
+########################################
+
+#This portion of the script installs some nice-to-have packages that, for some reason or another are _not_ installed by default on Kali.
+#Frankly I have no idea why, but this portion is here to fix that.
+
+print_status "Installing armitage, mimikatz, terminator, unicornscan, and zenmap.."
+apt-get -y install armitage mimikatz terminator unicornscan zenmap &>> $logfile
+success_check
+print_notification "Newly installed tools should be located on your default PATH."
+
+########################################
+
+#This is a simple git pull of the Cortana .cna script repository available on github.
+
+print_status "Grabbing Armitage Cortana Scripts via github.."
+git clone http://www.github.com/rsmudge/cortana-scripts.git /opt/cortana &>> $logfile
+success_check
+print_notification "Cortana scripts installed under /opt/cortana."
+
+########################################
+
+#This is an svn pull of the unsploitable set of tools available on sourceforge.
+#Unsploitable is essentially a set of scripts that, when fed a set of nessus scans, can map a vulnerability to a specific patch (e.g. tell you what patch fixes what vulnerability)
+
+print_status "Pulling Unsploitable.."
+mkdir /opt/other-tools
+cd /opt/other-tools
+svn checkout svn://svn.code.sf.net/p/unsploitable/code/trunk unsploitable &>> $logfile
+success_check
+print_notification "Unsploitable installed to /opt/other-tools/unsploitable"
+
+########################################
+
+#This is an svn pull of defense tools for the blind
+#The DTFTB scripts are a set of tools that are CTF oriented.
+#These are tools and scripts that are meant to be run on a target system that you are either defending (blue team) or gained access to and have to maintain that access from enemy teams (KOTH-style gameplay)
+
+print_status "Pulling DTFTB (Defense Tools for the Blind)"
+svn checkout svn://svn.code.sf.net/p/dtftb/code/trunk dtftb &>> $logfile
+success_check
+print_notification "DTFTB installed to /opt/other-tools/dtftb"
+
+########################################
+
+#This last portion of the script pulls smbexec from brav0hax's github.
+#this is a stand-alone smbexec tool based off of samba
+#its primary use is for gaining access to system with security products in place that will flag on service creation, or just are aware of tactics used
+#by metasploit's default smbexec module.
+#The script has to be ran twice. The first time, the script grabs the prereqs, etc required to compile smbexec
+#The second time around, it compiles smbexec, actually installing it.
+
+print_status "Pulling SMBexec."
+print_notification "This pulls somewhere north of 180mb of data. It's going to take a bit of time."
+git clone https://github.com/brav0hax/smbexec.git /opt/other-tools/smbexec-source &>> $logfile
+success_check
+cd /opt/other-tools/smbexec-source
+print_status "Performing Installation pre-reqs."
+print_notification "The installation is scripted. When prompted for what OS you are using choose Debian or Ubuntu variant."
+print_notification "When prompted for where to install smbexec, select /opt/other-tools/smbexec-source"
+print_notification "Select option 5 to exit, if prompted."
+read -p "You'll have to run the installer twice. The script immediately bails after installing pre-reqs. Hit enter to continue." pause_1
+bash install.sh
+success_check
+print_status "Re-running installer."
+print_notification "We have to re-run the installer. The first run verifies you have the right pre-reqs available and installs them."
+print_notification "This time, select option 4 to compile smbexec."
+print_notification "Like all good things compiled from source, be patient; this'll take a moment or two."
+read -p "Select option 5 to exit, post-compile, if prompted. Hit enter to continue" pause_2
+bash install.sh
+success_check
+print_notification "smbexec should be installed wherever you told the installer script to install it to. That should be /opt/other-tools/smbexec-source"
+
+########################################
+
 
 check_euid
+update
 security_tools

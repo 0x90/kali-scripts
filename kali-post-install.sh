@@ -116,11 +116,7 @@ install_packages(){
 }
 
 
-cleanup(){
-    if ask "Clean up?" Y; then
-        apt-get -y autoremove && apt-get -y clean
-    fi
-}
+
 
 # Main code here.
 check_euid

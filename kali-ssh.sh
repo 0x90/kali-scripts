@@ -1,4 +1,5 @@
 #!/bin/bash
+. helper.sh
 
 config_ssh(){
     if ask "Configure SSH?" Y; then
@@ -48,10 +49,33 @@ config_ssh(){
     fi
 }
 
-#!/bin/bash
 
-# Turn on X Forwarding
-sed -i -e 's/\#X11Forwarding no/X11Forwarding yes/' /etc/ssh/sshd_config
-sed -i -e 's/\#X11DisplayOffset/X11DisplayOffset/' /etc/ssh/sshd_config
-sed -i -e 's/\#X11UseLocalhost/X11UseLocalhost/' /etc/ssh/sshd_config
-sed -i -e 's/\#AllowTcpForwarding/AllowTcpForwarding/' /etc/ssh/sshd_config
+config_ssh
+
+
+########################################
+
+#This reconfigures sshd on kali (it's not running by default) -- it deletes the old host keys, regenerates then, configures sshd to run on startup, then starts the service.
+
+print_status "Reconfiguring sshd."
+
+print_status "Removing old host keys.."
+rm -rf /etc/ssh/ssh_host_* &>> $logfile
+success_check
+
+print_status "Regenerating host keys.."
+dpkg-reconfigure openssh-server &>> $logfile
+success_check
+
+print_status "Reconfiguring sshd to start on boot"
+update-rc.d ssh enable &>> $logfile
+success_check
+
+print_status "Starting sshd"
+service ssh start &>> $logfile
+success_check
+
+print_status "Printing sshd status"
+service ssh status
+
+########################################
