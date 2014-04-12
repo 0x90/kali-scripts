@@ -1,6 +1,10 @@
 #!/bin/bash
 . helper.sh
 
+mobile_tools()
+{
+    apt-get install gammu
+}
 
 android_tools(){
     if ask "Install tools for Andoid hacking?" Y; then
