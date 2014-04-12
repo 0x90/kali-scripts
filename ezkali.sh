@@ -12,7 +12,7 @@
 . kali-build-live.sh
 . kali-mirror.sh
 . kali-post-install.sh
-. kali-sec-tools.sh
+. kali-pentest.sh
 . kali-tweaks.sh
 . kali-update.sh
 . kali-vm.sh
