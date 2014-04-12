@@ -18,8 +18,8 @@ install_mitm(){
         cd /tmp
         wget http://intercepter.nerf.ru/Intercepter-NG.CE.05.zip
         unzip Intercepter-NG.CE.05.zip
-        mv intercepter_linux /usr/bin/intercepeter
-        chmod +x /usr/bin/intercpeter
+        mv intercepter_linux /usr/bin/intercepter
+        chmod +x /usr/bin/intercepter
     fi
 
     if ask "Install yamas.sh?" Y; then
