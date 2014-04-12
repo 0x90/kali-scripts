@@ -7,9 +7,7 @@
 
 . helper.sh
 . kali-embedded.sh
-. kali-gnome.sh
 . kali-kernel.sh
-. kali-build-live.sh
 . kali-mirror.sh
 . kali-post-install.sh
 . kali-pentest.sh
@@ -17,7 +15,7 @@
 . kali-update.sh
 . kali-vm.sh
 . kali-wipe.sh
-. kali-xfce.sh
+
 
 # All soft installation & config
 all(){
