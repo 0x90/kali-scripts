@@ -18,13 +18,13 @@ python_libs(){
 
 
     if ask "Install scapy?" Y; then
-        pip install -e hg+https://bb.secdev.org/scapy
+        pip install -e hg+https://bb.secdev.org/scapy#egg=scapy
     fi
 
     if ask "Install scapytain?" Y; then
         apt-get install -y python-cherrypy3 graphviz python-genshi python-sqlobject python-formencode python-pyopenssl highlight python-trml2pdf python-pip
         pip install pyopenssl
-        pip install -e hg+https://bb.secdev.org/scapytain
+        pip install -e hg+https://bb.secdev.org/scapytain#egg=scapytain
 
         mcedit /etc/scapytainrc
         mkdir /var/lib/scapytain
