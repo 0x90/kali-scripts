@@ -61,6 +61,7 @@ python_libs(){
         python setup.py build
         python setup.py install
 
+        #TODO: move to ruby
         # to make lorcon available to metasploit
         #cd ../ruby-lorcon/
         #ruby extconf.rb
