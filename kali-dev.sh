@@ -6,7 +6,7 @@
 install_devel(){
 
     print_status "Installing development tools and environment"
-    apt-get install -y prepare build-essential module-assistantlibncurses5-dev zlib1g-dev gawk flex gettext \
+    apt-get install -y build-essential module-assistant libncurses5-dev zlib1g-dev gawk flex gettext \
     gcc gcc-multilib dkms make linux-headers-$(uname -r) autoconf automake libssl-dev \
     kernel-package ncurses-dev fakeroot bzip2 linux-source
     success_check
