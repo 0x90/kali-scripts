@@ -113,6 +113,10 @@ install_packages(){
     if ask "Do you want to install pidgin and an OTR chat plugin?" Y; then
         apt-get -y install pidgin pidgin-otr
     fi
+
+    if ask "Install Dropbox? " Y; then
+        apt-get install -y nautilus-dropbox
+    fi
 }
 
 

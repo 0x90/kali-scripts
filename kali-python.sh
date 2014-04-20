@@ -4,8 +4,8 @@
 python_libs(){
     if ask "Install pip & python modules" Y; then
         echo "Step 2: PIP & Python modules"
-        apt-get -y install python-setuptools git mercurial subversion #python-pip
-        easy_install pip==1.2.1
+        apt-get -y install python-setuptools git mercurial subversion python-setuptools python-pip python-twisted
+        #easy_install pip==1.2.1
 
         echo "Step 2: Python modules.."
         apt-get install python-twisted python-virtualenv idle idle3 python-qt4
@@ -62,6 +62,18 @@ python_libs(){
 
 
     fi
+
+
+    if ask "Install Jetbrains PyCharm Community Edition?" N; then
+        wget http://download.jetbrains.com/python/pycharm-community-3.1.1.tar.gz -O /tmp/pycharm-community-3.1.1.tar.gz
+        cd /opt
+        tar xzvf /tmp/pycharm-community-3.1.1.tar.gz
+
+        #TODO: add java -version check
+        print_status "Not complete yet..."
+        pause
+    fi
+
 }
 
 if ask "Do you want to install python modules?" Y; then

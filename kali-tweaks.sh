@@ -7,6 +7,7 @@ tweak(){
         /etc/init.d/ssh start
     fi
 
+    #TODO: check and fix!
     if "Do you want to auto login on startup?" Y; then
         sed -i 's,#  Automatic,Automatic,g' /etc/gdm3/daemon.conf
     fi
@@ -24,7 +25,8 @@ tweak(){
         rm /tmp/msf.rc
     fi
 
-    if ask "Install bash alises and other speed hacks?" Y; then
+    #TODO: fix ^m issues
+    if ask "Install bash alises and other speed hacks?" N; then
         echo "Installing ~/.bash_aliases"
         if [ -d ~/.bash_aliase ]; then
             print_notification "~/.bash_aliase found, backuping to ~/bash_aliases.bak"
