@@ -3,8 +3,10 @@
 
 python_libs(){
     if ask "Install pip & python modules" Y; then
-        apt-get -y install python-setuptools git mercurial subversion python-setuptools python-pip python-twisted
-        #easy_install pip==1.2.1
+        apt-get -y install python-setuptools git mercurial subversion python-setuptoolspython-twisted
+        # python-pip removed because of too fresh version
+        easy_install pip==1.2.1
+
         apt-get install -y python-twisted python-virtualenv idle idle3 python-qt4
         pip install shodan mysql-python python-ntlm scipy selenium tornado netaddr matplotlib paramiko lxml pcapy \
         GitPython PyGithub SOAPpy SQLAlchemy Jinja2 readline nose six pyparsing==1.5.7 python-dateutil tornado==3.1.1 \
