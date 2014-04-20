@@ -1,11 +1,10 @@
 #!/bin/bash
-#TODO: add check for hg
 . helper.sh
 
 python_libs(){
     if ask "Install pip & python modules" Y; then
         echo "Step 2: PIP & Python modules"
-        apt-get -y install python-setuptools #python-pip
+        apt-get -y install python-setuptools git mercurial subversion #python-pip
         easy_install pip==1.2.1
 
         echo "Step 2: Python modules.."
@@ -61,12 +60,7 @@ python_libs(){
         python setup.py build
         python setup.py install
 
-        #TODO: move to ruby
-        # to make lorcon available to metasploit
-        #cd ../ruby-lorcon/
-        #ruby extconf.rb
-        #make
-        #make install
+
     fi
 }
 

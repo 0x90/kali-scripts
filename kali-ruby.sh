@@ -25,3 +25,11 @@ if ask "Do you want to install ruby and extras?" Y; then
     gem install bundler risu ffi multi_json childprocess selenium-webdriver mechanize fxruby net-http-digest_auth pcaprub \
     net-http-persistent nokogiri domain_name unf webrobots ntlm-http net-http-pipeline nfqueue pry colorize mechanize
 fi
+
+
+        #TODO: Add installation
+        # to make lorcon available to metasploit
+        #cd ../ruby-lorcon/
+        #ruby extconf.rb
+        #make
+        #make install
