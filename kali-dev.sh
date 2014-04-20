@@ -18,7 +18,7 @@ install_devel(){
 
     print_status "System Pre-requirements"
 
-    if ask "Install i386 support? Install to compile old software!" Y; then
+    if ask "Install i386 support? Install to compile old software!" N; then
         dpkg --add-architecture i386
         apt-get update -y && apt-get install ia32-libs -y
     fi

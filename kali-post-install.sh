@@ -44,16 +44,16 @@ install_packages(){
         echo 'CHROMIUM_FLAGS="--password-store=detect --user-data-dir"' >> /etc/chromium/default
     fi
 
-    if ask "Add 'add-apt-repository' script (needed for OracleJDK 7 installation) ?" Y; then
+    if ask "Do you want to install OracleJDK 7?" Y; then
         print_status "Downloading to /usr/sbin/add-apt-repository.."
         wget http://blog.anantshri.info/content/uploads/2010/09/add-apt-repository.sh.txt -O /usr/sbin/add-apt-repository
         chmod o+x /usr/sbin/add-apt-repository
         #chown root:root /usr/sbin/add-apt-repository
-        echo "Now try to exec: 'add-apt-repository ppa:webupd8team/java' for example"
+        #echo "Now try to exec: 'add-apt-repository ppa:webupd8team/java' for example"
 
         if ask "Install OracleJDK 7" Y; then
-            add-apt-repository ppa:webupd8team/java
-            apt-get update -y
+            add-apt-repository ppa:webupd8team/java && apt-get update -y
+
             #TODO: Can we agree the license in auto mode?
             apt-get install oracle-java7-installer -y
         fi

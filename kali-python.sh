@@ -3,21 +3,16 @@
 
 python_libs(){
     if ask "Install pip & python modules" Y; then
-        echo "Step 2: PIP & Python modules"
         apt-get -y install python-setuptools git mercurial subversion python-setuptools python-pip python-twisted
         #easy_install pip==1.2.1
-
-        echo "Step 2: Python modules.."
-        apt-get install python-twisted python-virtualenv idle idle3 python-qt4
+        apt-get install -y python-twisted python-virtualenv idle idle3 python-qt4
         pip install shodan mysql-python python-ntlm scipy selenium tornado netaddr matplotlib paramiko lxml pcapy \
         GitPython PyGithub SOAPpy SQLAlchemy Jinja2 readline nose six pyparsing==1.5.7 python-dateutil tornado==3.1.1 \
         pyzmq pytz pika pygments scipy patsy
-
     fi
 
-
     if ask "Install scapy?" Y; then
-        pip install -e hg+https://bb.secdev.org/scapy#egg=scapy
+        pip install -e hg+https://bb.secdev.org/scapy#egg=scapy --insecure
     fi
 
     if ask "Install scapytain?" Y; then
@@ -59,23 +54,26 @@ python_libs(){
         cd pylorcon2
         python setup.py build
         python setup.py install
-
-
     fi
 
 
     if ask "Install Jetbrains PyCharm Community Edition?" N; then
-        wget http://download.jetbrains.com/python/pycharm-community-3.1.1.tar.gz -O /tmp/pycharm-community-3.1.1.tar.gz
-        cd /opt
-        tar xzvf /tmp/pycharm-community-3.1.1.tar.gz
+        print_status "Installing Oracle JDK 7 + prequerements"
+        print_status "Downloading to /usr/sbin/add-apt-repository.."
+        wget http://blog.anantshri.info/content/uploads/2010/09/add-apt-repository.sh.txt -O /usr/sbin/add-apt-repository
+        chmod o+x /usr/sbin/add-apt-repository
+        #chown root:root /usr/sbin/add-apt-repository
+        add-apt-repository ppa:webupd8team/java && apt-get update -y
+        #TODO: Can we agree the license in auto mode?
+        apt-get install oracle-java7-installer -y
 
-        #TODO: add java -version check
-        print_status "Not complete yet..."
-        pause
+        cd /opt
+        wget http://download.jetbrains.com/python/pycharm-community-3.1.1.tar.gz
+        tar xzvf pycharm-community-3.1.1.tar.gz
+        rm -f pycharm-community-3.1.1.tar.gz
+        mv pycharm-community-3.1.1 pycharm-community
     fi
 
 }
 
-if ask "Do you want to install python modules?" Y; then
-    python_libs
-fi
+python_libs
