@@ -30,11 +30,22 @@ python_libs(){
     if ask "Install scapytain?" Y; then
         apt-get install -y python-cherrypy3 graphviz python-genshi python-sqlobject python-formencode python-pyopenssl highlight python-trml2pdf python-pip
         pip install pyopenssl
-        pip install -e hg+https://bb.secdev.org/scapytain#egg=scapytain --insecure
+        pip install -e hg+ --insecure
+
+        cd /tmp
+        hg clone https://bb.secdev.org/scapytain --insecure
+        cd scapytain
+        ./setup.py install
 
         mcedit /etc/scapytainrc
         mkdir /var/lib/scapytain
         scapytain_dbutil -c
+
+        #Cleanup
+        cd /tmp
+        rm -rf scapytain/*
+        rm -rf scapytain/.hg*
+        rmdir scapytain
     fi
 
     # Latest version of Pylorcon2 https://github.com/tom5760/pylorcon2
