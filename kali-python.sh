@@ -3,7 +3,7 @@
 
 python_libs(){
     if ask "Install pip & python modules" Y; then
-        apt-get -y install python-setuptools git mercurial subversion python-setuptoolspython-twisted
+        apt-get -y install python-setuptools bpython python-setuptoolspython-twisted
         # python-pip removed because of too fresh version
         easy_install pip==1.2.1
 
@@ -14,7 +14,17 @@ python_libs(){
     fi
 
     if ask "Install scapy?" Y; then
-        pip install -e hg+https://bb.secdev.org/scapy#egg=scapy --insecure
+        #pip install -e hg+https://bb.secdev.org/scapy#egg=scapy --insecure
+        cd /tmp
+        hg clone https://bb.secdev.org/scapy --insecure
+        cd scapy
+        ./setup.py install
+
+        #Cleanup
+        cd ..
+        rm -rf scapy/*
+        rm -rf scapy/.hg*
+        rmdir scapy
     fi
 
     if ask "Install scapytain?" Y; then
