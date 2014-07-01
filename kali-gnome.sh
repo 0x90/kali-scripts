@@ -121,4 +121,4 @@ EOT
     fi
 }
 
-
+config_gnome
