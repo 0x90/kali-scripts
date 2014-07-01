@@ -3,7 +3,7 @@
 . kali-update.sh
 . kali-post-install.sh
 
-install_virtualboc(){
+install_virtualbox(){
     echo >> /etc/apt/sources.list
     echo deb http://download.virtualbox.org/virtualbox/debian wheezy contrib >> /etc/apt/sources.list
     apt-get update && apt-get install virtualbox-4.3

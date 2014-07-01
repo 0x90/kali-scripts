@@ -91,10 +91,10 @@ python_libs(){
         apt-get install oracle-java7-installer -y
 
         cd /opt
-        wget http://download.jetbrains.com/python/pycharm-community-3.1.1.tar.gz
-        tar xzvf pycharm-community-3.1.1.tar.gz
-        rm -f pycharm-community-3.1.1.tar.gz
-        mv pycharm-community-3.1.1 pycharm-community
+        wget http://download.jetbrains.com/python/pycharm-community-3.4.1.tar.gz
+        tar xzvf pycharm-community-3.4.1.tar.gz
+        rm -f pycharm-community-3.4.1.tar.gz
+        mv pycharm-community-3.4.1 pycharm-community
     fi
 
 }
