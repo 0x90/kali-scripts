@@ -115,9 +115,6 @@ install_embedded(){
 install_embedded
 
 
-
-##!/bin/bash
-#. helper.sh
 #
 #apt-get install gcc-arm-linux-gnueabi libc6-dev-armel-cross qemu git-core gnupg flex bison gperf \
 # libesd0-dev build-essential zip curl libncurses5-dev zlib1g-dev libncurses5-dev gcc-multilib g++-multilib

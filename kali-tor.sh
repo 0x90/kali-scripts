@@ -1,6 +1,6 @@
 #!/bin/sh
 
-apt-get install vidalia privoxy
+apt-get install vidalia privoxy -y
 
 echo forward-socks4a / 127.0.0.1:9050 . >> /etc/privoxy/config
 
