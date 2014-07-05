@@ -30,7 +30,7 @@ python_libs(){
     if ask "Install scapytain?" Y; then
         apt-get install -y python-cherrypy3 graphviz python-genshi python-sqlobject python-formencode python-pyopenssl highlight python-trml2pdf python-pip
         pip install pyopenssl
-        pip install -e hg+ --insecure
+        #pip install -e hg+ --insecure
 
         cd /tmp
         hg clone https://bb.secdev.org/scapytain --insecure
