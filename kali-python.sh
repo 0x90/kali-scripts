@@ -28,10 +28,13 @@ python_libs(){
     fi
 
     if ask "Install scapytain?" Y; then
+        
         apt-get install -y python-cherrypy3 graphviz python-genshi python-sqlobject python-formencode python-pyopenssl highlight python-trml2pdf python-pip
+        # pip install   http://www.satchmoproject.com/snapshots/trml2pdf-1.2.tar.gz
         pip install pyopenssl
+        
         #pip install -e hg+ --insecure
-
+        # udo pip install -e hg+http://bb.secdev.org/scapytain#egg=scapytain --insecure
         cd /tmp
         hg clone https://bb.secdev.org/scapytain --insecure
         cd scapytain
