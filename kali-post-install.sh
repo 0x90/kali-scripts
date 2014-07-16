@@ -124,7 +124,6 @@ install_packages(){
 
 # Main code here.
 check_euid
-install_devel
 install_packages
 install_misc
 cleanup
