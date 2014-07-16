@@ -65,33 +65,33 @@ install_packages(){
 
     # Kali Cisco VPN Installer based on https://github.com/captainhooligan/Kali-Cisco-VPN
     # TODO: add wget Cisco-VPN.tar.gz
-    if ask "Install Cisco VPN?" Y; then
-        wget https://github.com/captainhooligan/Kali-Cisco-VPN/raw/master/Cisco-VPN.tar.gz -O /tmp/Cisco-VPN.tar.gz
-        cd /tmp
+    # if ask "Install Cisco VPN?" Y; then
+    #     wget https://github.com/captainhooligan/Kali-Cisco-VPN/raw/master/Cisco-VPN.tar.gz -O /tmp/Cisco-VPN.tar.gz
+    #     cd /tmp
 
-        print_notofocation "Setting up folders..."
-        INSTALLDIR=`pwd`
-        print_notofocation "Extracting Files..."
+    #     print_notofocation "Setting up folders..."
+    #     INSTALLDIR=`pwd`
+    #     print_notofocation "Extracting Files..."
 
-        tar xf Cisco-VPN.tar.gz
-        cd VPN
-        tar xf vpnclient-linux-x86_64-4.8.02.0030-k9.tar.gz
+    #     tar xf Cisco-VPN.tar.gz
+    #     cd VPN
+    #     tar xf vpnclient-linux-x86_64-4.8.02.0030-k9.tar.gz
 
-        print_notofocation "Ensuring Kernel Sources are prepared..."
-        apt-get install linux-headers-$(uname -r)
-        cd /usr/src/linux-headers-$(uname -r)
-        cp -rf include/generated/* include/linux
-        cd $INSTALLDIR/VPN/vpnclient
+    #     print_notofocation "Ensuring Kernel Sources are prepared..."
+    #     apt-get install linux-headers-$(uname -r)
+    #     cd /usr/src/linux-headers-$(uname -r)
+    #     cp -rf include/generated/* include/linux
+    #     cd $INSTALLDIR/VPN/vpnclient
 
-        print_notofocation "Applying Patches..."
-        patch < ../ciscovpn-kali.patch
+    #     print_notofocation "Applying Patches..."
+    #     patch < ../ciscovpn-kali.patch
 
-        print_notofocation "Compiling and installing Cisco VPN. Please be patient and answer all on screen questions."
-        ./vpn_install
-    fi
+    #     print_notofocation "Compiling and installing Cisco VPN. Please be patient and answer all on screen questions."
+    #     ./vpn_install
+    # fi
 
     #TODO: check this shit.
-    if ask "Do you want to configure /var/www/tools?" Y; then
+    if ask "Do you want to install Windowstools?" N; then
         apt-get -y install windows-binaries
         mkdir -p /var/www/tools/shells && chmod -R 755 /var/www/tools
         cp /usr/share/windows-binaries/{nc.exe,plink.exe,vncviewer.exe,wget.exe} /var/www/tools/
@@ -102,7 +102,7 @@ install_packages(){
         rm /tmp/WinSCP*
     fi
 
-    if ask "Do you want to install meld (graphical diff tool)?" Y; then
+    if ask "Do you want to install meld (graphical diff tool)?" N; then
         apt-get -y install meld
         gconftool-2 --type bool --set /apps/meld/show_line_numbers true
         gconftool-2 --type bool --set /apps/meld/show_whitespace true
