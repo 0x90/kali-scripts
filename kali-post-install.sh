@@ -120,11 +120,8 @@ install_packages(){
 }
 
 
-
-
 # Main code here.
 check_euid
 install_packages
-install_misc
 cleanup
 
