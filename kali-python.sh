@@ -14,6 +14,9 @@ python_libs(){
     fi
 
     if ask "Install scapy?" Y; then
+        print_status "Installing Scapy dependencies"
+        apt-get install tcpdump graphviz imagemagick python-gnuplot python-crypto python-pyx wiresharl -y
+        
         #pip install -e hg+https://bb.secdev.org/scapy#egg=scapy --insecure
         cd /tmp
         hg clone https://bb.secdev.org/scapy --insecure
