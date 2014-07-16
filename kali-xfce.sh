@@ -55,13 +55,13 @@ config_xfce(){
     print_status "Enable compositing. Needed to be run with X11!"
     xfconf-query -c xfwm4 -p /general/use_compositing -s true
 
-    print_status "Configure Thunar file browser (Need to re-login for effect)"
-    #TODO: check file existance
-    if [ ! -e /root/.config/Thunar/thunarrc ]; then
-        echo -e "[Configuration]\nLastShowHidden=TRUE" > /root/.config/Thunar/thunarrc;
-    else
-        sed -i 's/LastShowHidden=.*/LastShowHidden=TRUE/' /root/.config/Thunar/thunarrc;
-    fi
+    # print_status "Configure Thunar file browser (Need to re-login for effect)"
+    # #TODO: check file existance
+    # if [ ! -e /root/.config/Thunar/thunarrc ]; then
+    #     echo -e "[Configuration]\nLastShowHidden=TRUE" > /root/.config/Thunar/thunarrc;
+    # else
+    #     sed -i 's/LastShowHidden=.*/LastShowHidden=TRUE/' /root/.config/Thunar/thunarrc;
+    # fi
 }
 
 if ask "Install XFCE desktop?" Y; then
