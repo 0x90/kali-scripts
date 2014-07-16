@@ -27,7 +27,7 @@ python_libs(){
         rmdir scapy
     fi
 
-    if ask "Install scapytain?" Y; then
+    if ask "Install scapytain?" N; then
         
         apt-get install -y python-cherrypy3 graphviz python-genshi python-sqlobject python-formencode python-pyopenssl highlight python-trml2pdf python-pip
         # pip install   http://www.satchmoproject.com/snapshots/trml2pdf-1.2.tar.gz
