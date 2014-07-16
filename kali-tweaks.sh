@@ -8,7 +8,7 @@ tweak(){
     fi
 
     #TODO: check and fix!
-    if "Do you want to auto login on startup?" Y; then
+    if ask "Do you want to auto login on startup?" Y; then
         sed -i 's,#  Automatic,Automatic,g' /etc/gdm3/daemon.conf
     fi
 
