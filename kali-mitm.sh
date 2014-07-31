@@ -3,7 +3,7 @@
 
 install_mitm(){
     print_notification "Installing ettercap, haxorblox and ghost-phisher"
-    apt-get install -y  ettercap hamster-sidejack ferret-sidejack dsniff gawk snarf ngrep ghost-phisher
+    apt-get install -y  ettercap hamster-sidejack ferret-sidejack dsniff gawk snarf ngrep ghost-phisher urlsnarf sslstrip
 
     if ask "Do you want to install Intercepter-NG?" Y; then
         print_notification "Adding i386 support"
