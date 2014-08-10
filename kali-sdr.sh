@@ -5,8 +5,10 @@
 # http://labs.inguardians.com/
 # http://nutaq.com/en/blog/complete-model-based-pc-fpga-sdr-development-environment-gnu-radio
 # http://funoverip.net/2014/07/gnu-radio-cc1111-packets-encoderdecoder-blocks/
+# http://leetupload.com/blagosphere/index.php/2014/03/28/analyze-and-crack-gsm-downlink-with-a-usrp/
 
-## BladeRF
+
+### BladeRF
 # https://github.com/Nuand/bladeRF
 # https://github.com/jmichelp/sdrsharp-bladerf
 
