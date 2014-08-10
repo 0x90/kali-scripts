@@ -9,7 +9,7 @@
 # http://g4akw.blogspot.ru/
 # http://eliasoenal.com/
 
-# ieee802.11
+# IEEE 802.11
 # https://www.ruby-forum.com/topic/4487026
 cd /tmp
 git clone git://github.com/bastibl/gr-ieee802-11.git
