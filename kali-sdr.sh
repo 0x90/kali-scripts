@@ -6,6 +6,30 @@
 # http://nutaq.com/en/blog/complete-model-based-pc-fpga-sdr-development-environment-gnu-radio
 # http://funoverip.net/2014/07/gnu-radio-cc1111-packets-encoderdecoder-blocks/
 # http://leetupload.com/blagosphere/index.php/2014/03/28/analyze-and-crack-gsm-downlink-with-a-usrp/
+# http://g4akw.blogspot.ru/
+
+# ieee802.11
+# https://www.ruby-forum.com/topic/4487026
+cd /tmp
+git clone git://github.com/bastibl/gr-ieee802-11.git
+cd gr-ieee802-11
+mkdir build
+cd build
+cmake ..
+make
+make install
+cd /tmp
+rm -rf /tmp/gr-ieee802-11
+
+# Digital speech decoder
+git clone https://github.com/LinuxSheeple-E/dsd
+cd dsd
+git checkout Feature/DMRECC
+cd dsd
+mkdir build
+cd build
+cmake ..
+make
 
 
 ### BladeRF
@@ -24,12 +48,13 @@
 ### GPS
 # https://github.com/davidhodo/gnuradio_gps
 
-### 802.1X
+### 802.1X 
 # https://github.com/bastibl/gr-ieee802-11
 # https://github.com/bastibl/gr-ieee802-15-4
 # https://github.com/wishi/gr_802.15.4
 # https://github.com/UpYou/gr-ieee802-15-5
 # https://github.com/septikus/gnuradio-802.15.4-demodulation
+# https://code.google.com/p/zigbee-security
 
 
 ### MOBILE NETWORKS ###
@@ -39,6 +64,7 @@
 # https://github.com/scateu/airprobe-3.7-hackrf-patch
 # https://github.com/oWCTejLVlFyNztcBnOoh/gr-lte
 # https://github.com/NightlyDev/Airprobe-GSM-RCV-GR3.7
+# http://sourceforge.net/projects/openbts
 # https://github.com/neo4reo/OpenLTE
 # http://sourceforge.net/projects/openlte/
 # https://github.com/kit-cel/gr-lte
