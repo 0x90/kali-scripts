@@ -7,6 +7,7 @@
 # http://funoverip.net/2014/07/gnu-radio-cc1111-packets-encoderdecoder-blocks/
 # http://leetupload.com/blagosphere/index.php/2014/03/28/analyze-and-crack-gsm-downlink-with-a-usrp/
 # http://g4akw.blogspot.ru/
+# http://eliasoenal.com/
 
 # ieee802.11
 # https://www.ruby-forum.com/topic/4487026
@@ -42,8 +43,10 @@ make
 # https://github.com/BogdanDIA/gr-dvbt
 # https://github.com/drmpeg/gr-dvbs2
 
-###
+### Digital Speech Decode
 # https://github.com/argilo/gr-dsd
+# https://github.com/EliasOenal/multimon-ng
+# https://github.com/LinuxSheeple-E/dsd
 
 ### GPS
 # https://github.com/davidhodo/gnuradio_gps
@@ -101,4 +104,7 @@ make
 # https://github.com/urbank/beacon
 # https://github.com/piratfm/gr-ssrptx
 # https://github.com/argilo/sdr-examples
+
+### Tools
 # https://github.com/argilo/ham-utils
+# 
