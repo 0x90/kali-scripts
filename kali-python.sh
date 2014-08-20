@@ -13,6 +13,9 @@ python_libs(){
         pyzmq pytz pika pygments scipy patsy
     fi
 
+    # http://www.scipy.org/install.html
+    # http://pandas.pydata.org/pandas-docs/stable/install.html
+
     if ask "Install scapy?" Y; then
         print_status "Installing Scapy dependencies"
         apt-get install tcpdump graphviz imagemagick python-gnuplot python-crypto python-pyx wireshark -y

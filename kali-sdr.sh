@@ -9,6 +9,10 @@
 # http://g4akw.blogspot.ru/
 # http://eliasoenal.com/
 
+# http://www.kubonweb.de/?tag=rtl-sdr
+
+# https://raw.githubusercontent.com/zacinaction/kicksat-groundstation/master/Install-SpriteRadio
+
 # IEEE 802.11
 # https://www.ruby-forum.com/topic/4487026
 cd /tmp

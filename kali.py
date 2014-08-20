@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8 -*-
+# curl https://bootstrap.pypa.io/ez_setup.py | python
 #
+# curl http://peak.telecommunity.com/dist/ez_setup.py | python
+#
+# sudo curl http://peak.telecommunity.com/dist/ez_setup.py | sudo python
 
 __author__ = '090h'
 __license__ = 'GPL'
