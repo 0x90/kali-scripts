@@ -1,5 +1,6 @@
 #!/bin/sh
 # TODO: Test both variants
+# http://ziolity.blogspot.ru/2012/04/ubuntu-1110-how-to-install-ruby.html
 
 sudo add-apt-repository ppa:wagungs/kali-linux
 sudo add-apt-repository ppa:wagungs/kali-linux1
