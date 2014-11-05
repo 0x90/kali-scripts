@@ -12,15 +12,11 @@ install_bluetooth(){
     apt-get install cmake libusb-1.0-0-dev make gcc g++ pkg-config libpcap-dev \
     python-numpy python-pyside python-qt4 build-essential libpcap-dev python-pyside python-numpy
 
-    print_status "Installing redfang, spooftooph, obexfs, bluewho, btscanner and others"
+    print_status "Installing BlueMaho, redfang, spooftooph, obexfs, bluewho, btscanner and others"
+    # wget "https://wiki.thc.org/BlueMaho?action=AttachFile&do=get&target=bluemaho_v090417.tgz"
     apt-get install anyremote redfang spooftooph python-bluez obexfs bluepot bluewho btscanner \
-    bluez-utils bluelog libopenobex1:i386 libopenobex1-dev:i386 libbluetooth-dev:i386 libbluetooth-dev
+    bluez-utils bluelog libopenobex1:i386 libopenobex1-dev:i386 libbluetooth-dev:i386 libbluetooth-dev spectools bluemaho
 
-
-    if ask "Install BlueMaho?" Y; then
-        # wget "https://wiki.thc.org/BlueMaho?action=AttachFile&do=get&target=bluemaho_v090417.tgz"
-        apt-get install bluemaho
-    fi
 
     if ask "Install ubertooth hacking tools?" Y; then
 
@@ -39,7 +35,7 @@ install_bluetooth(){
 #        rm -rf pyusb-1.0.0b1
 
 
-        print_status "Installing dependencies for bluetooth hacking"
+        print_status "Installing libbtbb from sources"
         wget https://github.com/greatscottgadgets/libbtbb/archive/2014-02-R2.tar.gz -O libbtbb-2014-02-R2.tar.gz
         tar xf libbtbb-2014-02-R2.tar.gz
         cd libbtbb-2014-02-R2
@@ -49,7 +45,7 @@ install_bluetooth(){
         make
         make install
 
-        print_status "Installing dependencies for bluetooth hacking"
+        print_status "Installing ubertooth"
         wget https://github.com/greatscottgadgets/ubertooth/archive/2014-02-R2.tar.gz -O ubertooth-2014-02-R2.tar.gz
         tar xf ubertooth-2014-02-R2.tar.gz
         cd ubertooth-2014-02-R2/host
@@ -73,7 +69,7 @@ install_bluetooth(){
             make && make plugins
             sudo make suidinstall
             sudo make plugins-install
-            echo Add "pcapbtbb" to the "logtypes=..." line in kismet.conf
+            # echo Add "pcapbtbb" to the "logtypes=..." line in kismet.conf
         fi
 
 
@@ -90,14 +86,6 @@ install_bluetooth(){
             sudo make install
         fi
 
-        if ask "Install bluetooth hacking tools?" Y; then
-            apt-get install spectools
-#            git clone https://www.kismetwireless.net/spectools.git
-#            cd spectools
-#            ./configure
-#            make
-#            make install
-        fi
     fi
 }
 
