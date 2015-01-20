@@ -6,9 +6,7 @@ install_devel(){
     print_status "Installing development tools and environment"
     apt-get install -y build-essential module-assistant libncurses5-dev zlib1g-dev gawk flex gettext \
     gcc gcc-multilib dkms make linux-headers-$(uname -r) autoconf automake libssl-dev \
-    kernel-package ncurses-dev fakeroot bzip2 linux-source
-    success_check
-    apt-get install -y build-essential openssl libreadline6 libreadline6-dev git-core zlib1g zlib1g-dev libssl-dev \
+    kernel-package ncurses-dev fakeroot bzip2 linux-source openssl libreadline6 libreadline6-dev git-core zlib1g zlib1g-dev libssl-dev \
     libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt-dev autoconf libc6-dev ncurses-dev automake libtool bison \
     libmysqlclient-dev libmagickcore-dev libmagick++-dev libmagickwand-dev libnetfilter-queue-dev
     success_check
@@ -21,6 +19,12 @@ install_devel(){
     if ask "Install i386 support? Install to compile old software!" N; then
         dpkg --add-architecture i386
         apt-get update -y && apt-get install ia32-libs -y
+    fi
+
+    if ask "Install Sublime?" N; then
+        add-apt-repository ppa:webupd8team/sublime-text-3
+        apt-get update
+        apt-get install sublime-text-installer
     fi
 
     if ask "Install MinGW compiler+tools?" N; then

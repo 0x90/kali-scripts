@@ -137,3 +137,38 @@ install_embedded
 #echo "USE following"
 #echo "export ARCH=arm"
 #echo "export CROSS_COMPILE=~/arm-stuff/kernel/toolchains/arm-eabi-linaro-4.6.2/bin/arm-eabi-linaro-4.6.2"
+# General
+apt-get update && apt-get upgrade
+apt-get install mc mongodb python-dev python-pip git mercurial subversion build-essential linux-headers-`uname -r` -y
+
+# http://www.emdebian.org/crosstools.html
+sudo apt-get install emdebian-archive-keyring
+echo "deb http://ftp.us.debian.org/debian/ squeeze main" >> /etc/apt/sources.list
+echo "deb http://www.emdebian.org/debian/ squeeze main" >> /etc/apt/sources.list
+echo "deb http://www.emdebian.org/debian/ oldstable main" >> /etc/apt/sources.list
+apt-get update
+
+echo "Installing GCC-4.4 for mips, mipsel"
+apt-get install binutils-mipsel-linux-gnu binutils-mips-linux-gnu gcc-4.4-mips-linux-gnu gcc-4.4-mips-linux-gnu -y
+
+echo "Installing QEMU..."
+aptitude install qemu qemu-kvm-extras virt-manager virtinst -y
+
+echo "Installing archivers"
+# Install standard extraction utilities
+apt-get install mtd-utils gzip bzip2 tar arj lhasa p7zip p7zip-full cabextract openjdk-6-jdk cramfsprogs cramfsswap squashfs-tools
+apt-get install zlib1g-dev liblzma-dev liblzo2-dev
+
+# Install sasquatch to extract non-standard SquashFS images
+
+cd /tmp
+git clone https://github.com/devttys0/sasquatch
+cd sasquatch && make && sudo make install
+cd ..
+rm -rf /tmp/sasquatch*
+rmdir /tmp/sasquatch
+
+# https://github.com/devttys0/binwalk/blob/master/INSTALL.md
+echo "Installing binwalk"
+apt-get install python-lzma libqt4-opengl python-opengl python-qt4 python-qt4-gl python-numpy python-scipy python-pip
+pip install pyqtgraph
