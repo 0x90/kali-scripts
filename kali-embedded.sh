@@ -172,3 +172,8 @@ rmdir /tmp/sasquatch
 echo "Installing binwalk"
 apt-get install python-lzma libqt4-opengl python-opengl python-qt4 python-qt4-gl python-numpy python-scipy python-pip
 pip install pyqtgraph
+
+
+# Install FTDI libs
+apt-get install -f libftdi1:i386 -y
+apt-get install libftdi-dev python-ftdi -y
