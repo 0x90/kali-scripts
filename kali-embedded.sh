@@ -11,13 +11,19 @@ install_embedded(){
             success_check
         fi
     fi
+    
+    echo "Installing archivers"
+    # Install standard extraction utilities
+    apt-get -y install mtd-utils gzip bzip2 tar arj lhasa p7zip p7zip-full cabextract openjdk-6-jdk cramfsprogs cramfsswap squashfs-tools zlib1g-dev liblzma-dev liblzo2-dev
 
     if ask "Install tool for onchip debugging and emulation" Y; then
         apt-get install -y skyeye openocd
     fi
 
     if ask "Install tools for serial port?" Y; then
-        apt-get install -y ftdi-eeprom libftdi1 python-ftdi minicom python-serial cutecom
+        # Install FTDI libs
+        apt-get install -y ftdi-eeprom libftdi1 python-ftdi minicom python-serial cutecom libftdi-dev python-ftdi -y
+        apt-get install -f libftdi1:i386 -y
     fi
 
     if ask "Do you want to install Avatar?" Y; then
@@ -61,12 +67,53 @@ install_embedded(){
         fi
     fi
 
+    
+    if ask "Install Emdebian crossdev?" Y; then
+        # http://www.emdebian.org/crosstools.html
+        print_status "Installing Embedian, xapt"
+        apt-get install emdebian-archive-keyring xapt -y
+        echo "deb http://ftp.us.debian.org/debian/ squeeze main" >> /etc/apt/sources.list
+        echo "deb http://www.emdebian.org/debian/ squeeze main" >> /etc/apt/sources.list
+        echo "deb http://www.emdebian.org/debian/ oldstable main" >> /etc/apt/sources.list
+        apt-get update
+
+        echo "Installing GCC-4.4 for mips, mipsel"
+        apt-get install binutils-mipsel-linux-gnu binutils-mips-linux-gnu gcc-4.4-mips-linux-gnu gcc-4.4-mips-linux-gnu -y
+
+        #echo deb http://www.emdebian.org/debian stable main >> /etc/apt/sources.list
+        #wget http://http.us.debian.org/debian/pool/main/g/gmp/libgmp3c2_4.3.2+dfsg-1_amd64.deb -O /tmp/libgmp3c2_4.3.2+dfsg-1_amd64.deb
+        #dpkg -i /tmp/libgmp3c2_4.3.2+dfsg-1_amd64.deb
+
+        #print_status "Updating package list.."
+        #apt-get update -y && apt-get upgrade -y
+
+        #if ask "Install g++-4.4-arm-linux-gnueabi ?" Y; then
+        #    apt-get install g++-4.4-arm-linux-gnueabi -y
+        #fi
+    fi
+
+    if ask "Install binwalk and dependencies?" N; then
+        # Install sasquatch to extract non-standard SquashFS images
+        cd /tmp
+        git clone https://github.com/devttys0/sasquatch
+        cd sasquatch && make && sudo make install
+        cd ..
+        rm -rf /tmp/sasquatch*
+        rmdir /tmp/sasquatch
+
+        # https://github.com/devttys0/binwalk/blob/master/INSTALL.md
+        echo "Installing binwalk"
+        apt-get install python-lzma libqt4-opengl python-opengl python-qt4 python-qt4-gl python-numpy python-scipy python-pip
+        pip install pyqtgraph
+    fi
+
     if ask "Do you want to install QEMU?" Y; then
-        apt-get install qemu-system-arm qemu-system-mips qemu-system-common qemu-system-x86
+        echo "Installing QEMU..."
+        apt-get install qemu-system-arm qemu-system-mips qemu-system-common qemu-system-x86 qemu qemu-kvm-extras virt-manager virtinst -y
     fi
 
     # http://elinux.org/Toolchains
-    if ask "Install linaro toolchains?" Y; then
+    if ask "Install linaro toolchains?" N; then
         print_status "Installing Linaro toolchains..."
         mkdir -p /root/toolchains/arm
         cd /root/toolchains/arm
@@ -80,35 +127,19 @@ install_embedded(){
     fi
 
     # https://www.embtoolkit.org/userguide.html#quick_start_guide
-    if ask "Install Embtoolkit?" Y; then
+    if ask "Install Embtoolkit?" N; then
         cd
         git clone git://git.embtoolkit.org/embtoolkit.git embtoolkit
         cd embtoolkit
         git pull
     fi
 
-    if ask "Config & make Embtoolkit?" Y; then
-        #$ make xconfig #qt
-        make menuconfig #ncurses
-        make
-
-        make rootfs_build
-    fi
-
-    if ask "Install Embedian crossdev?" Y; then
-        print_status "Installing Embedian, xapt"
-        apt-get install emdebian-archive-keyring xapt -y
-        echo deb http://www.emdebian.org/debian stable main >> /etc/apt/sources.list
-        wget http://http.us.debian.org/debian/pool/main/g/gmp/libgmp3c2_4.3.2+dfsg-1_amd64.deb -O /tmp/libgmp3c2_4.3.2+dfsg-1_amd64.deb
-        dpkg -i /tmp/libgmp3c2_4.3.2+dfsg-1_amd64.deb
-
-        print_status "Updating package list.."
-        apt-get update -y && apt-get upgrade -y
-
-        if ask "Install g++-4.4-arm-linux-gnueabi ?" Y; then
-            apt-get install g++-4.4-arm-linux-gnueabi -y
-        fi
-    fi
+    # if ask "Config & make Embtoolkit?" N; then
+        # $ make xconfig #qt
+        # make menuconfig #ncurses
+        # make
+        # make rootfs_build
+    # fi
 
 }
 
@@ -138,42 +169,8 @@ install_embedded
 #echo "export ARCH=arm"
 #echo "export CROSS_COMPILE=~/arm-stuff/kernel/toolchains/arm-eabi-linaro-4.6.2/bin/arm-eabi-linaro-4.6.2"
 # General
-apt-get update && apt-get upgrade
-apt-get install mc mongodb python-dev python-pip git mercurial subversion build-essential linux-headers-`uname -r` -y
-
-# http://www.emdebian.org/crosstools.html
-sudo apt-get install emdebian-archive-keyring
-echo "deb http://ftp.us.debian.org/debian/ squeeze main" >> /etc/apt/sources.list
-echo "deb http://www.emdebian.org/debian/ squeeze main" >> /etc/apt/sources.list
-echo "deb http://www.emdebian.org/debian/ oldstable main" >> /etc/apt/sources.list
-apt-get update
-
-echo "Installing GCC-4.4 for mips, mipsel"
-apt-get install binutils-mipsel-linux-gnu binutils-mips-linux-gnu gcc-4.4-mips-linux-gnu gcc-4.4-mips-linux-gnu -y
-
-echo "Installing QEMU..."
-aptitude install qemu qemu-kvm-extras virt-manager virtinst -y
-
-echo "Installing archivers"
-# Install standard extraction utilities
-apt-get install mtd-utils gzip bzip2 tar arj lhasa p7zip p7zip-full cabextract openjdk-6-jdk cramfsprogs cramfsswap squashfs-tools
-apt-get install zlib1g-dev liblzma-dev liblzo2-dev
-
-# Install sasquatch to extract non-standard SquashFS images
-
-cd /tmp
-git clone https://github.com/devttys0/sasquatch
-cd sasquatch && make && sudo make install
-cd ..
-rm -rf /tmp/sasquatch*
-rmdir /tmp/sasquatch
-
-# https://github.com/devttys0/binwalk/blob/master/INSTALL.md
-echo "Installing binwalk"
-apt-get install python-lzma libqt4-opengl python-opengl python-qt4 python-qt4-gl python-numpy python-scipy python-pip
-pip install pyqtgraph
+# apt-get update && apt-get upgrade
+# apt-get install mc mongodb python-dev python-pip git mercurial subversion build-essential linux-headers-`uname -r` -y
 
 
-# Install FTDI libs
-apt-get install -f libftdi1:i386 -y
-apt-get install libftdi-dev python-ftdi -y
+
