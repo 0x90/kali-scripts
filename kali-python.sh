@@ -17,7 +17,7 @@ python_libs(){
     # http://pandas.pydata.org/pandas-docs/stable/install.html
 
     if ask "Install scapy?" Y; then
-        print_status "Installing Scapy dependencies"
+        print_status "Installing Scapy Community edition and dependencies"
         apt-get install tcpdump graphviz imagemagick python-gnuplot python-crypto python-pyx wireshark -y
         
         #pip install -e hg+https://bb.secdev.org/scapy#egg=scapy --insecure
@@ -70,14 +70,6 @@ python_libs(){
         cd lorcon
         ./configure
         make && make install
-
-        #TODO: Deprecated?
-        #echo "Install pylorcon"
-        #cd /usr/src
-        #svn checkout http://pylorcon.googlecode.com/svn/trunk/ pylorcon
-        #cd pylorcon
-        #python setup.py build
-        #python setup.py install
 
         # install pylorcon2
         print_status "Install pylorcon2"
