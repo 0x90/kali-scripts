@@ -1,5 +1,5 @@
 #!/bin/bash
-. helper.sh
+source  ../helper/helper.sh
 
 python_libs(){
     if ask "Install pip & python modules" Y; then

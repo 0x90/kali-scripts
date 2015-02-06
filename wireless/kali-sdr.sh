@@ -1,5 +1,6 @@
 #!/bin/bash
-. helper.sh
+
+source  ../helper/helper.sh
 
 ### RTFM
 # http://labs.inguardians.com/

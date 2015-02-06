@@ -5,7 +5,7 @@
 # http://penturalabs.wordpress.com/2013/09/01/ubertooth-open-source-bluetooth-sniffing/
 #
 
-. helper.sh
+source  ../helper/helper.sh
 
 install_bluetooth(){
     print_status "Installing dependencies for bluetooth hacking"

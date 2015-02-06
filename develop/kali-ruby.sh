@@ -1,7 +1,6 @@
 #!/bin/bash
 #
-. helper.sh
-
+source  ../helper/helper.sh
 
 
 if ask "Do you want to install RVM ands set ruby-1.9.3 to default?" Y; then

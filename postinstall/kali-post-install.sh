@@ -1,5 +1,5 @@
 #!/bin/bash
-. helper.sh
+source  ../helper/helper.sh
 
 
 install_packages(){

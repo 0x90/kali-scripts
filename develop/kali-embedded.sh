@@ -1,7 +1,7 @@
 #!/bin/bash
 #TODO: add multiple repo support
 # http://lgogua.blogspot.ru/2013/07/all-goodies-repository-for-kali-linux.html
-. helper.sh
+source  ../helper/helper.sh
 
 
 install_embedded(){

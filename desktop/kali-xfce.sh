@@ -1,6 +1,6 @@
 #!/bin/bash
 # Install & configure XFCE4 in Kali Linux
-. helper.sh
+source  ../helper/helper.sh
 
 # Install XFCE4
 install_xfce(){

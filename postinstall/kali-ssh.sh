@@ -1,5 +1,5 @@
 #!/bin/bash
-. helper.sh
+source  ../helper/helper.sh
 
 config_ssh(){
     print_status "Сonfiguring sshd. Current OpenSSH status:"

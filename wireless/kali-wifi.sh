@@ -1,7 +1,7 @@
 #!/bin/bash
 # http://www.janoweb.net/tutorials/install-drivers-rtl8187-r8187-rt2800usb-on-ubuntu-lucid-maverick.html#axzz39x5Kw0rH
 
-. helper.sh
+source  ../helper/helper.sh
 
 # apt-get install wireless-tools
 

@@ -5,8 +5,7 @@
 #   Run only under X11 sessions
 #
 # WARNING WARNING WARNING WARNING WARNING
-
-. helper.sh
+source  ../helper/helper.sh
 
 #TODO: check bugs with dconf, add check for X11 session
 config_gnome(){

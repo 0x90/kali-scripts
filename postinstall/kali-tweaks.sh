@@ -1,5 +1,5 @@
 #!/bin/bash
-. helper.sh
+source  ../helper/helper.sh
 
 tweak(){
     if ask "Enable SSH?" Y; then
