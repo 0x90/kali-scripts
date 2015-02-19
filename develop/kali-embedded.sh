@@ -1,8 +1,8 @@
 #!/bin/bash
 #TODO: add multiple repo support
 # http://lgogua.blogspot.ru/2013/07/all-goodies-repository-for-kali-linux.html
-source  ../helper/helper.sh
 
+source  ../helper/helper.sh
 
 install_embedded(){
     if [ `getconf LONG_BIT` = "64" ] ; then
@@ -11,7 +11,7 @@ install_embedded(){
             success_check
         fi
     fi
-    
+
     echo "Installing archivers"
     # Install standard extraction utilities
     apt-get -y install mtd-utils gzip bzip2 tar arj lhasa p7zip p7zip-full cabextract openjdk-6-jdk cramfsprogs cramfsswap squashfs-tools zlib1g-dev liblzma-dev liblzo2-dev
@@ -38,7 +38,6 @@ install_embedded(){
         mkdir build
         cd build
         make -j -f ../s2e/Makefile
-
 
         print_status "Installing Python3 and dependencies"
         sudo apt-get install python3 python3-pip
@@ -78,7 +77,7 @@ install_embedded(){
         apt-get update
 
         echo "Installing GCC-4.4 for mips, mipsel"
-        apt-get install binutils-mipsel-linux-gnu binutils-mips-linux-gnu gcc-4.4-mips-linux-gnu gcc-4.4-mips-linux-gnu -y
+        apt-get install binutils-mipsel-linux-gnu binutils-mips-linux-gnu gcc-4.4-mips-linux-gnu gcc-4.4-mipsel-linux-gnu -y
 
         #echo deb http://www.emdebian.org/debian stable main >> /etc/apt/sources.list
         #wget http://http.us.debian.org/debian/pool/main/g/gmp/libgmp3c2_4.3.2+dfsg-1_amd64.deb -O /tmp/libgmp3c2_4.3.2+dfsg-1_amd64.deb
