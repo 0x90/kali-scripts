@@ -1,7 +1,7 @@
 #!/bin/sh
 # https://forums.kali.org/showthread.php?25715-How-to-install-Wifite-mod-pixiewps-and-reaver-wps-fork-t6x-to-nethunter
 
-cd ~
+cd /root
 mkdir backup
 cd backup
 git clone https://github.com/derv82/wifite.git
