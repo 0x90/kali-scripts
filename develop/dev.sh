@@ -9,12 +9,8 @@ install_devel(){
     gcc gcc-multilib dkms make linux-headers-$(uname -r) autoconf automake libssl-dev \
     kernel-package ncurses-dev fakeroot bzip2 linux-source openssl libreadline6 libreadline6-dev git-core zlib1g zlib1g-dev libssl-dev \
     libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt-dev autoconf libc6-dev ncurses-dev automake libtool bison \
-    libmysqlclient-dev libmagickcore-dev libmagick++-dev libmagickwand-dev libnetfilter-queue-dev
+    libmysqlclient-dev libmagickcore-dev libmagick++-dev libmagickwand-dev libnetfilter-queue-dev git subversion mercurial
     success_check
-
-    print_status "Installing git,hg,svn.."
-    apt-get install -y git subversion mercurial
-
     print_status "System Pre-requirements"
 
     if ask "Install i386 support? Install to compile old software!" N; then
@@ -24,8 +20,7 @@ install_devel(){
 
     if ask "Install Sublime?" N; then
         add-apt-repository ppa:webupd8team/sublime-text-3
-        apt-get update
-        apt-get install sublime-text-installer
+        apt-get update -y && apt-get install sublime-text-installer
     fi
 
     if ask "Install MinGW compiler+tools?" N; then

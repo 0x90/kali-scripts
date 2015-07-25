@@ -6,7 +6,7 @@ python_libs(){
     if ask "Install pip & python modules" Y; then
         apt-get -y install python-setuptools bpython python-setuptoolspython-twisted
         # python-pip removed because of too fresh version
-        easy_install pip==1.2.1
+#        easy_install pip==1.2.1
 
         apt-get install -y python-twisted python-virtualenv idle idle3 python-qt4
         pip install shodan mysql-python python-ntlm scipy selenium tornado netaddr matplotlib paramiko lxml pcapy \
@@ -16,71 +16,6 @@ python_libs(){
 
     # http://www.scipy.org/install.html
     # http://pandas.pydata.org/pandas-docs/stable/install.html
-
-    if ask "Install scapy?" Y; then
-        print_status "Installing Scapy Community edition and dependencies"
-        apt-get install tcpdump graphviz imagemagick python-gnuplot python-crypto python-pyx wireshark -y
-        
-        #pip install -e hg+https://bb.secdev.org/scapy#egg=scapy --insecure
-        cd /tmp
-        hg clone https://bb.secdev.org/scapy --insecure
-        cd scapy
-        ./setup.py install
-
-        #Cleanup
-        cd ..
-        rm -rf scapy/*
-        rm -rf scapy/.hg*
-        rmdir scapy
-    fi
-
-    if ask "Install scapytain?" N; then
-        
-        apt-get install -y python-cherrypy3 graphviz python-genshi python-sqlobject python-formencode python-pyopenssl highlight python-trml2pdf python-pip
-        # pip install   http://www.satchmoproject.com/snapshots/trml2pdf-1.2.tar.gz
-        pip install pyopenssl
-        
-        #pip install -e hg+ --insecure
-        # udo pip install -e hg+http://bb.secdev.org/scapytain#egg=scapytain --insecure
-        cd /tmp
-        hg clone https://bb.secdev.org/scapytain --insecure
-        cd scapytain
-        ./setup.py install
-
-        mcedit /etc/scapytainrc
-        mkdir /var/lib/scapytain
-        scapytain_dbutil -c
-
-        #Cleanup
-        cd /tmp
-        rm -rf scapytain/*
-        rm -rf scapytain/.hg*
-        rmdir scapytain
-    fi
-
-    # Latest version of Pylorcon2 https://github.com/tom5760/pylorcon2
-    if ask "Install Lorcon?" Y; then
-
-        print_status "Installing Lorcon dependecies"
-        apt-get install libpcap0.8-dev libnl-dev
-
-        #Requires lorcon2:
-        print_status "Installing Lorcon"
-        cd /usr/src
-        git clone https://code.google.com/p/lorcon
-        cd lorcon
-        ./configure
-        make && make install
-
-        # install pylorcon2
-        print_status "Install pylorcon2"
-        cd /usr/src
-        svn checkout http://pylorcon2.googlecode.com/svn/trunk/ pylorcon2
-        cd pylorcon2
-        python setup.py build
-        python setup.py install
-    fi
-
 
     if ask "Install Jetbrains PyCharm Community Edition?" N; then
         print_status "Installing Oracle JDK 7 + prequerements"

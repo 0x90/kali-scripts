@@ -3,7 +3,7 @@
 source ../helper/helper.sh
 
 install_firefox(){
-    apt-get remove iceweasel
+#    apt-get remove iceweasel
 #    echo >> /etc/apt/sources.list
 #    echo "deb http://downloads.sourceforge.net/project/ubuntuzilla/mozilla/apt all main" >> /etc/apt/sources.list
     echo "deb http://downloads.sourceforge.net/project/ubuntuzilla/mozilla/apt all main" > /etc/apt/sources.list.d/ubuntuzilla.list
