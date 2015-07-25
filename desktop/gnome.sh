@@ -1,11 +1,13 @@
-#!/bin/bash
+#!/usr/bin/env bash
+#
+source ../helper/helper.sh
 #
 # WARNING WARNING WARNING WARNING WARNING
 #
 #   Run only under X11 sessions
 #
 # WARNING WARNING WARNING WARNING WARNING
-source  ../helper/helper.sh
+
 
 #TODO: check bugs with dconf, add check for X11 session
 config_gnome(){

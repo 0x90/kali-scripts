@@ -1,6 +1,6 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
-source  ../helper/helper.sh
+source ../helper/helper.sh
 
 # Install tools for iphone
 install_idevice(){

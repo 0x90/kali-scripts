@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
+#
 
 print_status(){
     echo -e "\x1B[01;34m[*]\x1B[0m $1"
@@ -63,32 +64,27 @@ check_euid(){
     if [[ $EUID -ne 0 ]]; then
         print_error "This script must be ran with sudo or root privileges, or this isn't going to work."
 	    exit 1
-    else
-        print_good "w00t w00t we are root!"
+#    else
+#        print_good "w00t w00t we are root!"
     fi
 }
 
-check_root(){
-    print_status "Checking for root privs."
-    if [ $(whoami) != "root" ]; then
-        print_error "This script must be ran with sudo or root privileges, or this isn't going to work."
-        exit 1
-    else
-        print_good "We are root."
-    fi
-}
-
-cleanup(){
-    if ask "Clean up?" Y; then
-        apt-get -y autoremove && apt-get -y clean
-    fi
-}
-
-update(){
-    if ask "Step 0: Fresh the system?" Y; then
-        apt-get update -y && apt-get upgrade -y
-    fi
-}
 command_exists () {
     type "$1" &> /dev/null ;
 }
+
+upgrade(){
+    apt-get update && apt-get upgrade -y
+}
+
+super_upgrade(){
+    apt-get update && apt-get upgrade -y && apt-get dist-upgrade -y
+}
+
+cleanup(){
+    apt-get -y autoremove && apt-get -y clean
+}
+
+
+#
+check_euid

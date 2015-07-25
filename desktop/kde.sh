@@ -1,5 +1,6 @@
-#!/bin/bash
-source  ../helper/helper.sh
+#!/usr/bin/env bash
+#
+source ../helper/helper.sh
 
 install_kde(){
     # How to install KDE Plasma Desktop Environment in Kali Linux:

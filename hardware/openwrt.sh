@@ -1,7 +1,7 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Based on http://wiki.openwrt.org/ru/doc/howto/build
-#
-. helper.sh
+source ../helper/helper.sh
+
 
 openwrt_prepare(){
     print_status "Installing development tools for OpenWRT.."

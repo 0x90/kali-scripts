@@ -1,5 +1,6 @@
-#!/bin/bash
-. helper.sh
+#!/usr/bin/env bash
+#
+source ../helper/helper.sh
 
 mobile_tools()
 {

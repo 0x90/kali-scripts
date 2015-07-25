@@ -1,8 +1,9 @@
-#!/bin/bash
+#!/usr/bin/env bash
+#
+source ../helper/helper.sh
 #TODO: add multiple repo support
 # http://lgogua.blogspot.ru/2013/07/all-goodies-repository-for-kali-linux.html
 
-source  ../helper/helper.sh
 
 install_embedded(){
     if [ `getconf LONG_BIT` = "64" ] ; then
