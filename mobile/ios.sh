@@ -2,18 +2,11 @@
 #
 source ../helper/helper.sh
 
-mobile_tools()
-{
-    apt-get install gammu
-}
-
-android_tools(){
-    if ask "Install tools for Andoid hacking?" Y; then
-        apt-get install -y abootimg smali android-sdk apktool dex2jar
-
-        #TODO: check if file exists
-        add-apt-repository ppa:nilarimogard/webupd8
-        apt-get update -y && apt-get install android-tools-adb android-tools-fastboot
+# Install tools for iphone
+install_idevice(){
+    if ask "Do you want to install tools for work with iDevice?" Y; then
+        print_status "Installing tools.."
+        apt-get install -y libimobiledevice1 python-imobiledevice usbmuxd iphone-backup-analyzer ipheth-utils ifuse
     fi
 }
 
@@ -39,3 +32,4 @@ msf_on_iphone(){
 
     ruby msfconsole
 }
+install_idevice
