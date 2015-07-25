@@ -1,4 +1,6 @@
-#!/bin/sh
+#!/usr/bin/env bash
+#
+source ../helper/helper.sh
 
 apt-get update && apt-get upgrade -y && apt-get dist-upgrade -y
 aptitude -r install linux-headers-$(uname -r)

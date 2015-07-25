@@ -1,5 +1,6 @@
-#!/bin/bash
-source  ../helper/helper.sh
+#!/usr/bin/env bash
+#
+source ../helper/helper.sh
 
 install_zsh(){
     if ask "Do you want to install zsh?" Y; then

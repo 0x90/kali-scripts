@@ -1,7 +1,6 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
-
-source  ../helper/helper.sh
+source ../helper/helper.sh
 
 echo "Installing Lorcon dependecies"
 apt-get update && apt-get upgrade -y && apt-get dist-upgrade -y

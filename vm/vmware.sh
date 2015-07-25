@@ -1,7 +1,6 @@
-#!/bin/bash
-. helper.sh
-. kali-update.sh
-. kali-post-install.sh
+#!/usr/bin/env bash
+#
+source ../helper/helper.sh
 
 install_virtualbox(){
     echo >> /etc/apt/sources.list

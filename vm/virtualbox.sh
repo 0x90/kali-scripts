@@ -1,4 +1,6 @@
-#!/bin/sh
+#!/usr/bin/env bash
+#
+source ../helper/helper.sh
 
 echo "Add VB repo"
 echo >> /etc/apt/sources.list

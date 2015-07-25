@@ -1,11 +1,11 @@
-#!/bin/bash
+#!/usr/bin/env bash
+#
+source ../helper/helper.sh
 #
 # https://github.com/greatscottgadgets/ubertooth/wiki/Build-Guide
 # http://www.splitbits.com/2014/05/14/ubertooth-spectools-chromebook/
 # http://penturalabs.wordpress.com/2013/09/01/ubertooth-open-source-bluetooth-sniffing/
 #
-
-source  ../helper/helper.sh
 
 install_bluetooth(){
     print_status "Installing dependencies for bluetooth hacking"

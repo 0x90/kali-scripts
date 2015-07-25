@@ -1,4 +1,6 @@
-#!/bin/sh
+#!/usr/bin/env bash
+#
+source ../helper/helper.sh
 # http://www.axozie.org/2014/09/install-amd-ati-proprietary-fglrx_8.html
 
 # Backup

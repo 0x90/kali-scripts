@@ -1,4 +1,6 @@
-#!/bin/sh
+#!/usr/bin/env bash
+#
+source ../helper/helper.sh
 
 dpkg --add-architecture i386
 apt-get update
