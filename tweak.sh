@@ -38,7 +38,7 @@ config_ssh(){
         success_check
         print_status "Regenerating host keys.."
         dpkg-reconfigure openssh-server
-        success_check
+        check_success
 
         mkdir /etc/ssh/default_kali_keys
         mv /etc/ssh/ssh_host* /etc/ssh/default_kali_keys/
@@ -50,18 +50,18 @@ config_ssh(){
         ssh-keygen -t rsa -b 2048
     fi
 
-    if "Enable X11 Forwarding support" Y; then
+    if ask "Enable X11 Forwarding support" Y; then
         sed -i -e 's/\#X11Forwarding no/X11Forwarding yes/' /etc/ssh/sshd_config
         sed -i -e 's/\#X11DisplayOffset/X11DisplayOffset/' /etc/ssh/sshd_config
         sed -i -e 's/\#X11UseLocalhost/X11UseLocalhost/' /etc/ssh/sshd_config
         sed -i -e 's/\#AllowTcpForwarding/AllowTcpForwarding/' /etc/ssh/sshd_config
     fi
 
-    if "Enable SSHD to start on boot?" Y; then
+    if ask "Enable SSHD to start on boot?" Y; then
         update-rc.d ssh enable
     fi
 
-    if "Enabling visual hostkeys in your .ssh/config?" Y; then
+    if ask "Enabling visual hostkeys in your .ssh/config?" Y; then
         mkdir -p ~/.ssh && echo "VisualHostKey=yes" >> ~/.ssh/config
     fi
 

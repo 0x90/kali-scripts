@@ -135,10 +135,7 @@ install_kde(){
 
 # Install XFCE4
 install_xfce(){
-    if ask "Do you want to install XFCE4?" Y; then
-        print_status "Installing XFCE4.."
-        apt-get install -y kali-defaults kali-root-login desktop-base xfce4 xfce4-places-plugin xfce4-goodies
-    fi
+    apt-get install -y kali-defaults kali-root-login desktop-base xfce4 xfce4-places-plugin xfce4-goodies
 }
 
 # Configure XFCE4 in Kali Linux
@@ -176,15 +173,15 @@ config_xfce(){
     #rm -r /root/.cache/sessions/*
 
     # Install Shiki-Colors-Light-Menus and gnome-brave on demand
-    if ask "Do you want to install Shiki-Colors-Light-Menus and gnome-brave?" Y; then
-        wget http://xfce-look.org/CONTENT/content-files/142110-Shiki-Colors-Light-Menus.tar.gz -O /tmp/Shiki-Colors-Light-Menus.tar.gz
-        tar zxf /tmp/Shiki-Colors-Light-Menus.tar.gz -C /root/.themes/
-        xfconf-query -c xsettings -p /Net/ThemeName -s "Shiki-Colors-Light-Menus"
-        xfconf-query -c xsettings -p /Net/IconThemeName -s "gnome-brave"
-    fi
+#    if ask "Do you want to install Shiki-Colors-Light-Menus and gnome-brave?" Y; then
+#        wget http://xfce-look.org/CONTENT/content-files/142110-Shiki-Colors-Light-Menus.tar.gz -O /tmp/Shiki-Colors-Light-Menus.tar.gz
+#        tar zxf /tmp/Shiki-Colors-Light-Menus.tar.gz -C /root/.themes/
+#        xfconf-query -c xsettings -p /Net/ThemeName -s "Shiki-Colors-Light-Menus"
+#        xfconf-query -c xsettings -p /Net/IconThemeName -s "gnome-brave"
+#    fi
 
-    print_status "Enable compositing. Needed to be run with X11!"
-    xfconf-query -c xfwm4 -p /general/use_compositing -s true
+#    print_status "Enable compositing. Needed to be run with X11!"
+#    xfconf-query -c xfwm4 -p /general/use_compositing -s true
 
     # print_status "Configure Thunar file browser (Need to re-login for effect)"
     # #TODO: check file existance
@@ -196,7 +193,7 @@ config_xfce(){
 }
 
 install_desktop(){
-    if ask "Install XFCE desktop?" N; then
+    if ask "Do you want to install XFCE4?" N; then
         install_xfce
 
         if ask "Configure XFCE??" Y; then
@@ -212,3 +209,5 @@ install_desktop(){
         config_gnome
     fi
 }
+
+install_desktop

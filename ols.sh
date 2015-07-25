@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-#
+# TODO: make functions
 . helper.sh
 
 apt-get install libsigrok0-dev sigrok libsigrokdecode0-dev -y

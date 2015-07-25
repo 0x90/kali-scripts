@@ -21,35 +21,11 @@ install_packages(){
         print_status "Installing shell tools.."
         apt-get install -y terminator zip gnome-tweak-tool htop mc synapse ack-grep netcat-openbsd xsel screen
 
-#        print_status "Installing ARP tools"
-#        apt-get install -y arp-scan arpalert arping arpwatch
-
         print_status "Installing unpackers.."
         apt-get -y install unace rar unrar p7zip zip unzip p7zip-full p7zip-rar sharutils uudeview mpack arj cabextract file-roller
     fi
-#
-#    #TODO: check this shit.
-#    if ask "Do you want to install Windowstools?" N; then
-#        apt-get -y install windows-binaries
-#        mkdir -p /var/www/tools/shells && chmod -R 755 /var/www/tools
-#        cp /usr/share/windows-binaries/{nc.exe,plink.exe,vncviewer.exe,wget.exe} /var/www/tools/
-#        wget -c http://winscp.net/download/winscp514.zip -O /tmp/winscp514.zip && unzip /tmp/winscp514.zip
-#        cp /tmp/WinSCP.exe /var/www/tools/scp.exe
-#        rm /tmp/winscp*
-#        rm /tmp/readme.txt
-#        rm /tmp/WinSCP*
-#    fi
-#
-#    if ask "Do you want to install meld (graphical diff tool)?" N; then
-#        apt-get -y install meld
-#        gconftool-2 --type bool --set /apps/meld/show_line_numbers true
-#        gconftool-2 --type bool --set /apps/meld/show_whitespace true
-#        gconftool-2 --type bool --set /apps/meld/use_syntax_highlighting true
-#        gconftool-2 --type int --set /apps/meld/edit_wrap_lines 2
-#    fi
+
 }
 
-install_postinstall(){
-    install_packages
-    apt_cleanup
-}
+install_packages
+apt_cleanup

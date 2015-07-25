@@ -4,15 +4,15 @@
 
 install_jdk(){
     apt_add_repo ppa:webupd8team/java
-    #TODO: Can we agree the license in auto mode?
-    apt-get install oracle-java7-installer -y
+    apt-get install oracle-java7-installer -y #TODO: Can we agree the license in auto mode?
 }
 
 install_python(){
     if ask "Install pip & python modules" Y; then
         apt-get -y install bpython python-setuptools python-twisted python-shodan  \
         python-virtualenv python-pygments python-tornado python-sqlalchemy python-lxml python-pymongo \
-        python-gnuplot python-matplotlib python-pandas python-scipy
+        python-gnuplot python-matplotlib python-pandas python-scipy \
+        python-requests python-gevent
         pip install virtualenvwrapper cookiecutter
     fi
 
@@ -26,10 +26,12 @@ install_python(){
 }
 
 install_ruby(){
-    if ask "Do you want to install RVM ands set ruby-1.9.3 to default?" Y; then
+    if ask "Do you want to install RVM ands set ruby-1.9.5 to default?" Y; then
         curl -L https://get.rvm.io | bash -s stable
         source /usr/local/rvm/scripts/rvm
-        rvm install 1.9.3 && rvm use 1.9.3 --default
+        rvm install 1.9.5 && rvm use 1.9.5 --default
+
+#        source /etc/profile.d/rvm.sh
 
         # This loads RVM into a shell session.
         #echo [[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm" >> ~/.bashrc

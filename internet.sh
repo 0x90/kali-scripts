@@ -19,8 +19,7 @@ install_chromium(){
 }
 
 install_firefox(){
-# TODO: Fix! Not working
-#    apt-get remove iceweasel
+    apt-get remove iceweasel
     echo "deb http://downloads.sourceforge.net/project/ubuntuzilla/mozilla/apt all main" > /etc/apt/sources.list.d/ubuntuzilla.list
     apt-key adv --recv-keys --keyserver keyserver.ubuntu.com C1289A29
     apt-get update -y &&  apt-get install firefox-mozilla-build -y
@@ -59,7 +58,7 @@ install_skype(){
 }
 
 install_tor(){
-    apt-get install vidalia privoxy -y
+    apt-get install tor vidalia privoxy -y
     echo forward-socks4a / 127.0.0.1:9050 . >> /etc/privoxy/config
 
     mkdir -p /var/run/tor
@@ -72,7 +71,7 @@ install_tor(){
 }
 
 install_internet(){
-    if ask "Do you want to install some browsers (Chrome,Firefox,Mantra)?" N; then
+    if ask "Do you want to install some browsers (Chrome, Firefox, OWASP Mantra)?" N; then
         install_browsers
     fi
 
@@ -92,3 +91,5 @@ install_internet(){
         apt-get install -y nautilus-dropbox
     fi
 }
+
+install_internet
