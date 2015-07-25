@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-source ../helper/helper.sh
+. helper.sh
 
 apt-get install libsigrok0-dev sigrok libsigrokdecode0-dev -y
 

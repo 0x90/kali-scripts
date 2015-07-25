@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-source ../helper/helper.sh
+. helper.sh
 # http://www.axozie.org/2014/09/install-amd-ati-proprietary-fglrx_8.html
 
 # Backup
@@ -19,10 +19,16 @@ deb-src http://security.kali.org/kali-security kali/updates main contrib non-fre
 EOF
 
 apt-get update
-apt-get install firmware-linux-nonfree 
-apt-get install amd-opencl-icd 
+apt-get install firmware-linux-nonfree
+apt-get install amd-opencl-icd
 apt-get install linux-headers-$(uname -r)
-
 apt-get install fglrx-atieventsd fglrx-driver fglrx-control fglrx-modules-dkms -y
-
 aticonfig --initial -f
+
+###NVIDIA
+apt-get update && apt-get upgrade -y && apt-get dist-upgrade -y
+aptitude -r install linux-headers-$(uname -r)
+apt-get install nvidia-xconfig nvidia-kernel-dkms
+sed 's/quiet/quiet nouveau.modeset=0/g' -i /etc/default/grub
+update-grub
+nvidia-xconfig

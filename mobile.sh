@@ -1,15 +1,14 @@
 #!/usr/bin/env bash
 #
-source ../helper/helper.sh
+. helper.sh
 
-# Install tools for iphone
-install_idevice(){
-    if ask "Do you want to install tools for work with iDevice?" Y; then
-        print_status "Installing tools.."
-        apt-get install -y libimobiledevice1 python-imobiledevice usbmuxd iphone-backup-analyzer ipheth-utils ifuse
-    fi
+mobile_tools()
+{
+    apt-get install gammu
 }
 
+
+# Install tools for iphone
 ios_tools(){
     if ask "Install tools for iOS hacking?" Y; then
         apt-get install -y ifuse ipheth-utils iphone-backup-analyzer libimobiledevice-utils libimobiledevice2 python-imobiledevice usbmuxd
@@ -29,7 +28,13 @@ msf_on_iphone(){
 
     cd /private/var
     svn co https://www.metasploit.com/svn/framework3/trunk/ msf3
-
     ruby msfconsole
 }
-install_idevice
+
+android_tools(){
+    if ask "Install tools for Andoid hacking?" Y; then
+        apt-get install -y abootimg smali android-sdk apktool dex2jar
+        apt_add_repo ppa:nilarimogard/webupd8
+        apt-get install -y android-tools-adb android-tools-fastboot
+    fi
+}

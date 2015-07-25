@@ -1,13 +1,11 @@
 #!/usr/bin/env bash
 # Based on http://wiki.openwrt.org/ru/doc/howto/build
-source ../helper/helper.sh
-
+. helper.sh
 
 openwrt_prepare(){
     print_status "Installing development tools for OpenWRT.."
-    #apt-get update -y
-    apt-get install -y subversion git-core git mercurial build-essential subversion libncurses5-dev zlib1g-dev gawk gcc-multilib flex libncurses5-dev zlib1g-dev gawk flex gawk gcc-multilib flex gettext
-
+    apt-get install -y subversion git-core git mercurial build-essential subversion libncurses5-dev zlib1g-dev \
+    gawk gcc-multilib flex libncurses5-dev zlib1g-dev gawk flex gawk gcc-multilib flex gettext
     print_status "Creating OpenWRT directoy"
     mkdir ~/openwrt && cd ~/openwrt
 }
@@ -16,13 +14,11 @@ openwrt_image_builder(){
     wget http://downloads.openwrt.org/attitude_adjustment/12.09/ar71xx/generic/OpenWrt-ImageBuilder-ar71xx_generic-for-linux-i486.tar.bz2
     tar -xvjf OpenWrt-ImageBuilder-ar71xx_generic-for-linux-i486.tar.bz2
     cd OpenWrt-ImageBuilder-ar71xx_generic-for-linux-i486
-
     #TODO: Add build example
 }
 
 openwrt_svn(){
     # OpenWRT buildroot installation based on http://wiki.openwrt.org/ru/doc/howto/build
-
     print_status "Cloning OpenWRT.."
     cd ~/openwrt
     svn co svn://svn.openwrt.org/openwrt/trunk/
@@ -35,9 +31,7 @@ openwrt_svn(){
 
     #Use one of the following commands to check for missing packages on the system you want to build OpenWrt on:
     if ask "Run OpenWRT configuration immidiately" N; then
-        make defconfig
-        make prereq
-        make menuconfig
+        make defconfig && make prereq && make menuconfig
     fi
 }
 
@@ -45,8 +39,7 @@ openwrt_git(){
     # Source from https://dev.openwrt.org/wiki/GetSource
     git clone git://git.openwrt.org/12.09/openwrt.git
 
-    make menuconfig
-    make
+    make menuconfig && make
     scripts/flashing/flash.sh
 
     git clone git://git.openwrt.org/12.09/packages.git
