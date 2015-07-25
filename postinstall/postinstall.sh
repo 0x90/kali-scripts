@@ -5,18 +5,11 @@ source ../helper/helper.sh
 
 install_packages(){
     if ask "Install common tools (mostly fixes and essentials) ?" Y; then
-        print_status "Installing armitage, mimikatz, unicornscan, and zenmap.."
-        apt-get -y install armitage mimikatz unicornscan zenmap
-        success_check
-        print_notification "Newly installed tools should be located on your default PATH."
 
-        print_status "Fixing wash"
-        apt-get -y install libsqlite3-dev
-        mkdir -p /etc/reaver
 
         print_status "Adding some essential packages."
         apt-get install -y cifs-utils ibssl-dev hostapd ipcalc cmake cmake-data \
-        emacsen-common libltdl-dev libpcap0.8-dev libtool libxmlrpc-core-c3 arp-scan filezilla gedit recon-ng xdotool \
+        emacsen-common libltdl-dev libpcap0.8-dev libtool libxmlrpc-core-c3 filezilla gedit recon-ng xdotool \
          curl build-essential openssl libreadline6 libreadline6-dev git-core zlib1g zlib1g-dev \
         libssl-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt-dev autoconf libc6-dev ncurses-dev bison libmysqlclient-dev libmagickcore-dev \
         libmagick++-dev libmagickwand-dev libnetfilter-queue-dev autotools-dev cdbs check checkinstall dctrl-tools debian-keyring \
@@ -39,12 +32,6 @@ install_packages(){
     fi
 
 
-    if ask "Do you want to install chromium (and allowing run as root) ?" Y; then
-        apt-get install -y chromium
-        echo "# simply override settings above" >> /etc/chromium/default
-        echo 'CHROMIUM_FLAGS="--password-store=detect --user-data-dir"' >> /etc/chromium/default
-    fi
-
     if ask "Do you want to install OracleJDK 7?" Y; then
         print_status "Downloading to /usr/sbin/add-apt-repository.."
         wget http://blog.anantshri.info/content/uploads/2010/09/add-apt-repository.sh.txt -O /usr/sbin/add-apt-repository
@@ -60,9 +47,7 @@ install_packages(){
         fi
     fi
 
-    if ask "Do you want to install the flash player?" Y; then
-        apt-get -y install flashplugin-nonfree
-    fi
+
 
     # Kali Cisco VPN Installer based on https://github.com/captainhooligan/Kali-Cisco-VPN
     # TODO: add wget Cisco-VPN.tar.gz

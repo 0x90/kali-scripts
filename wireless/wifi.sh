@@ -78,6 +78,12 @@ install_horst(){
     rm -rf /tmp/horst
 }
 
+fix_wash(){
+        print_status "Fixing wash"
+        apt-get -y install libsqlite3-dev
+        mkdir -p /etc/reaver
+
+}
 # GNU Radio 802.11
 # An IEEE 802.11 a/g/p Transceiver  http://www.ccs-labs.org/projects/wime/
 # git clone https://github.com/bastibl/gr-ieee802-11
