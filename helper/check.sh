@@ -15,7 +15,6 @@ command_exists () {
     type "$1" &> /dev/null ;
 }
 
-
 check_success(){
     if [ $? -eq 0 ]; then
         print_good "Procedure successful."
