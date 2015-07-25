@@ -106,3 +106,5 @@ pause(){
 read_default(){
     return read -e -p "$1" -i "$2"
 }
+
+check_euid

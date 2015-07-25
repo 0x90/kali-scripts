@@ -6,7 +6,7 @@ detect_vm(){
     apt-get install virt-what
 
 #VMWare
-dmidecode | awk '/VMware Virtual Platform/ {print $3,$4,$5}'
+#dmidecode | awk '/VMware Virtual Platform/ {print $3,$4,$5}'
 #Run lspci and check for the string 'VirtualBox'.
 #You could run lspci | grep VirtualBox.
 #You could also run lsusb and check the string 'VirtualBox'. Such as lsusb | grep VirtualBox.
@@ -14,8 +14,7 @@ dmidecode | awk '/VMware Virtual Platform/ {print $3,$4,$5}'
 }
 
 check_vt(){
-    apt-get update
-    apt-get install msr-tools
+    apt-get update && apt-get install msr-tools
     modprobe msr
 
     msr_vt=`rdmsr 0x3A`
@@ -58,49 +57,32 @@ install_vmware_tools(){
         mount /dev/cdrom /mnt/vmware
         tar zxpf /mnt/vmware/VMwareTools-*.tar.gz -C /tmp/
         /tmp/vmware-tools-distrib/vmware-install.pl default
-        rm -rf /mnt/vmware
-        rm -rf /tmp/vmware-*
+        rm -rf /mnt/vmware && rm -rf /tmp/vmware-*
     fi
 }
 
 virtual_machine(){
-    update
-    development
+#    update
+#    development
 
     dmi=`dmidecode | awk '/VMware Virtual Platform/ {print $3}'`
     if [[ "$dmi" ==  *VMware* ]]; then
         if ask "It seems you're running kali as VMWare guest, do you want to install vmware-tools?" Y; then
-            vmware_tools
+            install_vmware_tools
         fi
     fi
-
 }
 
-# Parallels 9 + Kali Linux 1.0.6 (kernel 3.12)
-#
+# TODO: Fix it.
+install_parallels_tools(){
+    # Parallels 9 + Kali Linux 1.0.6 (kernel 3.12)
+#    print_status "Mount Tools CD in virtual machine (Virtual Machine -> Install/Reinstall Parallels Tools)"
+#    pause
+    print_status "Preparing environment"
+    apt-get install -y gcc dkms make linux-headers-$(uname -r)
 
-echo "Preparing environment"
-apt-get install -y gcc dkms make linux-headers-$(uname -r)
-
-echo "Copying Parallels tools from CD"
-cp -R /media/cdrom0 /tmp/
-
-echo "Downloading patch file"
-wget http://pastebin.com/raw.php?i=17fVAntV -O /tmp/parallels-tools-linux-3.12-prl-fs-9.0.23350.941886.patch
-
-echo "Patching...."
-cd /tmp/cdrom0/kmods
-tar -xaf prl_mod.tar.gz
-patch -p1 -d prl_fs < /tmp/parallels-tools-linux-3.12-prl-fs-9.0.23350.941886.patch
-tar -czf prl_mod.tar.gz prl_eth prl_fs prl_fs_freeze prl_tg Makefile.kmods dkms.conf
-
-echo "Launching install"
-/tmp/cdrom0/install
-
-
-parallels_tools(){
-print_status "Mount Tools CD in virtual machine (Virtual Machine -> Install/Reinstall Parallels Tools)"
-    pause
+    print_status "Copying Parallels tools from CD"
+    cp -R /media/cdrom0 /tmp/
 
     # Download the patch from http://pastebin.com/8imsrmcN
     curl http://pastebin.com/raw.php?i=8imsrmcN > /tmp/parallels-tools-linux-3.12-prl-fs-9.0.23350.941886.patch

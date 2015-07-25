@@ -207,14 +207,23 @@ install_bluetooth(){
     fi
 }
 
+install_sdr(){
+    apt-get install -y kali-linux-sdr
+}
+
 install_wireless(){
     if ask "Install WiFi hacking tools?" Y; then
         install_wifi
     fi
 
-    if ask "Install Bluetooth hacking tools + Kismet + BTBB from source?" Y; then
+    if ask "Install Bluetooth hacking tools + Kismet + BTBB from source?" N; then
         install_bluetooth
+    fi
+
+    if ask "Install SDR tools?" Y; then
+        install_sdr
     fi
 }
 
+install_wireless
 

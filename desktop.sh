@@ -121,22 +121,22 @@ install_kde(){
     apt-get install kali-defaults kali-root-login desktop-base kde-plasma-desktop
 
     # How to install Netbook KDE Plasma Desktop Environment in Kali Linux:
-    apt-get install kali-defaults kali-root-login desktop-base kde-plasma-netbook
+#    apt-get install kali-defaults kali-root-login desktop-base kde-plasma-netbook
 
     # How to install Standard Debian selected packages and frameworks in Kali Linux:
-    apt-get install kali-defaults kali-root-login desktop-base kde-standard
+#    apt-get install kali-defaults kali-root-login desktop-base kde-standard
 
     # How to install KDE Full Install in Kali Linux:
-    apt-get install kali-defaults kali-root-login desktop-base kde-full
+#    apt-get install kali-defaults kali-root-login desktop-base kde-full
 
     # How to remove KDE on Kali Linux:
-    apt-get remove kde-plasma-desktop kde-plasma-netbook kde-standard
+#    apt-get remove kde-plasma-desktop kde-plasma-netbook kde-standard
 }
 
 # Install XFCE4
 install_xfce(){
     if ask "Do you want to install XFCE4?" Y; then
-        print_status Installing XFCE4
+        print_status "Installing XFCE4.."
         apt-get install -y kali-defaults kali-root-login desktop-base xfce4 xfce4-places-plugin xfce4-goodies
     fi
 }
@@ -196,7 +196,7 @@ config_xfce(){
 }
 
 install_desktop(){
-    if ask "Install XFCE desktop?" Y; then
+    if ask "Install XFCE desktop?" N; then
         install_xfce
 
         if ask "Configure XFCE??" Y; then

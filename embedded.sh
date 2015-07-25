@@ -46,8 +46,7 @@ install_binwalk(){
     git clone https://github.com/devttys0/sasquatch
     cd sasquatch && make && sudo make install
     cd ..
-    rm -rf /tmp/sasquatch*
-    rmdir /tmp/sasquatch
+    rm -rf /tmp/sasquatch
 
     # https://github.com/devttys0/binwalk/blob/master/INSTALL.md
     echo "Installing binwalk"
@@ -106,7 +105,6 @@ install_embedded(){
     fi
 
     echo "Installing archivers"
-    # Install standard extraction utilities
     apt-get -y install mtd-utils gzip bzip2 tar arj lhasa p7zip p7zip-full cabextract openjdk-6-jdk cramfsprogs cramfsswap squashfs-tools zlib1g-dev liblzma-dev liblzo2-dev
 
     if ask "Install tool for onchip debugging and emulation" Y; then
@@ -118,7 +116,6 @@ install_embedded(){
 #        apt-get install -f libftdi1:i386 -y
     fi
 
-
     if ask "Install Emdebian crossdev?" Y; then
         install_emdebian
     fi
@@ -129,7 +126,7 @@ install_embedded(){
 
     if ask "Do you want to install QEMU?" Y; then
         echo "Installing QEMU..."
-        apt-get install qemu-system-arm qemu-system-mips qemu-system-common qemu-system-x86 qemu qemu-kvm-extras virt-manager virtinst -y
+        apt-get install qemu-system-arm qemu-system-mips qemu-system-common qemu-system-x86 qemu virt-manager virtinst -y
     fi
 
     if ask "Do you want to install Avatar?" N; then
@@ -142,24 +139,6 @@ install_embedded(){
 }
 
 install_embedded
-
-# https://www.embtoolkit.org/userguide.html#quick_start_guide
-#    if ask "Install Embtoolkit?" N; then
-#        cd
-#        git clone git://git.embtoolkit.org/embtoolkit.git embtoolkit
-#        cd embtoolkit
-#        git pull
-#    fi
-
-    # if ask "Config & make Embtoolkit?" N; then
-        # $ make xconfig #qt
-        # make menuconfig #ncurses
-        # make
-        # make rootfs_build
-    # fi
-
-#apt-get install gcc-arm-linux-gnueabi libc6-dev-armel-cross qemu git-core gnupg flex bison gperf \
-# libesd0-dev build-essential zip curl libncurses5-dev zlib1g-dev libncurses5-dev gcc-multilib g++-multilib
 
 
 

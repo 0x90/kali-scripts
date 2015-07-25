@@ -2,20 +2,11 @@
 #
 . helper.sh
 
-mobile_tools()
-{
-    apt-get install gammu
+install_ios_tools(){
+    apt-get install -y ifuse ipheth-utils iphone-backup-analyzer libimobiledevice-utils libimobiledevice2 python-imobiledevice usbmuxd
 }
 
-
-# Install tools for iphone
-ios_tools(){
-    if ask "Install tools for iOS hacking?" Y; then
-        apt-get install -y ifuse ipheth-utils iphone-backup-analyzer libimobiledevice-utils libimobiledevice2 python-imobiledevice usbmuxd
-    fi
-}
-
-msf_on_iphone(){
+install_msf_on_iphone(){
     apt-get update && apt-get dist-upgrade && apt-get install wget subversion
 
     wget http://ininjas.com/repo/debs/ruby_1.9.2-p180-1-1_iphoneos-arm.deb
@@ -31,10 +22,23 @@ msf_on_iphone(){
     ruby msfconsole
 }
 
-android_tools(){
+install_android_tools(){
+    apt-get install -y abootimg smali android-sdk apktool dex2jar
+    apt_add_repo ppa:nilarimogard/webupd8
+    apt-get install -y android-tools-adb android-tools-fastboot
+}
+
+install_mobile_tools()
+{
+    apt-get install gammu
+
+    if ask "Install tools for iOS hacking?" Y; then
+        install_ios_tools
+    fi
+
     if ask "Install tools for Andoid hacking?" Y; then
-        apt-get install -y abootimg smali android-sdk apktool dex2jar
-        apt_add_repo ppa:nilarimogard/webupd8
-        apt-get install -y android-tools-adb android-tools-fastboot
+        install_android_tools
     fi
 }
+
+install_mobile_tools

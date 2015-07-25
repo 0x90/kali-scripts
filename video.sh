@@ -1,34 +1,47 @@
 #!/usr/bin/env bash
 #
 . helper.sh
+
+
 # http://www.axozie.org/2014/09/install-amd-ati-proprietary-fglrx_8.html
+install_ati_driver(){
+    # Backup
+    mv /etc/apt/sources.list /etc/apt/sources.list.bak
 
-# Backup
-mv /etc/apt/sources.list /etc/apt/sources.list.bak
+    # New sources file
+    cat <<EOF > /etc/apt/sources.list
+    #Official Repo Kali linux
+    deb http://http.kali.org/ /wheezy main contrib non-free
+    deb-src http://repo.kali.org/kali kali main non-free contrib
+    deb http://repo.kali.org/kali kali main/debian-installer
+    deb http://repo.kali.org/kali kali main contrib non-free
+    deb-src http://repo.kali.org/kali kali main contrib non-free
+    deb http://security.kali.org/kali-security kali/updates main contrib non-free
+    deb-src http://security.kali.org/kali-security kali/updates main contrib non-free
+    EOF
 
-# New sources file
-cat <<EOF > /etc/apt/sources.list
-#Official Repo Kali linux
-deb http://http.kali.org/ /wheezy main contrib non-free
-deb-src http://repo.kali.org/kali kali main non-free contrib
-deb http://repo.kali.org/kali kali main/debian-installer
-deb http://repo.kali.org/kali kali main contrib non-free
-deb-src http://repo.kali.org/kali kali main contrib non-free
-deb http://security.kali.org/kali-security kali/updates main contrib non-free
-deb-src http://security.kali.org/kali-security kali/updates main contrib non-free
-EOF
+    apt-get update
+    apt-get install -y firmware-linux-nonfree amd-opencl-icd linux-headers-$(uname -r) fglrx-atieventsd fglrx-driver fglrx-control fglrx-modules-dkms -y
+    aticonfig --initial -f
+}
 
-apt-get update
-apt-get install firmware-linux-nonfree
-apt-get install amd-opencl-icd
-apt-get install linux-headers-$(uname -r)
-apt-get install fglrx-atieventsd fglrx-driver fglrx-control fglrx-modules-dkms -y
-aticonfig --initial -f
+install_nvidia_driver(){
+    apt_super_upgrade
+    aptitude -r install linux-headers-$(uname -r)
+    apt-get install nvidia-xconfig nvidia-kernel-dkms
+    sed 's/quiet/quiet nouveau.modeset=0/g' -i /etc/default/grub
+    update-grub
+    nvidia-xconfig
+}
 
-###NVIDIA
-apt-get update && apt-get upgrade -y && apt-get dist-upgrade -y
-aptitude -r install linux-headers-$(uname -r)
-apt-get install nvidia-xconfig nvidia-kernel-dkms
-sed 's/quiet/quiet nouveau.modeset=0/g' -i /etc/default/grub
-update-grub
-nvidia-xconfig
+install_video_driver(){
+    if ask "Install ATI/AMD driver fglrx?" N; then
+        install_ati_driver
+    fi
+
+    if ask "Install NVIDIA driver nouveau?" N; then
+        install_nvidia_driver
+    fi
+}
+
+install_video_driver

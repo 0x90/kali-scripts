@@ -55,7 +55,7 @@ install_devel(){
     kernel-package ncurses-dev fakeroot bzip2 linux-source openssl libreadline6 libreadline6-dev git-core zlib1g zlib1g-dev libssl-dev \
     libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt-dev autoconf libc6-dev ncurses-dev automake libtool bison \
     libmysqlclient-dev libmagickcore-dev libmagick++-dev libmagickwand-dev libnetfilter-queue-dev git subversion mercurial
-    success_check
+    check_success
     print_status "System Pre-requirements"
 
     if ask "Install i386 support? Install to compile old software!" Y; then

@@ -19,13 +19,14 @@ install_chromium(){
 }
 
 install_firefox(){
+# TODO: Fix! Not working
 #    apt-get remove iceweasel
     echo "deb http://downloads.sourceforge.net/project/ubuntuzilla/mozilla/apt all main" > /etc/apt/sources.list.d/ubuntuzilla.list
     apt-key adv --recv-keys --keyserver keyserver.ubuntu.com C1289A29
     apt-get update -y &&  apt-get install firefox-mozilla-build -y
 }
 
-install_browser(){
+install_browsers(){
     if ask "Do you want to install Chromium (and allowing run as root) ?" Y; then
         install_chromium
     fi
@@ -37,11 +38,57 @@ install_browser(){
     if ask "Do you want to install Firefox?" Y; then
         install_firefox
     fi
+
     if ask "Do you want to install the Flash player?" Y; then
         apt-get -y install flashplugin-nonfree
     fi
 
     if ask "Do you want to install OWASP Mantra browser?" Y; then
         apt-get install -y owasp-mantra-ff
+    fi
+}
+
+install_skype(){
+    dpkg --add-architecture i386 && apt-get update -y
+
+    cd /tmp
+    wget -O skype-install.deb http://www.skype.com/go/getskype-linux-deb
+    dpkg -i skype-install.deb
+
+    apt-get install gdebi && apt-get -f install && apt-get autoclean
+}
+
+install_tor(){
+    apt-get install vidalia privoxy -y
+    echo forward-socks4a / 127.0.0.1:9050 . >> /etc/privoxy/config
+
+    mkdir -p /var/run/tor
+    chown debian-tor:debian-tor /var/run/tor
+    chmod 02750 /var/run/tor
+
+#    /etc/init.d/tor start
+#    /etc/init.d/privoxy start
+    #USE SOCKS PROXY 127.0.0.1:9059
+}
+
+install_internet(){
+    if ask "Do you want to install some browsers (Chrome,Firefox,Mantra)?" N; then
+        install_browsers
+    fi
+
+    if ask "Do you want to install TOR?" N; then
+        install_tor
+    fi
+
+    if ask "Do you want to install Skype?" N; then
+        install_skype
+    fi
+
+    if ask "Do you want to install pidgin and an OTR chat plugin?" N; then
+        apt-get -y install pidgin pidgin-otr
+    fi
+
+    if ask "Install Dropbox? " N; then
+        apt-get install -y nautilus-dropbox
     fi
 }
