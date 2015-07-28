@@ -1,8 +1,8 @@
 # Kali scripts
 
 Welcome to kali-scripts repository, which is created to help managing Kali Linux.
-Pentesters will like this stuff to automate installation or deployment.
-Every script can be launched separately, except helper.sh - functions module
+Pentesters will like this stuff to automate installation or deployment of Kali Linux.
+Every script can be launched separately except helper.sh which us just a functions storage file.
 
 ## Contents
 
@@ -18,6 +18,6 @@ Scripts are in development. Please review code before launching. Feel free to co
     pentest.sh - pentest tools installation script (MITMf,)
     postinstall.sh - common software installation and configuration (SSH, GDM, MSF, PostgreSQL)
     video.sh - video drivers installation script (Nvidia, AMD)
-    vm.sh - script to install vm hypervisors or vm tools (VirtualBox, VMWare)
+    vm.sh - script to install vm hypervisors or vm tools (VirtualBox, VMWare, Parallels)
     wireless.sh - wireless stuff (WiFi, Bluetooth, SDR)
 
