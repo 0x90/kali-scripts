@@ -1,6 +1,4 @@
 #!/usr/bin/env bash
-#
-
 
 print_status(){
     echo -e "\x1B[01;34m[*]\x1B[0m $1"
@@ -17,7 +15,6 @@ print_error(){
 print_notification(){
 	echo -e "\x1B[01;33m[*]\x1B[0m $1"
 }
-
 
 apt_upgrade(){
     apt-get update && apt-get upgrade -y
@@ -141,26 +138,17 @@ show_help(){
     echo "-u - update scripts"
 }
 
-parse_args(){
-    while getopts ":hvyna" opt; do
-        case ${opt} in
-            y)
-                ASKMODE="YES"
-                ;;
-            n)
-                ASKMODE="NO"
-                ;;
-            a)
-                ASKMODE="AUTO"
-                ;;
-            h|\?)
-                show_help
-                exit 0
-                ;;
-            v)  verbose=1
-                ;;
-        esac
-    done
-}
-check_euid
+# Main
 ASKMODE="WIZARD"
+while getopts ":ahnuyv" opt; do
+    case ${opt} in
+        h|\?) show_help;;
+        a) ASKMODE="AUTO";;
+        n) ASKMODE="NO";;
+        y) ASKMODE="YES";;
+        u) git pull;;
+        v) verbose=1;;
+    esac
+done
+
+check_euid

@@ -52,7 +52,7 @@ install_ruby(){
     fi
 }
 
-install_dev_tools(){
+install_dev(){
     print_status "Installing development tools and environment"
     apt-get install -y cmake cmake-data autoconf build-essential module-assistant libncurses5-dev zlib1g-dev gawk flex gettext \
     gcc gcc-multilib dkms make patchutils strace wdiff linux-headers-`uname -r` autoconf automake libssl-dev \
@@ -89,5 +89,5 @@ install_dev_tools(){
 }
 
 if [ "${0##*/}" = "dev.sh" ]; then
-    install_dev_tools
+    install_dev
 fi

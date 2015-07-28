@@ -1,4 +1,8 @@
 #!/usr/bin/env bash
+#
+# Automatic installation script.
+#
+
 . desktop.sh
 . dev.sh
 . embedded.sh
@@ -12,17 +16,16 @@
 . vm.sh
 . wireless.sh
 
-parse_args
-echo "ASKMODE: ${ASKMODE}"
 ASKMODE="AUTO"
-echo "ASKMODE: ${ASKMODE}"
+
 postinstall
 
 install_vm
-#install_desktop
 install_internet
-install_dev_tools
-install_pentest_tools
+install_dev
+install_pentest
 install_embedded
 install_wireless
 install_hardware
+#install_desktop
+#install_video
