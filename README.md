@@ -1,12 +1,13 @@
 # Kali scripts
 
-Welcome to kali-scripts repository, which is created to help managing Kali Linux.
-Pentesters will like this stuff to automate installation or deployment of Kali Linux.
-Every script can be launched separately except helper.sh which us just a functions storage file.
+Welcome to kali-scripts repository, which is created to help managing Kali Linux software installation.
+Scripts are in development at the moment, so many bugs are present.
+Please review code before launching. Feel free to commit bugs/patches.
 
 ## Contents
 
-Scripts are in development. Please review code before launching. Feel free to commit bugs/patches.
+This scripts are pretended to be used to automate installation or deployment of Kali Linux.
+Every script can be launched separately except helper.sh which us just a functions storage file.
 
     desktop.sh - desktop environment installation and postinstall configuration (Gnome, XFCE, KDE)
     dev.sh - developer tools (GCC, Python, Ruby)
