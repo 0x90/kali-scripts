@@ -5,7 +5,8 @@
 
 #TODO: check bugs with dconf, add check for X11 session
 config_gnome(){
-    if ask "Do you want to change some Gnome 3 settings?" Y; then
+    if ask "Do you want to tweak Gnome 3?" Y; then
+        apt-get install -y gnome-tweak-tool nautilus-open-terminal
 
         if ask "Do you want to install some terminal changes and tweaks?" Y; then
             gconftool-2 --type bool --set /apps/gnome-terminal/profiles/Default/scrollback_unlimited true #Terminal -> Edit -> Profile Preferences -> Scrolling -> Scrollback: Unlimited -> Close

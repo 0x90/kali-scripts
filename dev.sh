@@ -1,14 +1,17 @@
 #!/usr/bin/env bash
 #
-. helper.sh
+. postinstall.sh
 
 install_jdk(){
+    apt-get -y install default-jdk openjdk-6-jdk
     apt_add_repo ppa:webupd8team/java
-    apt-get install oracle-java7-installer -y #TODO: Can we agree the license in auto mode?
+
+    #TODO: Can we agree the license in auto mode?
+    apt-get install oracle-java7-installer -y
 }
 
 install_python(){
-    if ask "Install pip & python modules" Y; then
+    if ask "Install pip and other python modules" Y; then
         apt-get -y install bpython python-setuptools python-twisted python-shodan  \
         python-virtualenv python-pygments python-tornado python-sqlalchemy python-lxml python-pymongo \
         python-gnuplot python-matplotlib python-pandas python-scipy \
@@ -19,9 +22,9 @@ install_python(){
     if ask "Install Jetbrains PyCharm Community Edition?" N; then
         cd /opt
         wget http://download-cf.jetbrains.com/python/pycharm-community-4.5.3.tar.gz
-        tar xzvf pycharm-community-4.5.3.tar.gz
-        rm -f pycharm-community-4.5.3.tar.gz
-        mv pycharm-community-4.5.3 pycharm-community
+        tar xzvf pycharm-community-*.tar.gz
+        rm -f pycharm-community-*.tar.gz
+        mv pycharm-community-* pycharm-community
     fi
 }
 
@@ -30,7 +33,6 @@ install_ruby(){
         curl -L https://get.rvm.io | bash -s stable
         source /usr/local/rvm/scripts/rvm
         rvm install 1.9.5 && rvm use 1.9.5 --default
-
 #        source /etc/profile.d/rvm.sh
 
         # This loads RVM into a shell session.
@@ -50,10 +52,10 @@ install_ruby(){
     fi
 }
 
-install_devel(){
+install_dev_tools(){
     print_status "Installing development tools and environment"
-    apt-get install -y build-essential module-assistant libncurses5-dev zlib1g-dev gawk flex gettext \
-    gcc gcc-multilib dkms make linux-headers-$(uname -r) autoconf automake libssl-dev \
+    apt-get install -y cmake cmake-data autoconf build-essential module-assistant libncurses5-dev zlib1g-dev gawk flex gettext \
+    gcc gcc-multilib dkms make patchutils strace wdiff linux-headers-`uname -r` autoconf automake libssl-dev \
     kernel-package ncurses-dev fakeroot bzip2 linux-source openssl libreadline6 libreadline6-dev git-core zlib1g zlib1g-dev libssl-dev \
     libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt-dev autoconf libc6-dev ncurses-dev automake libtool bison \
     libmysqlclient-dev libmagickcore-dev libmagick++-dev libmagickwand-dev libnetfilter-queue-dev git subversion mercurial
@@ -61,8 +63,7 @@ install_devel(){
     print_status "System Pre-requirements"
 
     if ask "Install i386 support? Install to compile old software!" Y; then
-        dpkg --add-architecture i386
-        apt-get update -y && apt-get install ia32-libs -y
+        install_32bit
     fi
 
     if ask "Install JDK?" Y; then
@@ -87,4 +88,4 @@ install_devel(){
     fi
 }
 
-install_devel
+install_dev_tools

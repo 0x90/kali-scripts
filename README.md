@@ -11,15 +11,14 @@ Scripts are in development. Please review code before launching. Feel free to co
     desktop.sh - desktop environment installation and postinstall configuration (Gnome, XFCE, KDE)
     dev.sh - developer tools (GCC, Python, Ruby)
     embedded.sh - embedded developer toolchains (MIPS, ARM)
-    hardware.sh - Arduino, OLS, Sigrok and other stuff to deal with hardware
+    hardware.sh - stuff to deal with hardware (Arduino, OLS, Sigrok)
     helper.sh - misc helpful functions
     internet.sh - browsers (Chrome, Firefox, Chromium) and IM (Jabber, Skype)
     openwrt.sh - building OpenWRT toolchain and firmwares
-    phone.sh - tools for communication with mobile phones
-    pentest.sh - pentest tools installation script
-    postinstall.sh - common software dependecies installation
-    tweak.sh - misc tweaks
-    video.sh - video drivers installation script
-    vm.sh - script to install vm/vm tools 
+    phone.sh - tools for communication with mobile phones (iOS, Android)
+    pentest.sh - pentest tools installation script (MITMf,)
+    postinstall.sh - common software installation and configuration (SSH, GDM, MSF, PostgreSQL)
+    video.sh - video drivers installation script (Nvidia, AMD)
+    vm.sh - script to install vm hypervisors or vm tools (VirtualBox, VMWare)
     wireless.sh - wireless stuff (WiFi, Bluetooth, SDR)
 

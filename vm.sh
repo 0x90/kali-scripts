@@ -1,18 +1,6 @@
 #!/usr/bin/env bash
 . helper.sh
 
-# http://www.dmo.ca/blog/detecting-virtualization-on-linux/
-detect_vm(){
-    apt-get install virt-what
-
-#VMWare
-#dmidecode | awk '/VMware Virtual Platform/ {print $3,$4,$5}'
-#Run lspci and check for the string 'VirtualBox'.
-#You could run lspci | grep VirtualBox.
-#You could also run lsusb and check the string 'VirtualBox'. Such as lsusb | grep VirtualBox.
-#Also dmesg works, run dmesg | grep VirtualBox or dmesg | grep virtual.
-}
-
 check_vt(){
     apt-get update && apt-get install msr-tools
     modprobe msr
@@ -38,10 +26,9 @@ install_virtualbox(){
     apt-get update -y && apt-get install dkms -y && apt-get install virtualbox-4.3 -y
 }
 
-install_virtualbox_additions(){
-    print_status "Installing Oracle VirtualBox additions"
+install_virtualbox_tools(){
+    print_status "Installing Oracle VirtualBox tools"
 }
-
 
 install_vmware_tools(){
     if ask "Do you want to install vmware-tools?" Y; then
@@ -61,20 +48,8 @@ install_vmware_tools(){
     fi
 }
 
-virtual_machine(){
-#    update
-#    development
-
-    dmi=`dmidecode | awk '/VMware Virtual Platform/ {print $3}'`
-    if [[ "$dmi" ==  *VMware* ]]; then
-        if ask "It seems you're running kali as VMWare guest, do you want to install vmware-tools?" Y; then
-            install_vmware_tools
-        fi
-    fi
-}
-
-# TODO: Fix it.
 install_parallels_tools(){
+    # TODO: Fix it.
     # Parallels 9 + Kali Linux 1.0.6 (kernel 3.12)
 #    print_status "Mount Tools CD in virtual machine (Virtual Machine -> Install/Reinstall Parallels Tools)"
 #    pause
@@ -111,3 +86,47 @@ install_parallels_tools(){
     #$ sudo /tmp/Parallels\ Tools/install
     ../install
 }
+
+
+install_vm_host(){
+    # TODO: Check if VT is available
+    if ask "Do you want to install VirtualBox?" Y; then
+        echo "Installing VirtualBox..."
+        install_virtualbox
+    fi
+
+    if ask "Do you want to install QEMU?" Y; then
+        echo "Installing QEMU..."
+        apt-get install qemu-system-arm qemu-system-mips qemu-system-common qemu-system-x86 qemu virt-manager virtinst -y
+    fi
+}
+
+install_vm_tools(){
+    # TODO: Get VM type
+    dmi=`dmidecode | awk '/VMware Virtual Platform/ {print $3}'`
+    if [[ "$dmi" ==  *VMware* ]]; then
+        if ask "It seems you're running kali as VMWare guest, do you want to install vmware-tools?" Y; then
+            install_vmware_tools
+        fi
+    fi
+
+    install_virtualbox_tools
+}
+
+install_vm(){
+    # TODO: Check if running under VM
+    # http://www.dmo.ca/blog/detecting-virtualization-on-linux/
+    install_vm_host
+    install_vm_tools
+#    install_parallels_tools
+#    apt-get install virt-what
+
+#VMWare
+#dmidecode | awk '/VMware Virtual Platform/ {print $3,$4,$5}'
+#Run lspci and check for the string 'VirtualBox'.
+#You could run lspci | grep VirtualBox.
+#You could also run lsusb and check the string 'VirtualBox'. Such as lsusb | grep VirtualBox.
+#Also dmesg works, run dmesg | grep VirtualBox or dmesg | grep virtual.
+}
+
+install_vm
