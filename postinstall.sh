@@ -20,7 +20,7 @@ install_32bit(){
 
 install_common_tools(){
     print_status "Installing common tools.."
-    apt-get install -y terminator tmux htop iftop iotop nc mc screen curl wget
+    apt-get install -y terminator tmux htop iftop iotop mc screen curl wget
 }
 
 install_zsh(){

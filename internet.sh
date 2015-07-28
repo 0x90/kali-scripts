@@ -3,12 +3,15 @@
 . helper.sh
 
 install_chrome(){
-    echo "Adding Google Chrome to APT..."
-    wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
-    echo "deb http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list
-    apt-get update -y && apt-get install google-chrome-stable -y
+    print_status "Adding Google Chrome to APT..."
+#    wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+#    echo "deb http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list
+#    apt-get update -y && apt-get install google-chrome-stable -y
+    apt_add_key "https://dl-ssl.google.com/linux/linux_signing_key.pub"
+    apt_add_sources "deb http://dl.google.com/linux/chrome/deb/ stable main" "google-chrome"
+    apt-get install google-chrome-stable -y
 
-    echo "Patching Google Chrome to run as root.."
+    print_status "Patching Google Chrome to run as root.."
     cp /usr/bin/google-chrome /usr/bin/google-chrome.old && sed -i 's/^\(exec.*\)$/\1 --user-data-dir/' /usr/bin/google-chrome
 }
 
@@ -20,9 +23,10 @@ install_chromium(){
 
 install_firefox(){
     apt-get remove iceweasel
-    echo "deb http://downloads.sourceforge.net/project/ubuntuzilla/mozilla/apt all main" > /etc/apt/sources.list.d/ubuntuzilla.list
+    apt_add_sources "deb http://downloads.sourceforge.net/project/ubuntuzilla/mozilla/apt all main" "ubuntuzilla"
+#    echo "deb http://downloads.sourceforge.net/project/ubuntuzilla/mozilla/apt all main" > /etc/apt/sources.list.d/ubuntuzilla.list
     apt-key adv --recv-keys --keyserver keyserver.ubuntu.com C1289A29
-    apt-get update -y &&  apt-get install firefox-mozilla-build -y
+    apt-get update -y && apt-get install firefox-mozilla-build -y
 }
 
 install_browsers(){
@@ -53,8 +57,11 @@ install_skype(){
     cd /tmp
     wget -O skype-install.deb http://www.skype.com/go/getskype-linux-deb
     dpkg -i skype-install.deb
+    apt-get -f install
 
-    apt-get install gdebi && apt-get -f install && apt-get autoclean
+    apt-get install gdebi
+    apt-get -f install
+    apt-get autoclean
 }
 
 install_tor(){
