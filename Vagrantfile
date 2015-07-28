@@ -44,5 +44,5 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
   config.ssh.forward_x11 = true
-  config.vm.provision "shell", path: "autoinstall.sh"
+  # config.vm.provision "shell", path: "autoinstall.sh"
 end
