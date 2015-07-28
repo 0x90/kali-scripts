@@ -14,7 +14,6 @@ Scripts are in development. Please review code before launching. Feel free to co
     hardware.sh - stuff to deal with hardware (Arduino, OLS, Sigrok)
     helper.sh - misc helpful functions
     internet.sh - browsers (Chrome, Firefox, Chromium) and IM (Jabber, Skype)
-    openwrt.sh - building OpenWRT toolchain and firmwares
     phone.sh - tools for communication with mobile phones (iOS, Android)
     pentest.sh - pentest tools installation script (MITMf,)
     postinstall.sh - common software installation and configuration (SSH, GDM, MSF, PostgreSQL)
