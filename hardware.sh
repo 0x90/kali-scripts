@@ -121,3 +121,7 @@ install_hardware(){
         install_fpga
     fi
 }
+
+if [ "${0##*/}" = "hardware.sh" ]; then
+    install_hardware
+fi

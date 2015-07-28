@@ -211,4 +211,6 @@ install_desktop(){
     fi
 }
 
-install_desktop
+if [ "${0##*/}" = "desktop.sh" ]; then
+    install_desktop
+fi

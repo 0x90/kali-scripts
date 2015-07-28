@@ -28,7 +28,7 @@ install_android_tools(){
     apt-get install -y android-tools-adb android-tools-fastboot
 }
 
-install_mobile_tools()
+install_phone_tools()
 {
     apt-get install gammu
 
@@ -41,4 +41,6 @@ install_mobile_tools()
     fi
 }
 
-install_mobile_tools
+if [ "${0##*/}" = "phone.sh" ]; then
+    install_phone_tools
+fi

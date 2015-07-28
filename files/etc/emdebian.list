@@ -1,0 +1,3 @@
+deb http://ftp.us.debian.org/debian/ squeeze main
+deb http://www.emdebian.org/debian/ squeeze main
+deb http://www.emdebian.org/debian/ oldstable main

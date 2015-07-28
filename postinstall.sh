@@ -55,7 +55,7 @@ config_ssh(){
     if ask "Do you want to install fresh sshd/ssh keys? (might be good if you're using the vmware image)" N; then
         print_status "Removing old host keys.."
         rm -rf /etc/ssh/ssh_host_*
-        success_check
+        check_success
         print_status "Regenerating host keys.."
         dpkg-reconfigure openssh-server
         check_success
@@ -111,19 +111,11 @@ config_grub(){
 }
 
 config_personal(){
-    echo "Installing ~/.screenrc"
-    if [ -f ~/.screenrc ]; then
-        print_notification "~/.screenrc found, backuping to ~/.screenrc.bak"
-        cp ~/.screenrc ~/.screenrc.bak
-    fi
-    cp files/bash_aliases ~/.screenrc
+    print_status "Installing ~/.screenrc"
+    write_with_backup files/home/bash_aliases ~/.screenrc
 
-    echo "Installing ~/.bash_aliases"
-    if [ -f ~/.bash_aliase ]; then
-        print_notification "~/.bash_aliase found, backuping to ~/bash_aliases.bak"
-        cp ~/.bash_aliases ~/.bash_aliases.bak
-    fi
-    cp files/bash_aliases ~/.bash_aliases
+    print_status "Installing ~/.bash_aliases"
+    write_with_backup files/home/bash_aliases ~/.bash_aliases
 }
 
 postinstall(){
@@ -177,4 +169,6 @@ postinstall(){
     fi
 }
 
-postinstall
+if [ "${0##*/}" = "postinstall.sh" ]; then
+    postinstall
+fi

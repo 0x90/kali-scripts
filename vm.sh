@@ -18,7 +18,7 @@ check_vt(){
 
 install_virtualbox(){
     print_status "Add VirtualBox repo"
-    apt_add_sources "deb http://download.virtualbox.org/virtualbox/debian wheezy contrib","virtualbox"
+    apt_add_source "virtualbox"
 
     print_status "Trying to add Oracle VirtualBox key"
     apt_add_key "https://www.virtualbox.org/download/oracle_vbox.asc"
@@ -129,4 +129,6 @@ install_vm(){
 #Also dmesg works, run dmesg | grep VirtualBox or dmesg | grep virtual.
 }
 
-install_vm
+if [ "${0##*/}" = "vm.sh" ]; then
+    install_vm
+fi

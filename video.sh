@@ -9,16 +9,17 @@ install_ati_driver(){
     mv /etc/apt/sources.list /etc/apt/sources.list.bak
 
     # New sources file
-    cat <<EOF > /etc/apt/sources.list
-    #Official Repo Kali linux
-    deb http://http.kali.org/ /wheezy main contrib non-free
-    deb-src http://repo.kali.org/kali kali main non-free contrib
-    deb http://repo.kali.org/kali kali main/debian-installer
-    deb http://repo.kali.org/kali kali main contrib non-free
-    deb-src http://repo.kali.org/kali kali main contrib non-free
-    deb http://security.kali.org/kali-security kali/updates main contrib non-free
-    deb-src http://security.kali.org/kali-security kali/updates main contrib non-free
-    EOF
+    cp "files/etc/sources.list" /etc/apt/sources.list
+#    cat <<EOF > /etc/apt/sources.list
+#    Official Repo Kali linux
+#    deb http://http.kali.org/ /wheezy main contrib non-free
+#    deb-src http://repo.kali.org/kali kali main non-free contrib
+#    deb http://repo.kali.org/kali kali main/debian-installer
+#    deb http://repo.kali.org/kali kali main contrib non-free
+#    deb-src http://repo.kali.org/kali kali main contrib non-free
+#    deb http://security.kali.org/kali-security kali/updates main contrib non-free
+#    deb-src http://security.kali.org/kali-security kali/updates main contrib non-free
+#    EOF
 
     apt-get update -y
     apt-get install -y firmware-linux-nonfree amd-opencl-icd linux-headers-$(uname -r) fglrx-atieventsd fglrx-driver fglrx-control fglrx-modules-dkms -y
@@ -44,4 +45,6 @@ install_video_driver(){
     fi
 }
 
-install_video_driver
+if [ "${0##*/}" = "video.sh" ]; then
+    install_video_driver
+fi

@@ -8,7 +8,8 @@ install_chrome(){
 #    echo "deb http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list
 #    apt-get update -y && apt-get install google-chrome-stable -y
     apt_add_key "https://dl-ssl.google.com/linux/linux_signing_key.pub"
-    apt_add_sources "deb http://dl.google.com/linux/chrome/deb/ stable main" "google-chrome"
+#    apt_add_sources "deb http://dl.google.com/linux/chrome/deb/ stable main" "google-chrome"
+    apt_add_source  "google-chrome"
     apt-get install google-chrome-stable -y
 
     print_status "Patching Google Chrome to run as root.."
@@ -23,7 +24,7 @@ install_chromium(){
 
 install_firefox(){
     apt-get remove iceweasel
-    apt_add_sources "deb http://downloads.sourceforge.net/project/ubuntuzilla/mozilla/apt all main" "ubuntuzilla"
+    apt_add_source  "ubuntuzilla"
 #    echo "deb http://downloads.sourceforge.net/project/ubuntuzilla/mozilla/apt all main" > /etc/apt/sources.list.d/ubuntuzilla.list
     apt-key adv --recv-keys --keyserver keyserver.ubuntu.com C1289A29
     apt-get update -y && apt-get install firefox-mozilla-build -y
@@ -59,8 +60,8 @@ install_skype(){
     dpkg -i skype-install.deb
     apt-get -f install
 
-    apt-get install gdebi
-    apt-get -f install
+    apt-get install -y gdebi
+#    apt-get -f install
     apt-get autoclean
 }
 
@@ -99,4 +100,6 @@ install_internet(){
     fi
 }
 
-install_internet
+if [ "${0##*/}" = "internet.sh" ]; then
+    install_internet
+fi

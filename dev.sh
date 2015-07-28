@@ -88,4 +88,6 @@ install_dev_tools(){
     fi
 }
 
-install_dev_tools
+if [ "${0##*/}" = "dev.sh" ]; then
+    install_dev_tools
+fi

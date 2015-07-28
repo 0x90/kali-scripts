@@ -22,9 +22,11 @@ install_emdebian(){
     # http://www.emdebian.org/crosstools.html
     print_status "Installing Emdebian, xapt"
     apt-get install emdebian-archive-keyring xapt -y
-    echo "deb http://ftp.us.debian.org/debian/ squeeze main" > /etc/apt/sources.list.d/emdebian.list
-    echo "deb http://www.emdebian.org/debian/ squeeze main" >> /etc/apt/sources.list.d/emdebian.list
-    echo "deb http://www.emdebian.org/debian/ oldstable main" >> /etc/apt/sources.list/emdebian.list
+    apt_add_source emdebian
+    cp -f "files/etc/emdebian.list" /etc/apt/sources.list.d/emdebian.list && apt-get update -y
+#    echo "deb http://ftp.us.debian.org/debian/ squeeze main" > /etc/apt/sources.list.d/emdebian.list
+#    echo "deb http://www.emdebian.org/debian/ squeeze main" >> /etc/apt/sources.list.d/emdebian.list
+#    echo "deb http://www.emdebian.org/debian/ oldstable main" >> /etc/apt/sources.list/emdebian.list
     apt-get update -y
 
     print_status "Installing GCC-4.4 for mips, mipsel"
@@ -70,7 +72,9 @@ install_embedded(){
     fi
 }
 
-install_embedded
+if [ "${0##*/}" = "embedded.sh" ]; then
+    install_embedded
+fi
 
 
 

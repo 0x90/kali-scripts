@@ -225,5 +225,7 @@ install_wireless(){
     fi
 }
 
-install_wireless
+if [ "${0##*/}" = "wireless.sh" ]; then
+    install_wireless
+fi
 

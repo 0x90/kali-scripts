@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 #
 
+
 print_status(){
     echo -e "\x1B[01;34m[*]\x1B[0m $1"
 }
@@ -30,19 +31,23 @@ apt_cleanup(){
     apt-get -y autoremove && apt-get -y clean
 }
 
-apt_install_add_repo(){
-    cp ./add-apt-repository.sh /usr/sbin/add-apt-repository
+install_add_apt_repo(){
+    cp files/bin/add-apt-repository.sh /usr/sbin/add-apt-repository
     chmod o+x /usr/sbin/add-apt-repository
 }
 
-apt_add_sources(){
+apt_echo_sources(){
     echo "$1" > "/etc/apt/sources.list.d/$2.list"
+}
+
+apt_add_source(){
+    cp -f "files/etc/$1.list" "/etc/apt/sources.list.d/$1.list" && apt-get update -y
 }
 
 apt_add_repo(){
     if [ ! -f /usr/sbin/add-apt-repository ]; then
         print_notification "File /usr/sbin/add-apt-repository not found! Installing..."
-        apt_install_add_repo
+        install_add_apt_repo
     fi
     add-apt-repository "$1" && apt-get update -y
 }
@@ -52,12 +57,12 @@ apt_add_key(){
 }
 
 check_euid(){
-    print_status "Checking for root privs."
+#    print_status "Checking for root privs."
     if [[ $EUID -ne 0 ]]; then
         print_error "This script must be ran with sudo or root privileges, or this isn't going to work."
 	    exit 1
-    else
-        print_good "w00t w00t we are root!"
+#    else
+#        print_good "w00t w00t we are root!"
     fi
 }
 
@@ -75,28 +80,39 @@ check_success(){
 }
 
 ask(){
-    while true; do
-        if [ "${2:-}" = "Y" ]; then
-            prompt="Y/n"
-            default=Y
-        elif [ "${2:-}" = "N" ]; then
-            prompt="y/N"
-            default=N
-        else
-            prompt="y/n"
-            default=
-        fi
+    if [ "$ASKMODE" = "WIZARD" ]; then
+        while true; do
+            if [ "${2:-}" = "Y" ]; then
+                prompt="Y/n"
+                default=Y
+            elif [ "${2:-}" = "N" ]; then
+                prompt="y/N"
+                default=N
+            else
+                prompt="y/n"
+                default=
+            fi
 
-        read -p "$1 [$prompt] " REPLY
-        if [ -z "$REPLY" ]; then
-            REPLY=${default}
-        fi
+            read -p "$1 [$prompt] " REPLY
+            if [ -z "$REPLY" ]; then
+                REPLY=${default}
+            fi
 
-        case "$REPLY" in
-            Y*|y*) return 0 ;;
-            N*|n*) return 1 ;;
+            case "$REPLY" in
+                Y*|y*) return 0 ;;
+                N*|n*) return 1 ;;
+            esac
+        done
+    elif [ "$ASKMODE" = "YES" ]; then
+        return 1;
+    elif [ "$ASKMODE" = "NO" ]; then
+        return 0;
+    elif [ "$ASKMODE" = "AUTO" ]; then
+        case "$default" in
+                Y*|y*) return 0 ;;
+                N*|n*) return 1 ;;
         esac
-    done
+    fi
 }
 
 pause(){
@@ -107,4 +123,44 @@ read_default(){
     return read -e -p "$1" -i "$2"
 }
 
+write_with_backup(){
+    if [ -f $2 ]; then
+        print_notification "$2 found, backuping to $2.bak"
+        cp "$2" "$2.bak"
+    fi
+    cp -f "$1" "$2"
+
+}
+
+show_help(){
+    echo "Usage: cmd [-h] [-y] [-n] [-a] [-u]"
+    echo "-h - help message"
+    echo "-y - yes to all dialog questions"
+    echo "-n - no to all questions"
+    echo "-a - auto mode: choose default"
+    echo "-u - update scripts"
+}
+
+parse_args(){
+    while getopts ":hvyna" opt; do
+        case ${opt} in
+            y)
+                ASKMODE="YES"
+                ;;
+            n)
+                ASKMODE="NO"
+                ;;
+            a)
+                ASKMODE="AUTO"
+                ;;
+            h|\?)
+                show_help
+                exit 0
+                ;;
+            v)  verbose=1
+                ;;
+        esac
+    done
+}
 check_euid
+ASKMODE="WIZARD"
