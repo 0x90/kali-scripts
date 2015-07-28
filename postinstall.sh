@@ -127,11 +127,11 @@ config_personal(){
 }
 
 postinstall(){
-    if ask "Install common tools (mostly fixes and essentials) ?" Y; then
+    if ask "Install common tools (mostly fixes and essentials)?" Y; then
         print_status "Adding some essential packages."
-        apt-get install -y cifs-utils ibssl-dev  ipcalc  \
-        emacsen-common libltdl-dev libpcap0.8-dev libtool libxmlrpc-core-c3 xdotoolopenssl libreadline6 libreadline6-dev  \
-        libssl-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt-dev libc6-dev ncurses-dev bison libmysqlclient-dev libmagickcore-dev \
+        apt-get install -y cifs-utils libssl-dev ipcalc  \
+        emacsen-common libltdl-dev libpcap0.8-dev libtool libxmlrpc-core-c3 xdotool openssl libreadline6 libreadline6-dev  \
+        libssl-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt1-dev libc6-dev libncurses5-dev bison libmysqlclient-dev libmagickcore-dev \
         libmagick++-dev libmagickwand-dev libnetfilter-queue-dev autotools-dev cdbs check checkinstall dctrl-tools debian-keyring \
         devscripts dh-make diffstat dput equivs libapt-pkg-perl libauthen-sasl-perl libclass-accessor-perl libclass-inspector-perl \
         libcommon-sense-perl libconvert-binhex-perl libcrypt-ssleay-perl libdevel-symdump-perl libfcgi-perl libhtml-template-perl \

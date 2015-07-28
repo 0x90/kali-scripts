@@ -21,32 +21,38 @@ install_rom_tools(){
 install_signal_analysis()
 {
     # TODO: OLS install
+    apt-get install -y libsigrok0-dev sigrok libsigrokdecode0-dev git-core gcc g++ make autoconf autoconf-archive \
+    automake libtool pkg-config libglib2.0-dev libglibmm-2.4-dev libzip-dev libusb-1.0-0-dev libftdi-dev check \
+    doxygen python-numpy python-dev python-gi-dev python-setuptools swig default-jdk
 
-    apt-get install libsigrok0-dev sigrok libsigrokdecode0-dev -y
-    apt-get install git-core gcc g++ make autoconf autoconf-archive \
-  automake libtool pkg-config libglib2.0-dev libglibmm-2.4-dev libzip-dev \
-  libusb-1.0-0-dev libftdi-dev check doxygen python-numpy\
-  python-dev python-gi-dev python-setuptools swig default-jdk
-    apt-get install git-core gcc make autoconf automake libtool
+    cd /tmp && mkdir sigrok
+    cd sigrok
 
-#libserial
-git clone git://sigrok.org/libserialport
-cd libserialport
-./autogen.sh &&./configure && make && make install
+    #libserial
+    git clone git://sigrok.org/libserialport
+    cd libserialport
+    ./autogen.sh &&./configure && make && make install
+    cd ..
 
-#SIGROK
-git clone git://sigrok.org/libsigrok
-cd libsigrok
-./autogen.sh &&./configure && make && make install
+    #SIGROK
+    git clone git://sigrok.org/libsigrok
+    cd libsigrok
+    ./autogen.sh &&./configure && make && make install
+    cd ..
 
+    # SIGROK GUI dependencies
+    sudo apt-get install cmake libqt4-dev libboost-dev libboost-test-dev libboost-thread-dev libboost-system-dev
+    apt-get install git-core g++ make cmake libtool pkg-config \
+    libglib2.0-dev libqt4-dev libboost-test-dev libboost-thread-dev\
+    libboost-filesystem-dev libboost-system-dev
 
-# SIGROK GUI
-sudo apt-get install cmake libqt4-dev libboost-dev libboost-test-dev libboost-thread-dev libboost-system-dev
-apt-get install git-core g++ make cmake libtool pkg-config \
-  libglib2.0-dev libqt4-dev libboost-test-dev libboost-thread-dev\
-  libboost-filesystem-dev libboost-system-dev
+    # SIGROK GUI
+    git clone git://sigrok.org/pulseview
+    cd pulseview
+    ./autogen.sh &&./configure && make && make install
+    cd ../..
 
-git://sigrok.org/pulseview.git
+    rm -rf /tmp/sigrok
 }
 
 install_avatar(){
