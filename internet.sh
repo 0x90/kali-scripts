@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-#
+# Browsers, TOR and IM
 . helper.sh
 
 install_chrome(){
