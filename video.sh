@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-#
-. helper.sh
+# Installation script for AMD/NVIDIA video drivers.
 
+. helper.sh
 
 # http://www.axozie.org/2014/09/install-amd-ati-proprietary-fglrx_8.html
 install_ati_driver(){
@@ -20,7 +20,7 @@ install_ati_driver(){
     deb-src http://security.kali.org/kali-security kali/updates main contrib non-free
     EOF
 
-    apt-get update
+    apt-get update -y
     apt-get install -y firmware-linux-nonfree amd-opencl-icd linux-headers-$(uname -r) fglrx-atieventsd fglrx-driver fglrx-control fglrx-modules-dkms -y
     aticonfig --initial -f
 }
@@ -28,7 +28,7 @@ install_ati_driver(){
 install_nvidia_driver(){
     apt_super_upgrade
     aptitude -r install linux-headers-$(uname -r)
-    apt-get install nvidia-xconfig nvidia-kernel-dkms
+    apt-get install -y nvidia-xconfig nvidia-kernel-dkms
     sed 's/quiet/quiet nouveau.modeset=0/g' -i /etc/default/grub
     update-grub
     nvidia-xconfig
