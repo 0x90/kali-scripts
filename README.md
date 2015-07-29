@@ -9,6 +9,7 @@ Please review code before launching. Feel free to commit bugs/patches.
 This scripts are pretended to be used to automate installation or deployment of Kali Linux.
 Every script can be launched separately except helper.sh which us just a functions storage file.
 
+    autoinstall.sh - install ALL in AUTO mode
     desktop.sh - desktop environment installation and postinstall configuration (Gnome, XFCE, KDE)
     dev.sh - developer tools (GCC, Python, Ruby)
     embedded.sh - embedded developer toolchains (MIPS, ARM)
