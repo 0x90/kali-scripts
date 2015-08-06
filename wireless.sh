@@ -10,6 +10,34 @@ install_wifi_dependencies(){
     aircrack-ng sqlite3 libsqlite3-dev libssl-dev -y
 }
 
+install_patched_wireless_db(){
+    print_status "Installing dependencies for building wireless-db"
+    apt-get install -y python-m2crypto libgcrypt11 libgcrypt11-dev libnl-dev git gcc
+
+    print_status "Cloning repos.."
+    cd /tmp
+    git clone https://github.com/0x90/crda-ct
+    git clone https://github.com/0x90/wireless-regdb
+
+
+    print_status "Building and installing dependencies for building wireless-db"
+    cd wireless-regdb/
+    make && cp regulatory.bin /lib/crda/regulatory.bin
+
+    print_status "Copying certs.."
+    cp root.key.pub.pem ../crda-ct/pubkeys/
+    cp /lib/crda/pubkeys/benh@debian.org.key.pub.pem ../crda-ct/pubkeys/
+
+    print_status "Building and installing CRDA"
+    cd ../crda-ct
+    make && make install
+
+    print_status "Cleanup.."
+    cd /tmp
+    rm -rf crda-ct
+    rm -rf wireless-db
+}
+
 # https://forums.kali.org/showthread.php?25715-How-to-install-Wifite-mod-pixiewps-and-reaver-wps-fork-t6x-to-nethunter
 install_wifite_fork(){
     cd /tmp
@@ -115,6 +143,11 @@ install_radius_wpe(){
 
 install_wifi(){
     install_wifi_dependencies
+
+    if ask "Install patched wireless-db?" Y; then
+        install_patched_wireless_db
+    fi
+
     if ask "Install wifite-fork + pixie-wps?" Y; then
         install_wifite_fork
     fi
