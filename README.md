@@ -23,3 +23,6 @@ Every script can be launched separately except helper.sh which us just a functio
     vm.sh - script to install vm hypervisors or vm tools (VirtualBox, VMWare, Parallels)
     wireless.sh - wireless stuff (WiFi, Bluetooth, SDR)
 
+## Deploy
+
+Development in progress
