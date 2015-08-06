@@ -5,14 +5,14 @@
 install_wifi_dependencies(){
     print_status "Installing WiFi tools and dependecies"
     apt_super_upgrade
-    sudo apt-get install linux-headers-$(uname -r) build-essential make patch openssl libssl-dev zlib1g zlib1g-dev libssh2-1-dev  \
-    gettext libpcap0.8 libpcap0.8-dev python-scapy python-dev cracklib-runtime macchanger-gtk tshark ethtool iw libpcap-dev \
-    aircrack-ng sqlite3 libsqlite3-dev libssl-dev -y
+    sudo apt-get install -y linux-headers-$(uname -r) build-essential make patch openssl libssl-dev zlib1g zlib1g-dev libssh2-1-dev  \
+    gettext libpcap0.8 libpcap0.8-dev python-scapy python-dev cracklib-runtime tshark ethtool iw libpcap-dev \
+    aircrack-ng sqlite3 libsqlite3-dev libssl-dev kali-linux-wireless
 }
 
 install_patched_wireless_db(){
     print_status "Installing dependencies for building wireless-db"
-    apt-get install -y python-m2crypto libgcrypt11 libgcrypt11-dev libnl-dev git gcc
+    apt-get install -y python-m2crypto libgcrypt11 libgcrypt11-dev libnl-genl-3-dev git gcc
 
     print_status "Cloning repos.."
     cd /tmp
@@ -41,8 +41,7 @@ install_patched_wireless_db(){
 # https://forums.kali.org/showthread.php?25715-How-to-install-Wifite-mod-pixiewps-and-reaver-wps-fork-t6x-to-nethunter
 install_wifite_fork(){
     cd /tmp
-    mkdir backup
-    cd backup
+
     git clone https://github.com/derv82/wifite.git
     git clone https://github.com/aanarchyy/wifite-mod-pixiewps.git
     git clone https://github.com/t6x/reaver-wps-fork-t6x.git
@@ -50,13 +49,19 @@ install_wifite_fork(){
 
     cd pixiewps/src/
     make && make install
-    cd /tmp/backup/reaver-wps-fork-t6x/src/
+    cd /tmp/reaver-wps-fork-t6x/src/
     ./configure && make && make install
 
-    cp /tmp/backup/wifite/wifite.py /usr/bin/wifite
+    cp /tmp/wifite/wifite.py /usr/bin/wifite-old
+    chmod +x /usr/bin/wifite-old
+    cp /tmp/wifite-mod-pixiewps/wifite /usr/bin/wifite
     chmod +x /usr/bin/wifite
-    cp /tmp/backup/wifite-mod-pixiewps/wifite-ng /usr/bin/wifite-ng
-    chmod +x /usr/bin/wifite-ng
+
+    cd /tmp
+    rm -rf wifite
+    rm -rf wifite-mod-pixiewps
+    rm -rf reaver-wps-fork-t6x
+    rm -rf pixiewps
 }
 
 install_lorcon(){
@@ -148,16 +153,17 @@ install_wifi(){
         install_patched_wireless_db
     fi
 
-    if ask "Install wifite-fork + pixie-wps?" Y; then
-        install_wifite_fork
+    if ask "Install horst (Wireless L2 sniffer)?" Y; then
+        install_horst
     fi
 
     if ask "Install Lorcon library with python and ruby bindings?" Y; then
         install_lorcon
     fi
 
-    if ask "Install horst (Wireless L2 sniffer)?" Y; then
-        install_horst
+    # Fresh version of wifite is available via apt-get
+    if ask "Install wifite-fork + pixie-wps from source?" N; then
+        install_wifite_fork
     fi
 
     if ask "Install pyrit from source?" N; then
