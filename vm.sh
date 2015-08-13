@@ -90,12 +90,12 @@ install_parallels_tools(){
 
 install_vm_host(){
     # TODO: Check if VT is available
-    if ask "Do you want to install VirtualBox?" Y; then
+    if ask "Do you want to install VirtualBox?" N; then
         echo "Installing VirtualBox..."
         install_virtualbox
     fi
 
-    if ask "Do you want to install QEMU?" Y; then
+    if ask "Do you want to install QEMU?" N; then
         echo "Installing QEMU..."
         apt-get install qemu-system-arm qemu-system-mips qemu-system-common qemu-system-x86 qemu virt-manager virtinst -y
     fi
@@ -114,10 +114,11 @@ install_vm_tools(){
 }
 
 install_vm(){
-    # TODO: Check if running under VM
-    # http://www.dmo.ca/blog/detecting-virtualization-on-linux/
-    install_vm_host
+    # # http://www.dmo.ca/blog/detecting-virtualization-on-linux/
     install_vm_tools
+
+
+    install_vm_host
 #    install_parallels_tools
 #    apt-get install virt-what
 

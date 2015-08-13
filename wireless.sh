@@ -12,7 +12,7 @@ install_wifi_dependencies(){
 
 install_patched_wireless_db(){
     print_status "Installing dependencies for building wireless-db"
-    apt-get install -y python-m2crypto libgcrypt11 libgcrypt11-dev libnl-genl-3-dev git gcc
+    apt-get install -y python-m2crypto libgcrypt11 libgcrypt11-dev libnl-genl-3 libnl-genl-3-dev git gcc
 
     print_status "Cloning repos.."
     cd /tmp
@@ -54,8 +54,8 @@ install_wifite_fork(){
 
     cp /tmp/wifite/wifite.py /usr/bin/wifite-old
     chmod +x /usr/bin/wifite-old
-    cp /tmp/wifite-mod-pixiewps/wifite /usr/bin/wifite
-    chmod +x /usr/bin/wifite
+    cp /tmp/wifite-mod-pixiewps/wifite-ng /usr/bin/wifite-ng
+    chmod +x /usr/bin/wifite-ng
 
     cd /tmp
     rm -rf wifite
