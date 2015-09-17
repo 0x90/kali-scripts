@@ -26,3 +26,7 @@ Every script can be launched separately except helper.sh which us just a functio
 ## Deploy
 
 Development in progress
+
+## TODO
+
+https://www.offensive-security.com/kali-linux/top-10-post-install-tips/
