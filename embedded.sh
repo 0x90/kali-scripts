@@ -2,15 +2,18 @@
 #
 . postinstall.sh
 
-
-install_binwalk(){
-    # Install sasquatch to extract non-standard SquashFS images
+install_sasquatch(){
+    print_status "Installing sasquatch dependencies"
+    sudo apt-get install build-essential liblzma-dev liblzo2-dev zlib1g-dev
+    
     cd /tmp
+    print_status "Install sasquatch to extract non-standard SquashFS images"
     git clone https://github.com/devttys0/sasquatch
     cd sasquatch && make && sudo make install
     cd .. && rm -rf /tmp/sasquatch
+}
 
-    # https://github.com/devttys0/binwalk/blob/master/INSTALL.md
+install_binwalk(){
     print_status "Installing binwalk dependencies"
     apt-get install python-lzma libqt4-opengl python-opengl python-qt4 python-qt4-gl python-numpy python-scipy python-pip
 
@@ -61,6 +64,10 @@ install_embedded(){
 
     if ask "Install Emdebian crossdev?" Y; then
         install_emdebian
+    fi
+    
+    if ask "Install sasquatch?" Y; then
+        install_sasquatch
     fi
 
     if ask "Install binwalk and dependencies?" Y; then
