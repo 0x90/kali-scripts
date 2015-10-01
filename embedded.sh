@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
-#
+# TODO: add https://github.com/pieceofsummer/squashfs-tools
+# TODO: install from git
+# https://github.com/devttys0/binwalk
+
 . postinstall.sh
 
 install_sasquatch(){
