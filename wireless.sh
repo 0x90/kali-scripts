@@ -146,6 +146,12 @@ install_radius_wpe(){
     fi
 }
 
+install_hotspotd(){
+  git clone https://github.com/prahladyeri/hotspotd
+  cd hotspotd
+  sudo python2 setup.py install
+}
+
 install_wifi(){
     install_wifi_dependencies
 
@@ -176,6 +182,10 @@ install_wifi(){
 
     if ask "Install freeradius server 2.1.11 with WPE patch?" N; then
         install_radius_wpe
+    fi
+
+    if ask "Install hotspotd?" N; then
+        install_hotspotd
     fi
 }
 
@@ -267,4 +277,3 @@ install_wireless(){
 if [ "${0##*/}" = "wireless.sh" ]; then
     install_wireless
 fi
-
