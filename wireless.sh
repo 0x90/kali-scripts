@@ -69,7 +69,7 @@ install_lorcon(){
     cd /tmp
     git clone https://github.com/0x90/lorcon
     cd lorcon
-    ./configure && make && make install
+    ./configure --prefix=/usr && make && make install
 
     # install pylorcon
     echo "Install pylorcon2"
