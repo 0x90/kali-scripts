@@ -203,17 +203,6 @@ install_bluetooth(){
     if ask "Install ubertooth hacking tools?" Y; then
         print_status "Installing  pyusb-1.0.0b1"
         pip install https://github.com/walac/pyusb/archive/1.0.0b1.tar.gz
-        # PyUSB 1.0 is not yet available from the Debian, Ubuntu or Homebrew repositories,
-        #if you don't already have it installed you will need to fetch and build it as follows:
-#        cd /tmp
-#        wget https://github.com/walac/pyusb/archive/1.0.0b1.tar.gz -O pyusb-1.0.0b1.tar.gz
-#        tar xvf pyusb-1.0.0b1.tar.gz
-#        cd pyusb-1.0.0b1
-#        sudo python setup.py install
-#
-#        cd /tmp
-#        rm pyusb-1.0.0b1.tar.gz
-#        rm -rf pyusb-1.0.0b1
 
         print_status "Installing libbtbb from sources"
         wget https://github.com/greatscottgadgets/libbtbb/archive/2014-02-R2.tar.gz -O libbtbb-2014-02-R2.tar.gz
