@@ -148,7 +148,8 @@ install_radius_wpe(){
 }
 
 install_hotspotd(){
-  git clone https://github.com/prahladyeri/hotspotd
+  cd /tmp
+  git clone https://github.com/0x90/hotspotd
   cd hotspotd
   sudo python2 setup.py install
 }
