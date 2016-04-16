@@ -5,7 +5,7 @@
 install_wifi_dependencies(){
     print_status "Installing WiFi tools and dependecies"
     apt_super_upgrade
-    sudo apt-get install -y linux-headers-$(uname -r) build-essential make patch openssl libssl-dev zlib1g zlib1g-dev libssh2-1-dev  \
+    sudo apt-get install -y build-essential make patch openssl libssl-dev zlib1g zlib1g-dev libssh2-1-dev  \
     gettext libpcap0.8 libpcap0.8-dev python-scapy python-dev cracklib-runtime tshark ethtool iw libpcap-dev \
     aircrack-ng sqlite3 libsqlite3-dev libssl-dev kali-linux-wireless
 }
@@ -40,6 +40,7 @@ install_patched_wireless_db(){
 
 # https://forums.kali.org/showthread.php?25715-How-to-install-Wifite-mod-pixiewps-and-reaver-wps-fork-t6x-to-nethunter
 install_wifite_fork(){
+    apt-get install libsqlite3-dev libpcap-dev -y
     cd /tmp
 
     git clone https://github.com/derv82/wifite.git
