@@ -108,6 +108,15 @@ install_horst(){
     rm -rf /tmp/horst
 }
 
+install_penetrator(){
+    apt-get install libpcap-dev libssl-dev -y
+    cd /tmp
+    git clone https://github.com/xXx-stalin-666-money-xXx/penetrator-wps.git 
+    cd penetrator-wps/
+    ./install.sh 
+    cp penetrator /usr/bin
+}
+
 install_aircrack_svn(){
     if [ -d /opt/aircrack-ng-svn ]; then
         cd /opt/aircrack-ng-svn
