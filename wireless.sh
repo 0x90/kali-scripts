@@ -194,7 +194,7 @@ install_wifi(){
     if ask "Install freeradius server 2.1.11 with WPE patch?" N; then
         install_radius_wpe
     fi
-    
+
     if ask "Install pyrit from source?" N; then
         install_pyrit
     fi
@@ -217,36 +217,9 @@ install_bluetooth(){
     apt-get install -y libopenobex1:i386 libopenobex1-dev:i386 libbluetooth-dev:i386
 
     if ask "Install ubertooth hacking tools?" Y; then
-        print_status "Installing  pyusb-1.0.0b1"
-        pip install https://github.com/walac/pyusb/archive/1.0.0b1.tar.gz
-
-        print_status "Installing libbtbb from sources"
-        wget https://github.com/greatscottgadgets/libbtbb/archive/2014-02-R2.tar.gz -O libbtbb-2014-02-R2.tar.gz
-        tar xf libbtbb-2014-02-R2.tar.gz
-        cd libbtbb-2014-02-R2
-        mkdir build
-        cd build
-        cmake .. && make && make install
-
-        print_status "Installing ubertooth"
-        wget https://github.com/greatscottgadgets/ubertooth/archive/2014-02-R2.tar.gz -O ubertooth-2014-02-R2.tar.gz
-        tar xf ubertooth-2014-02-R2.tar.gz
-        cd ubertooth-2014-02-R2/host
-        mkdir build
-        cd build
-        cmake .. && make && make install
-
-        if ask "Install bluetooth hacking tools?" Y; then
-            print_status "Installing dependencies for bluetooth hacking"
-            sudo apt-get install libpcap0.8-dev libcap-dev pkg-config build-essential libnl-dev libncurses-dev libpcre3-dev libpcap-dev libcap-dev
-
-            wget https://kismetwireless.net/code/kismet-2013-03-R1b.tar.xz
-            tar xf kismet-2013-03-R1b.tar.xz
-            cd kismet-2013-03-R1b
-            ln -s ../ubertooth-2014-02-R2/host/kismet/plugin-ubertooth .
-            ./configure && make && make plugins && make suidinstall && make plugins-install
-            # echo Add "pcapbtbb" to the "logtypes=..." line in kismet.conf
-        fi
+      print_status "Installing dependencies for bluetooth hacking"
+      sudo apt-get install libpcap0.8-dev libcap-dev pkg-config build-essential libnl-dev libncurses-dev libpcre3-dev libpcap-dev \
+      libcap-dev obexfs redfang spooftooph sakis3g ubertooth gpsd btscanner bluelog  bluesnarfer bluez-tools bluewho
 
         if ask "Install bluetooth hacking tools?" Y; then
             print_status "Installing dependencies for bluetooth hacking"
