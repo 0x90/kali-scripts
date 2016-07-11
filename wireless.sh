@@ -78,10 +78,10 @@ install_lorcon(){
     python setup.py build && python setup.py install
 
     # to make lorcon available to metasploit
-    echo "Install ruby lorcon"
-    cd ../ruby-lorcon/
-    ruby extconf.rb
-    make && make install
+    # echo "Install ruby lorcon"
+    # cd ../ruby-lorcon/
+    # ruby extconf.rb
+    # make && make install
 }
 
 install_pyrit(){
@@ -111,9 +111,9 @@ install_horst(){
 install_penetrator(){
     apt-get install libpcap-dev libssl-dev -y
     cd /tmp
-    git clone https://github.com/xXx-stalin-666-money-xXx/penetrator-wps.git 
+    git clone https://github.com/xXx-stalin-666-money-xXx/penetrator-wps.git
     cd penetrator-wps/
-    ./install.sh 
+    ./install.sh
     cp penetrator /usr/bin
 }
 
@@ -179,10 +179,22 @@ install_wifi(){
     fi
 
     # Fresh version of wifite is available via apt-get
-    if ask "Install wifite-fork + pixie-wps from source?" N; then
+    if ask "Install wifite-fork + pixie-wps from source?" Y; then
         install_wifite_fork
     fi
 
+    if ask "Install WPS penetrator?" Y; then
+        install_penetrator
+    fi
+
+    if ask "Install hotspotd?" Y; then
+        install_hotspotd
+    fi
+
+    if ask "Install freeradius server 2.1.11 with WPE patch?" N; then
+        install_radius_wpe
+    fi
+    
     if ask "Install pyrit from source?" N; then
         install_pyrit
     fi
@@ -191,13 +203,6 @@ install_wifi(){
         install_aircrack_svn
     fi
 
-    if ask "Install freeradius server 2.1.11 with WPE patch?" N; then
-        install_radius_wpe
-    fi
-
-    if ask "Install hotspotd?" N; then
-        install_hotspotd
-    fi
 }
 
 install_bluetooth(){
