@@ -30,6 +30,8 @@ install_patched_wireless_db(){
 
     print_status "Building and installing CRDA"
     cd ../crda-ct
+    # REG_BIN path fix for Kali Linux
+    export REG_BIN=/lib/crda/regulatory.bin
     make && make install
 
     print_status "Cleanup.."
