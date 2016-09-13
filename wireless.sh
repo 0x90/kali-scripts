@@ -34,8 +34,7 @@ install_patched_wireless_db(){
 
     print_status "Cleanup.."
     cd /tmp
-    rm -rf crda-ct
-    rm -rf wireless-db
+    rm -rf crda-ct wireless-db
 }
 
 # https://forums.kali.org/showthread.php?25715-How-to-install-Wifite-mod-pixiewps-and-reaver-wps-fork-t6x-to-nethunter
