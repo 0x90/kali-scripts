@@ -167,15 +167,15 @@ install_hotspotd(){
 }
 
 install_wifi(){
-    install_wifi_dependencies
+    install_wifi_basic
 
     if ask "Install patched wireless-db?" Y; then
         install_patched_wireless_db
     fi
 
-    if ask "Install horst (Wireless L2 sniffer)?" Y; then
-        install_horst
-    fi
+    #if ask "Install horst (Wireless L2 sniffer)?" Y; then
+    #    install_horst
+    #fi
 
     if ask "Install Lorcon library with python and ruby bindings?" Y; then
         install_lorcon
@@ -194,17 +194,17 @@ install_wifi(){
         install_hotspotd
     fi
 
-    if ask "Install freeradius server 2.1.11 with WPE patch?" N; then
-        install_radius_wpe
-    fi
+    #if ask "Install freeradius server 2.1.11 with WPE patch?" N; then
+    #    install_radius_wpe
+    #fi
 
-    if ask "Install pyrit from source?" N; then
-        install_pyrit
-    fi
+    #if ask "Install pyrit from source?" N; then
+    #    install_pyrit
+    #fi
 
-    if ask "Install aircrack-ng from SVN?" N; then
-        install_aircrack_svn
-    fi
+    #if ask "Install aircrack-ng from SVN?" N; then
+    #    install_aircrack_svn
+    #fi
 
 }
 
@@ -257,5 +257,5 @@ install_wireless(){
 
 if [ "${0##*/}" = "wireless.sh" ]; then
     #install_wireless
-    install_wifi_basic
+    install_wifi
 fi
