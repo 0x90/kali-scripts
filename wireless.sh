@@ -2,12 +2,14 @@
 #
 . helper.sh
 
-install_wifi_dependencies(){
+install_wifi_basic(){
+    print_status "Installing WiFi dependecies..."
+    sudo apt-get install -y build-essential make patch openssl pkg-config libssl-dev zlib1g zlib1g-dev libssh2-1-dev  \
+    gettext libpcap0.8 libpcap0.8-dev python-scapy python-dev cracklib-runtime libpcap-dev sqlite3 libsqlite3-dev libssl-dev
+
     print_status "Installing WiFi tools and dependecies"
-    apt_super_upgrade
-    sudo apt-get install -y build-essential make patch openssl libssl-dev zlib1g zlib1g-dev libssh2-1-dev  \
-    gettext libpcap0.8 libpcap0.8-dev python-scapy python-dev cracklib-runtime tshark ethtool iw libpcap-dev \
-    aircrack-ng sqlite3 libsqlite3-dev libssl-dev kali-linux-wireless
+    sudo apt-get install -y kali-linux-wireless aircrack-ng kismet kismet-plugins giskismet horst wavemon urfkill \
+    hostapd dnsmasq iw tshark horst linssid cupid-wpasupplicant cupid-hostapd
 }
 
 install_patched_wireless_db(){
@@ -241,7 +243,7 @@ install_sdr(){
 
 install_wireless(){
     if ask "Install WiFi hacking tools?" Y; then
-        install_wifi
+        install_wifi_basic
     fi
 
     if ask "Install Bluetooth hacking tools + Kismet + BTBB from source?" N; then
@@ -254,5 +256,6 @@ install_wireless(){
 }
 
 if [ "${0##*/}" = "wireless.sh" ]; then
-    install_wireless
+    #install_wireless
+    install_wifi_basic
 fi
