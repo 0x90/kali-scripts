@@ -75,7 +75,7 @@ list:
 #sshd: sshd-root sshd-keys sshd-forwarding
 
 ##: deps - install dependecies                                 *
-deps:	archivers common-tools 32bit
+deps:	archivers common-tools
 
 #: dev - install ALL development tools                         *
 dev: archivers deps common-tools dev-vcs dev-python dev-net
@@ -121,7 +121,7 @@ upgrade:
 ##: archivers - install archivers
 archivers:
 	@echo "installing archivers.."
-	@apt-get -y install gzip bzip2 tar lzma arj lhasa p7zip-full cabextract unace rar unrar zip unzip \
+	@apt-get -y install gzip bzip2 tar lzma arj lhasa p7zip-full cabextract unace  unrar zip unzip \
 	sharutils uudeview mpack cabextract file-roller zlib1g zlib1g-dev liblzma-dev liblzo2-dev
 
 ##: 32bit - install 32 bit tools and libraries
@@ -230,7 +230,7 @@ dev-python:	dev-vcs dev-db dev-crypto
 	@echo "installing pyenv, pip and other python modules"
 	apt-get install -y python-dev bpython python-pip python-twisted python-shodan  \
 	python-virtualenv python-pygments python-tornado python-sqlalchemy python-lxml python-pymongo \
-	python-gnuplot python-matplotlib python-pandas python-scipy python-requests python-gevent \
+	python-gnuplot python-matplotlib python-scipy python-requests python-gevent \
 	python-numpy python-gi-dev python-psycopg2 swig doxygen python-lzma \
 	python-opengl python-qt4 python-qt4-gl libqt4-opengl python-pyqtgraph python-pyside \
 	python3 python3-pip
