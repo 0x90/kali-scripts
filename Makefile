@@ -14,9 +14,10 @@ THIS := ${TOP}/Makefile
 ROOT_DIR := ${CURDIR}
 # ROOT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 # KERNEL=4.2-1	# Release of drivers for kernel 4.2	a year ago
-KERNEL=4.4-1
+# KERNEL=4.4-1
 # KERNEL=4.7.4-experimental-1	#Add experimental release for 4.7.y kernels	2 months ago
-MODWIFI_RELEASE=modwifi-${KERNEL}.tar.gz
+# MODWIFI_RELEASE=modwifi-${KERNEL}.tar.gz
+MODWIFI_RELEASE=modwifi-4.7.4-experimental-1.tar.gz
 MODWIFI_URL=https://github.com/vanhoefm/modwifi/raw/master/releases/${MODWIFI_RELEASE}
 .DEFAULT_GOAL := help
 .PHONY: help clean archivers 32bit common-tools deps wifi wireless-db reaver
@@ -304,20 +305,44 @@ wireless-penetrator:
 	$(call gitclone,https://github.com/xXx-stalin-666-money-xXx/penetrator-wps)
 	cd $(repo) && ./install.sh;
 
-#: modwifi - install modwifi drivers and firmware
-modwifi:	wireless-modwifi-drivers
-wireless-modwifi-drivers:
-	mkdir -p ${TMPDIR}/modwifi
-	cd ${TMPDIR}/modwifi && wget ${MODWIFI_URL} && tar -xf modwifi-*.tar.gz
-	# tar -xf ${MODWIFI_RELEASE}	#tar -xf modwifi-*.tar.gz
-	cd ${TMPDIR}/modwifi/drivers && make defconfig-ath9k-debug && make && make install && cd ..
-	# Note: the location and name of firmware files on your machine may be different
-	compgen -G /lib/firmware/ath9k_htc/*backup || for FILE in /lib/firmware/ath9k_htc/*; do sudo cp $FILE ${FILE}_backup; done
-	sudo cp target_firmware/htc_7010.fw /lib/firmware/ath9k_htc/htc_7010-1.4.0.fw
-	sudo cp target_firmware/htc_9271.fw /lib/firmware/ath9k_htc/htc_9271-1.4.0.fw
+wireless-modwifi-dependencies:
+	@echo "Installing modwifi dependencies"
+	apt-get install -y kernel-package ncurses-dev fakeroot linux-source
+	@echo "Downloading modwifi: %{MODWIFI_RELEASE}"
+	@if [ ! -d ${TMPDIR}/modwifi ]; then \
+		mkdir -p ${TMPDIR}/modwifi ; \
+		cd ${TMPDIR}/modwifi && wget ${MODWIFI_URL} && tar -xzf modwifi-*.tar.gz ; \
+	else \
+		echo "Found downloaded modwifi release."; \
+	fi;
 
-	sudo apt-get install g++ libssl-dev libnl-3-dev libnl-genl-3-dev
-	cd tools && make all
+wireless-modwifi-drivers:
+	@echo "Installing modwifi drivers..."
+	cd ${TMPDIR}/modwifi/drivers && make defconfig-ath9k-debug && make && make install
+
+wireless-modwifi-firmware:
+	@echo "Backuping ath9k_htc firmware..."
+	cp /lib/firmware/ath9k_htc/htc_7010-1.4.0.fw /lib/firmware/ath9k_htc/htc_7010-1.4.0.fw.bak
+	cp /lib/firmware/ath9k_htc/htc_9271-1.4.0.fw /lib/firmware/ath9k_htc/htc_9271-1.4.0.fw.bak
+	@echo "Installing modwifi firmware..."
+	# compgen -G /lib/firmware/ath9k_htc/*backup || for FILE in /lib/firmware/ath9k_htc/*; do sudo cp $FILE ${FILE}_backup; done
+	cp ${TMPDIR}/modwifi/target_firmware/htc_7010.fw /lib/firmware/ath9k_htc/htc_7010-1.4.0.fw
+	cp ${TMPDIR}/modwifi/target_firmware/htc_9271.fw /lib/firmware/ath9k_htc/htc_9271-1.4.0.fw
+
+wireless-modwifi-tools:
+	@echo "Installing modwifi tools"
+	apt-get install -y g++ libssl-dev libnl-3-dev libnl-genl-3-dev
+	mkdir -p ${TMPDIR}/modwifi/tools/build
+	cd ${TMPDIR}/modwifi/tools/build && cmake .. && make all
+	install ${TMPDIR}/modwifi/tools/build/channelmitm /usr/bin
+	install ${TMPDIR}/modwifi/tools/build/constantjam /usr/bin
+	install ${TMPDIR}/modwifi/tools/build/fastreply /usr/bin
+	install ${TMPDIR}/modwifi/tools/build/reactivejam /usr/bin
+
+#: modwifi - install modwifi drivers and firmware
+modwifi: wireless-modwifi
+
+wireless-modwifi:	wireless-modwifi-dependencies wireless-modwifi-drivers wireless-modwifi-firmware wireless-modwifi-tools
 
 ##: wireless-radius-wpe - install Radius-WPE
 wireless-radius-wpe:
@@ -465,6 +490,10 @@ firmware-crossdev:	deps
 firmware-openwrt:	deps
 	@echo "installing OpenWRT"
 
+# diy
+diy:
+	apt-get install python-rpi.gpio python-smbus i2c-tools
+	pip install spidev
 
 ##: hardware - install generic hardware hacking tools
 hardware-generic:	deps dev
