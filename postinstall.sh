@@ -5,8 +5,7 @@
 install_archivers(){
     print_status "Installing archivers.."
     apt-get -y install gzip bzip2 tar lzma arj lhasa p7zip-full cabextract unace rar unrar zip unzip \
-    sharutils uudeview mpack arj cabextract file-roller \
-    zlib1g zlib1g-dev liblzma-dev liblzo2-dev
+    sharutils uudeview mpack arj cabextract file-roller zlib1g zlib1g-dev liblzma-dev liblzo2-dev
 }
 
 install_32bit(){
@@ -20,7 +19,7 @@ install_32bit(){
 
 install_common_tools(){
     print_status "Installing common tools.."
-    apt-get install -y terminator tmux htop iftop iotop mc screen curl wget
+    apt-get install -y terminator tmux htop iftop iotop mc screen curl wget git
 }
 
 install_zsh(){

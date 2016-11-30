@@ -1,0 +1,85 @@
+diff -rupN drivers/drivers/net/wireless/ath/ath9k/common-init.c drivers-patched/drivers/net/wireless/ath/ath9k/common-init.c
+--- drivers/drivers/net/wireless/ath/ath9k/common-init.c	2016-09-19 17:39:30.000000000 +0300
++++ drivers-patched/drivers/net/wireless/ath/ath9k/common-init.c	2016-11-29 17:38:10.000000000 +0300
+@@ -23,6 +23,7 @@
+ 	.center_freq = (_freq), \
+ 	.hw_value = (_idx), \
+ 	.max_power = 20, \
++	.max_power = 30, \
+ }
+ 
+ #define CHAN5G(_freq, _idx) { \
+@@ -30,6 +31,7 @@
+ 	.center_freq = (_freq), \
+ 	.hw_value = (_idx), \
+ 	.max_power = 20, \
++	.max_power = 30, \
+ }
+ 
+ /* Some 2 GHz radios are actually tunable on 2312-2732
+@@ -37,6 +39,26 @@
+  * we have calibration data for all cards though to make
+  * this static */
+ static const struct ieee80211_channel ath9k_2ghz_chantable[] = {
++  CHAN2G(2312, 33), /* Channel -19 */
++	CHAN2G(2317, 32), /* Channel -18 */
++	CHAN2G(2322, 31), /* Channel -17 */
++	CHAN2G(2327, 30), /* Channel -16 */
++	CHAN2G(2332, 29), /* Channel -15 */
++	CHAN2G(2337, 28), /* Channel -14 */
++	CHAN2G(2342, 27), /* Channel -13 */
++	CHAN2G(2347, 26), /* Channel -12 */
++	CHAN2G(2352, 25), /* Channel -11 */
++	CHAN2G(2357, 24), /* Channel -10 */
++	CHAN2G(2362, 23), /* Channel -9 */
++	CHAN2G(2367, 22), /* Channel -8 */
++	CHAN2G(2372, 21), /* Channel -7 */
++	CHAN2G(2377, 20), /* Channel -6 */
++	CHAN2G(2382, 19), /* Channel -5 */
++	CHAN2G(2387, 18), /* Channel -4 */
++	CHAN2G(2392, 17), /* Channel -3 */
++	CHAN2G(2397, 16), /* Channel -2 */
++	CHAN2G(2402, 15), /* Channel -1 */
++	CHAN2G(2407, 14), /* Channel 0 */
+ 	CHAN2G(2412, 0), /* Channel 1 */
+ 	CHAN2G(2417, 1), /* Channel 2 */
+ 	CHAN2G(2422, 2), /* Channel 3 */
+diff -rupN drivers/drivers/net/wireless/ath/regd.c drivers-patched/drivers/net/wireless/ath/regd.c
+--- drivers/drivers/net/wireless/ath/regd.c	2016-09-19 17:39:29.000000000 +0300
++++ drivers-patched/drivers/net/wireless/ath/regd.c	2016-11-29 16:34:52.000000000 +0300
+@@ -33,7 +33,7 @@ static int __ath_regd_init(struct ath_re
+  */
+ 
+ /* Only these channels all allow active scan on all world regulatory domains */
+-#define ATH9K_2GHZ_CH01_11	REG_RULE(2412-10, 2462+10, 40, 0, 20, 0)
++#define ATH9K_2GHZ_CH01_11	REG_RULE(2312-10, 2462+10, 40, 0, 20, 0)
+ 
+ /* We enable active scan on these a case by case basis by regulatory domain */
+ #define ATH9K_2GHZ_CH12_13	REG_RULE(2467-10, 2472+10, 40, 0, 20,\
+diff -rupN drivers/net/wireless/util.c drivers-patched/net/wireless/util.c
+--- drivers/net/wireless/util.c	2016-09-19 17:39:30.000000000 +0300
++++ drivers-patched/net/wireless/util.c	2016-11-29 17:31:53.000000000 +0300
+@@ -69,14 +69,17 @@ int ieee80211_channel_to_frequency(int c
+ {
+ 	/* see 802.11 17.3.8.3.2 and Annex J
+ 	 * there are overlapping channel numbers in 5GHz and 2GHz bands */
+-	if (chan <= 0)
+-		return 0; /* not supported */
++	// if (chan <= 0)
++		// return 0; /* not supported */
+ 	switch (band) {
+ 	case NL80211_BAND_2GHZ:
+-		if (chan == 14)
+-			return 2484;
+-		else if (chan < 14)
+-			return 2407 + chan * 5;
++		return 2407 + chan * 5;
++		// if (chan == 14)
++		// 	return 2484;
++		// else if (chan < 14)
++		// 	return 2407 + chan * 5;
++		// else if ( (chan > 14) && (chan < 34) )
++		// 	return 2407 - (chan-15)*5, /* Channel -1 */
+ 		break;
+ 	case NL80211_BAND_5GHZ:
+ 		if (chan >= 182 && chan <= 196)

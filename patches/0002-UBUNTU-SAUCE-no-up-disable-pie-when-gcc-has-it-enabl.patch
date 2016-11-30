@@ -1,0 +1,52 @@
+From 1577157a0f2f49e1231653c5d20fa5a2d092d93a Mon Sep 17 00:00:00 2001
+From: Steve Beattie <steve.beattie@canonical.com>
+Date: Tue, 10 May 2016 12:44:04 +0100
+Subject: [PATCH 2/4] UBUNTU: SAUCE: (no-up) disable -pie when gcc has it
+ enabled by default
+
+In Ubuntu 16.10, gcc's defaults have been set to build Position
+Independent Executables (PIE) on amd64 and ppc64le (gcc was configured
+this way for s390x in Ubuntu 16.04 LTS). This breaks the kernel build on
+amd64. The following patch disables pie for x86 builds (though not yet
+verified to work with gcc configured to build PIE by default i386 --
+we're not planning to enable it for that architecture).
+
+The intent is for this patch to go upstream after expanding it to
+additional architectures where needed, but I wanted to ensure that
+we could build 16.10 kernels first. I've successfully built kernels
+and booted them with this patch applied using the 16.10 compiler.
+
+Patch is against yakkety.git, but also applies with minor movement
+(no fuzz) against current linus.git.
+
+Signed-off-by: Steve Beattie <steve.beattie@canonical.com>
+[apw@canonical.com: shifted up so works in arch/<arch/Makefile.]
+BugLink: http://bugs.launchpad.net/bugs/1574982
+Signed-off-by: Andy Whitcroft <apw@canonical.com>
+Acked-by: Tim Gardner <tim.gardner@canonical.com>
+Acked-by: Stefan Bader <stefan.bader@canonical.com>
+Signed-off-by: Kamal Mostafa <kamal@canonical.com>
+---
+ Makefile | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/Makefile b/Makefile
+index 5c18baa..e342473 100644
+--- a/Makefile
++++ b/Makefile
+@@ -612,6 +612,12 @@ endif # $(dot-config)
+ # Defaults to vmlinux, but the arch makefile usually adds further targets
+ all: vmlinux
+ 
++# force no-pie for distro compilers that enable pie by default
++KBUILD_CFLAGS += $(call cc-option, -fno-pie)
++KBUILD_CFLAGS += $(call cc-option, -no-pie)
++KBUILD_AFLAGS += $(call cc-option, -fno-pie)
++KBUILD_CPPFLAGS += $(call cc-option, -fno-pie)
++
+ # The arch Makefile can set ARCH_{CPP,A,C}FLAGS to override the default
+ # values of the respective KBUILD_* variables
+ ARCH_CPPFLAGS :=
+-- 
+2.7.4
+

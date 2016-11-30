@@ -1,4 +1,5 @@
 # kali-scripts reborn to Makefile
+# author: @090h
 #
 PROJECT := kali-scripts
 CC      := gcc
@@ -9,14 +10,10 @@ TMPDIR=/tmp/kali-scripts
 CRDADIR=/lib/crda
 CRDADB=${CRDADIR}/regulatory.bin
 TOP ?= $(shell pwd)
-# THIS := $(dir $(lastword $(MAKEFILE_LIST)))
 THIS := ${TOP}/Makefile
 ROOT_DIR := ${CURDIR}
-# ROOT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 # KERNEL=4.2-1	# Release of drivers for kernel 4.2	a year ago
 # KERNEL=4.4-1
-# KERNEL=4.7.4-experimental-1	#Add experimental release for 4.7.y kernels	2 months ago
-# MODWIFI_RELEASE=modwifi-${KERNEL}.tar.gz
 MODWIFI_RELEASE=modwifi-4.7.4-experimental-1.tar.gz
 MODWIFI_URL=https://github.com/vanhoefm/modwifi/raw/master/releases/${MODWIFI_RELEASE}
 .DEFAULT_GOAL := help
@@ -294,6 +291,10 @@ wireless-pyrit:	deps
 	$(call gitclone,https://github.com/JPaulMora/Pyrit)
 	cd $(repo) && python setup.py clean && python setup.py build && python setup.py install
 
+wireless-python: wireless-lorcon wireless-pyrit
+	@echo "Installling PyRIC"
+	pip install -e "git+https://github.com/wraith-wireless/PyRIC#egg=PyRIC"
+
 ##: horst - install horst from source
 wireless-horst:
 	$(call gitclone,git://br1.einfach.org/horst)
@@ -307,6 +308,7 @@ wireless-penetrator:
 
 wireless-modwifi-dependencies:
 	@echo "Installing modwifi dependencies"
+	# apt-get install -y g++ libssl-dev libnl-3-dev libnl-genl-3-dev
 	apt-get install -y kernel-package ncurses-dev fakeroot linux-source
 	@echo "Downloading modwifi: %{MODWIFI_RELEASE}"
 	@if [ ! -d ${TMPDIR}/modwifi ]; then \
@@ -315,6 +317,37 @@ wireless-modwifi-dependencies:
 	else \
 		echo "Found downloaded modwifi release."; \
 	fi;
+
+wireless-modwifi-kernel-git:
+	@echo "Installing modwifi kernel"
+	git clone -b research https://github.com/vanhoefm/modwifi-linux ${TMPDIR}/modwifi/linux
+	cd ${TMPDIR}/modwifi/linux && make && make install
+
+wireless-modwifi-ath9k-git:
+	@echo "Installing modwifi tools"
+	git clone -b research https://github.com/vanhoefm/modwifi-ath9k-htc ${TMPDIR}/modwifi/ath9k-htc
+	cd ${TMPDIR}/modwifi/ath9k-htc && make && make install
+
+wireless-modwifi-backports-git:
+	@echo "Installing modwifi backports dependencies"
+	apt-get install coccinelle splatch
+	@echo "Installing modwifi backports"
+	git clone -b research https://github.com/vanhoefm/modwifi-backports ${TMPDIR}/modwifi/backports
+	cd ${TMPDIR}/modwifi/backports && make && make install
+
+wireless-modwifi-tools-git:
+	@echo "Installing modwifi tools"
+	apt-get install -y g++ libssl-dev libnl-3-dev libnl-genl-3-dev
+	git clone -b master https://github.com/vanhoefm/modwifi-tools ${TMPDIR}/modwifi/tools
+	mkdir -p ${TMPDIR}/modwifi/tools/build
+	cd ${TMPDIR}/modwifi/tools/build && cmake .. && make all
+	install ${TMPDIR}/modwifi/tools/build/channelmitm /usr/bin
+	install ${TMPDIR}/modwifi/tools/build/constantjam /usr/bin
+	install ${TMPDIR}/modwifi/tools/build/fastreply /usr/bin
+	install ${TMPDIR}/modwifi/tools/build/reactivejam /usr/bin
+
+##: modwifi - install modwifi drivers and firmware from SOURCE *
+wireless-modwifi-git: wireless-modwifi-*
 
 wireless-modwifi-drivers:
 	@echo "Installing modwifi drivers..."
@@ -325,7 +358,6 @@ wireless-modwifi-firmware:
 	cp /lib/firmware/ath9k_htc/htc_7010-1.4.0.fw /lib/firmware/ath9k_htc/htc_7010-1.4.0.fw.bak
 	cp /lib/firmware/ath9k_htc/htc_9271-1.4.0.fw /lib/firmware/ath9k_htc/htc_9271-1.4.0.fw.bak
 	@echo "Installing modwifi firmware..."
-	# compgen -G /lib/firmware/ath9k_htc/*backup || for FILE in /lib/firmware/ath9k_htc/*; do sudo cp $FILE ${FILE}_backup; done
 	cp ${TMPDIR}/modwifi/target_firmware/htc_7010.fw /lib/firmware/ath9k_htc/htc_7010-1.4.0.fw
 	cp ${TMPDIR}/modwifi/target_firmware/htc_9271.fw /lib/firmware/ath9k_htc/htc_9271-1.4.0.fw
 
@@ -339,10 +371,40 @@ wireless-modwifi-tools:
 	install ${TMPDIR}/modwifi/tools/build/fastreply /usr/bin
 	install ${TMPDIR}/modwifi/tools/build/reactivejam /usr/bin
 
-#: modwifi - install modwifi drivers and firmware
+#: modwifi - install modwifi drivers and firmware             *
 modwifi: wireless-modwifi
 
 wireless-modwifi:	wireless-modwifi-dependencies wireless-modwifi-drivers wireless-modwifi-firmware wireless-modwifi-tools
+
+##: wireless-kernel - install specific kernel with patches      *
+wireless-kernel:
+	@echo "Installing kernel source dependencies"
+	@if [ ! -d /usr/src/linux-source-4.8 ]; then \
+		@echo "Unpacking kernel"; \
+		cd /usr/src/ && unxz linux-source-4.8.tar.xz && tar xvf linux-source-4.8.tar;\
+		# cd /usr/src/linux-source-4.8 ;\
+	fi;
+	@echo "Configuring kernel.."
+	cp /boot/config-4.8.0-kali1-amd64 /usr/src/linux-source-4.8/.config
+	scripts/config --disable CC_STACKPROTECTOR_STRONG
+	@echo "Applying kernel patches"
+	# http://kernel.ubuntu.com/~kernel-ppa/mainline/v4.8-rc2/0002-UBUNTU-SAUCE-no-up-disable-pie-when-gcc-has-it-enabl.patch
+	patch -p1 -d /usr/src/linux-source-4.8 < patches/0002-UBUNTU-SAUCE-no-up-disable-pie-when-gcc-has-it-enabl.patch
+	@echo "Building kernel package"
+	export CONCURRENCY_LEVEL=$(cat /proc/cpuinfo | grep processor | wc -l)
+	make-kpkg clean
+	fakeroot make-kpkg kernel_image
+
+	@echo "Install the Modified Kernel"
+	dpkg -i ../linux-image-3.14.5_3.14.5-10.00.Custom_amd64.deb
+	update-initramfs -c -k 3.14.5
+	update-grub2
+	reboot
+
+#: wireless-spectral - install spectral scan tools             *
+wireless-spectral:
+	# https://github.com/kazikcz/ath9k-spectral-scan
+	git clone https://github.com/bcopeland/speccy ${TMPDIR}/speccy
 
 ##: wireless-radius-wpe - install Radius-WPE
 wireless-radius-wpe:
@@ -400,6 +462,7 @@ nrf24-deps:
 	pip install -U pip
 	pip install -U -I pyusb
 	pip install -U platformio
+	# pio platform install timsp430 teensy  windows_x86 nxplpc espressif32 linux_arm ststm32 microchippic32
 
 nrf24-firmware:
 	# https://github.com/BastilleResearch/nrf-research-firmware
