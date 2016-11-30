@@ -292,8 +292,8 @@ wireless-pyrit:	deps
 	cd $(repo) && python setup.py clean && python setup.py build && python setup.py install
 
 wireless-python: wireless-lorcon wireless-pyrit
-	@echo "Installling basic python libs: scap"
-	apt-get install python-pip scapy libdnet libtins1 libpcap-dev python-dev
+	@echo "Installling basic python libs and dependencies.."
+	apt-get install python-pip scapy libdnet libtins1 libpcap-dev python-dev flex bison
 	@echo "Installling PyRIC (new Lorcon)"
 	pip install -e "git+https://github.com/wraith-wireless/PyRIC#egg=PyRIC"
 	@echo "Installling cycapture for libpcap/libtins bindings"
