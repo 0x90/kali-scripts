@@ -293,12 +293,13 @@ wireless-pyrit:	deps
 
 wireless-python: wireless-lorcon wireless-pyrit
 	@echo "Installling basic python libs: scap"
-	apt-get install python-pip scapy libdnet libtins1
+	apt-get install python-pip scapy libdnet libtins1 libpcap-dev python-dev
 	@echo "Installling PyRIC (new Lorcon)"
 	pip install -e "git+https://github.com/wraith-wireless/PyRIC#egg=PyRIC"
 	@echo "Installling cycapture for libpcap/libtins bindings"
-	pip install -e "git+https://github.com/stephane-martin/cycapture"
-	# https://github.com/mfontanini/pytins
+	pip install -e "git+https://github.com/stephane-martin/cycapture#egg=cycapture"
+	git clone https://github.com/mfontanini/pytins ${TMPDIR}/pytins
+	cd ${TMPDIR}/pytins && make && make install
 
 ##: horst - install horst from source
 wireless-horst:
