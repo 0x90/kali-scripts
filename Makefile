@@ -98,7 +98,7 @@ all: clean upgrade wireless wired
 
 #: help - display callable targets                             *
 help:
-	@echo "\n\t`printf "\033[32m"`\t    .:[Kali Scripts reb0rn to Makefile]:.`printf "\033[0m"`"
+	@echo "\n\t`printf "\033[32m"`\t     .:[Kali Scripts reb0rn to Makefile]:.`printf "\033[0m"`"
 	@echo "\t+--------------------------------------------------------------+"
 		@egrep -o "^#: (.+)" [Mm]akefile  |sort| sed "s/#: /	*  `printf "\033[32m"`/"| sed "s/ - /`printf "\033[0m"` - /"
 	@echo "\t+--------------------------------------------------------------+"
@@ -129,6 +129,15 @@ archivers:
 	dpkg --add-architecture i386
 	apt-get update -y
 	apt-get install -y libstdc++6:i386 libgcc1:i386 zlib1g:i386 libncurses5:i386
+
+#: kali - install Kali Linux repos and soft                    *
+kali:
+	echo "deb http://http.kali.org/kali kali-rolling main contrib non-free" > /etc/apt/sources.list
+	echo "deb-src http://http.kali.org/kali kali-rolling main contrib non-free" > /etc/apt/sources.list
+	sudo apt-get update -y
+	sudo apt-get install kali-archive-keyring -y
+	sudo apt-get update -y
+	sudo apt-get -y install kali-linux-wireless kali-linux-sdr
 
 ##: common-tools - install common tools
 common-tools:
@@ -377,12 +386,12 @@ wireless-modwifi-tools:
 	install ${TMPDIR}/modwifi/tools/build/fastreply /usr/bin
 	install ${TMPDIR}/modwifi/tools/build/reactivejam /usr/bin
 
-#: modwifi - install modwifi drivers and firmware             *
+#: modwifi - install modwifi drivers and firmware              *
 modwifi: wireless-modwifi
 
 wireless-modwifi:	wireless-modwifi-dependencies wireless-modwifi-drivers wireless-modwifi-firmware wireless-modwifi-tools
 
-##: wireless-kernel - install specific kernel with patches      *
+#: wireless-kernel - install EXPERIMENTAL kernel for WiFi      *
 wireless-kernel:
 	@echo "Installing kernel source dependencies"
 	@if [ ! -d /usr/src/linux-source-4.8 ]; then \
@@ -407,7 +416,7 @@ wireless-kernel:
 	update-grub2
 	reboot
 
-#: wireless-spectral - install spectral scan tools             *
+##: wireless-spectral - install spectral scan tools             *
 wireless-spectral:
 	# https://github.com/kazikcz/ath9k-spectral-scan
 	git clone https://github.com/bcopeland/speccy ${TMPDIR}/speccy
