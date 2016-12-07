@@ -87,8 +87,8 @@ hardware: dev hardware-generic hardware-signal
 #: firmware - install firmware RE/DEBUG/MOD tools              *
 firmware:	dev firmware-reverse firmware-crossdev firmware-avatar firmware-openwrt
 
-#: wireless - install tools for ISM, WiFi, Bluetooth, NRF24XX  *
-wireless: wifi bluetooth ism nrf24
+##: air - install tools for ISM, WiFi, Bluetooth, NRF24XX       *
+# air: wifi bluetooth ism nrf24
 
 #: wired - install everything for wired interfaces             *
 wired: hardware firmware
