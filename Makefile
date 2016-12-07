@@ -450,10 +450,10 @@ ism: ism-deps
 	apt-get install rfcat libusb-1.0-0 python-usb
 	# @echo "installing ISM hacking tools for 433/866/915Mhz"
 	# $(call gitclone,https://github.com/0x90/ism-arsenal)
-	@echo "RFCat"
-	hg clone https://bitbucket.org/atlas0fd00m/rfcat ${TMPDIR}/ism-arsenal/rfcat
-	sudo cp ${TMPDIR}/ism-arsenal/rfcat/etc/udev/rules.d/20-rfcat.rules /etc/udev/rules.d && sudo udevadm control --reload-rules
-	cd ${TMPDIR}/ism-arsenal/rfcat/firmware && ./build
+	# @echo "RFCat"
+	# hg clone https://bitbucket.org/atlas0fd00m/rfcat ${TMPDIR}/ism-arsenal/rfcat
+	# sudo cp ${TMPDIR}/ism-arsenal/rfcat/etc/udev/rules.d/20-rfcat.rules /etc/udev/rules.d && sudo udevadm control --reload-rules
+	# cd ${TMPDIR}/ism-arsenal/rfcat/firmware && ./build
 	# "make testgoodfet" will read info from your dongle using the GoodFET. you should see something like:
 	#
 	# SmartRF not found for this chip. Ident CC1111/r1103/ps0x0400 Freq 0.000 MHz RSSI 00
