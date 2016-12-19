@@ -100,7 +100,7 @@ all: clean upgrade wireless wired
 help:
 	@echo "\n\t`printf "\033[32m"`\t     .:[Kali Scripts reb0rn to Makefile]:.`printf "\033[0m"`"
 	@echo "\t+--------------------------------------------------------------+"
-		@egrep -o "^#: (.+)" [Mm]akefile  |sort| sed "s/#: /	*  `printf "\033[32m"`/"| sed "s/ - /`printf "\033[0m"` - /"
+	@egrep -o "^#: (.+)" [Mm]akefile  |sort| sed "s/#: /	*  `printf "\033[32m"`/"| sed "s/ - /`printf "\033[0m"` - /"
 	@echo "\t+--------------------------------------------------------------+"
 	@echo "\t\t`printf "\033[32m"`      greetz fly to all DC7499 community`printf "\033[0m"`"
 	@echo "\t\t`printf "\033[32m"`           ~~-<  @090h 2016  >-~~`printf "\033[0m"`\n"
@@ -304,6 +304,7 @@ wireless-pyrit:	deps
 	# @echo "installing Pyrit from source"
 	# $(call gitclone,https://github.com/JPaulMora/Pyrit)
 	# cd $(repo) && python setup.py clean && python setup.py build && python setup.py install
+# https://bitbucket.org/cybertools/scapy-radio/src
 
 wireless-python: wireless-lorcon wireless-pyrit dev
 	@echo "Installling basic python libs and dependencies.."
@@ -320,6 +321,25 @@ wireless-python: wireless-lorcon wireless-pyrit dev
 wireless-horst:
 	$(call gitclone,git://br1.einfach.org/horst)
 	cd $(repo) && make && install -m 755 horst /usr/bin/horst # cp horst /usr/bin
+
+wireless-atear:
+	@echo "Installing AtEar dependencies"
+	apt-get install -y aircrack-ng tshark hostapd python-dev python-flask python-paramiko python-psycopg2 python-pyodbc python-sqlite python-pip
+	cd /usr/share && git clone https://github.com/NORMA-Inc/AtEar.git
+	cd ./AtEar/
+	sudo bash install.sh
+
+#: wireless-jammer - install : mdk3, wifijammer, zizzania     *
+wireless-jammer:
+	@echo "Installing mdk3"
+	apt-get install -y mdk3
+	@echo "Installing wifijammer"
+	pip install -e "git+https://github.com/0x90/wifijammer#egg=wifijammer"
+	@echo "Installing zizzania dependencies"
+	apt-get install -y scons libpcap-dev uthash-dev
+	@echo "Installing zizzania"
+	$(call gitclone,https://github.com/cyrus-and/zizzania)
+	cd $(repo) && make && make install
 
 #: penetrator - install penetrator-wps from source             *
 penetrator: wireless-penetrator
