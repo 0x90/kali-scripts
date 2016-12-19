@@ -296,9 +296,14 @@ wireless-lorcon:
 
 #: pyrit - install latest version of Pyrit from sources        *
 wireless-pyrit:	deps
-	@echo "installing Pyrit"
-	$(call gitclone,https://github.com/JPaulMora/Pyrit)
-	cd $(repo) && python setup.py clean && python setup.py build && python setup.py install
+	# pip install scapy==2.3.2
+	apt-get install pyrit
+	# NB: Updating from 2.3.2 to 2.3.3 breaks pyrit
+	# https://github.com/JPaulMora/Pyrit/issues/500
+
+	# @echo "installing Pyrit from source"
+	# $(call gitclone,https://github.com/JPaulMora/Pyrit)
+	# cd $(repo) && python setup.py clean && python setup.py build && python setup.py install
 
 wireless-python: wireless-lorcon wireless-pyrit
 	@echo "Installling basic python libs and dependencies.."
