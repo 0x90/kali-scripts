@@ -300,15 +300,18 @@ wifi-pyrit:	deps
 #: wifi-python - install python libs and bindings for 80211    *
 wifi-python: wifi-lorcon wifi-pyrit dev
 	@echo "Installling basic python libs and dependencies.."
-	apt-get install python-pip scapy libdnet libtins-dev libpcap-dev python-dev flex bison
+	apt-get install -y python-pip scapy libdnet libtins-dev libpcap-dev python-dev flex bison
 	@echo "Installling PyRIC (new Lorcon)"
-	pip install -e "git+https://github.com/wraith-wireless/PyRIC#egg=PyRIC"
+	pip install "git+https://github.com/wraith-wireless/PyRIC#egg=PyRIC"
 	@echo "Installling cycapture for libpcap/libtins bindings"
-	pip install -e "git+https://github.com/stephane-martin/cycapture#egg=cycapture"
-	# pytins?
+	apt-get install libbluetooth-dev
+	# --enable-bluetooth=no
+	pip install "git+https://github.com/stephane-martin/cycapture#egg=cycapture"
+	@echo "Installling itame for dealing with MPDU/MSDU frames"
+	sudo pip install itamae
 	# git clone https://github.com/mfontanini/pytins ${TMPDIR}/pytins
 	# cd ${TMPDIR}/pytins && make && make install
-	sudo pip install itamae
+
 	# https://github.com/wraith-wireless/wraith
 	# https://github.com/0x90/py80211
 	# https://github.com/bcopeland/python-radiotap
@@ -393,7 +396,7 @@ wifi-jammer:
 	@echo "Installing mdk3"
 	apt-get install -y mdk3
 	@echo "Installing wifijammer"
-	pip install -e "git+https://github.com/0x90/wifijammer#egg=wifijammer"
+	pip install "git+https://github.com/0x90/wifijammer#egg=wifijammer"
 	# pip install git+https://github.com/llazzaro/wifijammer.git
 	@echo "Installing zizzania dependencies"
 	apt-get install -y scons libpcap-dev uthash-dev
@@ -405,9 +408,12 @@ wifi-jammer:
 wifi-attacks: wifi-jammer wifi-wps wifite
 
 ##: wireless-spectral - install spectral scan tools             *
-wireless-spectral:
+wifi-spectral:
 	# https://github.com/kazikcz/ath9k-spectral-scan
 	git clone https://github.com/bcopeland/speccy ${TMPDIR}/speccy
+
+##: wireless-spectral - install WiFi signal monitoring tools    *
+wifi-signal:
 	# https://github.com/terbo/sigmon
 	# https://github.com/s7jones/Wifi-Signal-Plotter
 
