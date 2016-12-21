@@ -149,11 +149,11 @@ dev-vcs:
 ##: dev-build - install build tools and environment
 dev-build:
 	@echo "Istalling development tools and environment"
-	@apt-get install -y cmake cmake-data module-assistant build-essential patch g++ gcc gcc-multilib
+	@apt-get install -y cmake cmake-data module-assistant build-essential patch g++ gcc gcc-multilib \
 	dkms patchutils strace wdiff pkg-config automake autoconf flex bison gawk flex gettext \
 	linux-headers-`uname -r` kernel-package linux-source libncurses5-dev libreadline6 libreadline6-dev \
 	libbz2-dev zlib1g-dev fakeroot ncurses-dev libtool libmagickcore-dev libmagick++-dev libmagickwand-dev \
-	libyaml-dev libxslt1-dev libxml2-dev libxslt-dev libc6-dev dkms python-pip 
+	libyaml-dev libxslt1-dev libxml2-dev libxslt-dev libc6-dev python-pip
 
 ##: dev-crypto - install crypto libraries
 dev-crypto:
