@@ -155,8 +155,18 @@ dev-build:
 	libbz2-dev zlib1g-dev fakeroot ncurses-dev libtool libmagickcore-dev libmagick++-dev libmagickwand-dev \
 	libyaml-dev libxslt1-dev libxml2-dev libxslt-dev libc6-dev
 
+##: dev-crypto - install crypto libraries
+dev-crypto:
+	@echo "installing crypto libs"
+	@apt-get install -y openssl libssl-dev python-m2crypto libgcrypt20 libgcrypt20-dev cracklib-runtime
+
+##: dev-db - install DB libraries
+dev-db:
+	@echo "installing db libs"
+	@apt-get install -y libsqlite3-dev sqlite3 libmysqlclient-dev
+
 ##: dev-python - install python developer environment            *
-dev-python:	dev-vcs database 
+dev-python:	dev-vcs dev-db
 	@echo "installing pyenv, pip and other python modules"
 	apt-get install -y python-dev bpython python-pip python-twisted python-shodan  \
 	python-virtualenv python-pygments python-tornado python-sqlalchemy python-lxml python-pymongo \
@@ -195,23 +205,8 @@ wifi-frequency-hacker:
 ################################# regdb ########################################
 
 ################################# libs #########################################
-##: crypto - install crypto libraries
-crypto:
-	@echo "installing crypto libs"
-	@apt-get install -y openssl libssl-dev python-m2crypto libgcrypt20 libgcrypt20-dev cracklib-runtime
-
-##: dev-crypto - install DB libraries
-db:
-	@echo "installing db libs"
-	@apt-get install -y libsqlite3-dev sqlite3 libmysqlclient-dev
-
-# #: libtins - C++ lib with rfmon, 802.11 and wep/wpa2 decrypt         *
-# libtins:
-# 	# pyopenssl?
-# 	apt-get install -y libtins libtins-dev
-
 ##: network - difrent network libraries                          *
-network:
+lib-network:
 	@echo "installing network libs"
 	@apt-get install -y libpcap-dev libpcap0.8 libpcap0.8-dev libdnet \
 	libnetfilter-queue-dev libnl-genl-3-dev libssh2-1-dev  libtins libtins-dev
