@@ -232,7 +232,8 @@ libuwifi:
 python:
 	@echo "Installling basic python libs and dependencies.."
 	apt-get install -y python-pip libdnet libtins-dev libpcap-dev python-dev flex bison
-	pip install wifi pythonwifi
+	pip install wifi
+	pip install "git+https://github.com/pingflood/pythonwifi.git"
 	@echo "Installling PyRIC (new Lorcon)"
 	pip install "git+https://github.com/wraith-wireless/PyRIC#egg=PyRIC"
 	@echo "Installling cycapture for libpcap+libtins bindings"
@@ -245,12 +246,13 @@ python:
 	git clone ${TMPDIR}/pytins && cd ${TMPDIR}/pytins && make && make install
 	@echo "Installing py80211"
 	pip install "git+https://github.com/0x90/py80211#egg=py80211"
+
 	# https://github.com/wraith-wireless/wraith
 	# https://github.com/bcopeland/python-radiotap
-	# https://github.com/br101/libuwifi
+	# https://github.com/weaknetlabs/libpcap-80211-c
 	# https://github.com/0x90/wifi-arsenal/tree/master/libmoep-1.1
 	# https://github.com/moepinet/moepdefend
-	# https://github.com/weaknetlabs/libpcap-80211-c
+
 ################################# libs ########################################
 
 ################################## WPA ########################################
@@ -280,11 +282,12 @@ aircrack:
 	svn co http://svn.aircrack-ng.org/trunk/scripts/airgraph-ng
 	cd airgraph-ng && make install
 
-##: handshaker - install tool for easy handshake capture       *
+#: handshaker - install tool for easy handshake capture       *
 handshaker:	deps reaver pixiewps
 	apt-get install -y beep bc
 	$(call gitclone,https://github.com/d4rkcat/HandShaker)
 	cd $(repo) && make install
+
 
 # TODO: https://github.com/esc0rtd3w/wifi-hacker
 # https://github.com/vnik5287/wpa-autopwn
@@ -461,8 +464,8 @@ hotspotd:
 	# https://github.com/oblique/create_ap
 
 wifipumpkin:
-	git clone https://github.com/P0cL4bs/WiFi-Pumpkin.git /tmp/WiFi-Pumpkin
-	cd /tmp/WiFi-Pumpkin && chmod +x installer.sh && ./installer.sh --install
+	git clone https://github.com/P0cL4bs/WiFi-Pumpkin.git ${TMPDIR}/WiFi-Pumpkin
+	cd ${TMPDIR}/WiFi-Pumpkin && chmod +x installer.sh && ./installer.sh --install
 	# https://github.com/wouter-glasswall/rogueap
 	# https://github.com/xdavidhu/mitmAP
 	# https://github.com/entropy1337/infernal-twin
@@ -491,7 +494,6 @@ speccy:
 
 ath9k-spectral-scan:
 	git clone https://github.com/kazikcz/ath9k-spectral-scan ${TMPDIR}/ath9k-spectral-scan
-	# TODO: https://github.com/kazikcz/ath9k-spectral-scan
 	# TODO: https://github.com/terbo/sigmon
 	# TODO: https://github.com/s7jones/Wifi-Signal-Plotter
 ################################# Spectral #####################################
