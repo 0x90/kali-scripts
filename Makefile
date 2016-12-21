@@ -173,8 +173,8 @@ dev-python:	dev-vcs dev-db dev-crypto
 ################################# dev ##########################################
 
 ################################# regdb ########################################
-#: regdb - install wireles-regdb with unlocked freq/amp limits  *
-regdb: wifi-generic
+#: wifi-regdb - install wireles-regdb with unlocked freq/amp    *
+wifi-regdb: wifi-generic
 	@echo "Cloning repos wireless-db repos."
 	$(call gitclone,https://github.com/0x90/crda-ct)
 	$(call gitclone,https://github.com/0x90/wireless-regdb)
@@ -502,8 +502,8 @@ ath9k-spectral-scan:
 ################################# Spectral #####################################
 
 ################################## Kernel ######################################
-#: kernel - install EXPERIMENTAL kernel for 80211 debug         *
-kernel:
+##: wifi-kernel - install EXPERIMENTAL kernel for 80211 debug         *
+wifi-kernel:
 	@echo "Installing kernel source dependencies"
 	@if [ ! -d /usr/src/linux-source-4.8 ]; then \
 		@echo "Unpacking kernel"; \
@@ -726,16 +726,17 @@ hardware-signal:
 deps:	archivers common
 #: dev - install ALL development tools                          *
 dev: deps dev-vcs dev-python dev-net
-#: wifi-libs - install system libraries for 802.11 stack        *
-wifi-libs: lorcon libuwifi wifi-python
+
+##: airtools - install aircrack-ng, airoscript-ng, airgraph-ng   *
+airtools: aircrack airoscript airgraph
 #: wifi-deauth - tools for 80211 deauth: wifijammer, zizzania   *
 wifi-deauth: wifijammer zizzania
-#: airtools - install aircrack-ng, airoscript-ng, airgraph-ng   *
-airtools: aircrack airoscript airgraph
-#: wpa - install soft for attacks on WPA/WPA2/WPA-Enterprise    *
-wpa: deauth wifite airgeddon handshaker
-#: wps - install ALL WPS pwning tools and scripts               *
-wps: penetrator pixiewps wpsik reaver
+##: wifi-libs - install system libraries for 802.11 stack        *
+wifi-libs: lorcon libuwifi wifi-python
+#: wifi-wpa - isetup ALL attacks on WPA/WPA2/WPA-Enterprise     *
+wifi-wpa: deauth wifite airgeddon handshaker
+#: wifi-wps - install ALL WPS pwning tools and scripts          *
+wifi-wps: penetrator pixiewps wpsik reaver
 #: wifi-rogueap - install Rogue AP and configuration scripts    *
 wifi-rogueap: rogueap-deps hotspot wifipumpkin linset
 #: wifi-autopwn - install autopwn tools                         *
