@@ -238,8 +238,8 @@ libuwifi:
 	@echo "installing Lorcon from $(repo)"
 	@cd $(repo) && ./configure --prefix=$(PREFIX) && make && make install
 
-##: python-libs - install python libs and bindings for 802.11     *
-python-libs:
+#: python - install python libs and bindings for 802.11         *
+python:
 	@echo "Installling basic python libs and dependencies.."
 	apt-get install -y python-pip libdnet libtins-dev libpcap-dev python-dev flex bison
 	pip install wifi pythonwifi
@@ -308,7 +308,7 @@ wpa: deauth wifite airgeddon handshaker
 ################################## WPA ########################################
 
 ################################## WPS ########################################
-##: reaver - install fresh version of reaver-wps-fork-t6x
+#: reaver - install fresh version of reaver-wps-fork-t6x        *
 reaver:
 	@if [ -e /usr/bin/reaver ]; then \
 		@echo "Trying to remove original reaver-wps"; \
@@ -318,25 +318,25 @@ reaver:
 	$(call gitclone,https://github.com/t6x/reaver-wps-fork-t6x)
 	cd $(repo)/src/ && ./configure --prefix=$(PREFIX) && make && make install
 
-##: reaver-spoof - install  version of reaver-wps with MAC spoof support
+#: reaver-spoof - install reaver-spoof with MAC spoof support   *
 reaver-spoof:
 	$(call gitclone,https://github.com/gabrielrcouto/reaver-wps)
 	# cd $(repo)/src/ && ./configure --prefix=$(PREFIX) && make && make install
 	cd $(repo)/src/ && ./configure && make && make install
 	mv /usr/local/bin/reaver /usr/local/bin/reaver-spoof
 
-#: pixiewps - install fresh pixiewps from Github
+#: pixiewps - install fresh pixiewps from Github                *
 pixiewps:
 	@echo "Trying to remove original pixiewps"
 	sudo dpkg -r --force-depends pixiewps
 	$(call gitclone,https://github.com/wiire/pixiewps)
 	cd $(repo)/src/ && make && make install
 
-#: autopixiewps - install autopwner script for pixiewps
+#: autopixiewps - install autopwner script for pixiewps         *
 autopixiewps:
 	 pip install "git+https://github.com/0x90/AutoPixieWps#egg=AutoPixieWps"
 
-#: penetrator - install penetrator from source                 *
+#: penetrator - install penetrator from source                  *
 penetrator:
 	$(call gitclone,https://github.com/xXx-stalin-666-money-xXx/penetrator-wps)
 	cd $(repo) && ./install.sh;
@@ -346,7 +346,7 @@ wpsik:
 	@echo "Installling wpsik"
 	pip install "git+https://github.com/0x90/wpsik#egg=wpsik"
 
-#: autoreaver - install autoreaver
+#: autoreaver - install autoreaver                              *
 autoreaver:
 	apt-get install -y lshw
 	git clone https://github.com/DominikStyp/auto-reaver /usr/share/auto-reaver
@@ -413,11 +413,11 @@ atear:
 # https://github.com/adelashraf/cenarius
 
 #: autopwn - install autopwn tools for WiFi hacking             *
-autopwn: wifite airgeddon handshaker atear
+autopwn: wifite airgeddon handshaker atear autowps autoreaver
 ################################## autopwn  ####################################
 
 ################################### brute  #####################################
-#: pyrit - install latest version of Pyrit from sources    *
+#: pyrit - install latest version of Pyrit from sources         *
 pyrit:	deps
 	# NB: Updating from 2.3.2 to 2.3.3 breaks pyrit
 	# https://github.com/JPaulMora/Pyrit/issues/500
@@ -431,14 +431,15 @@ brute-common:
 	@echo "Installing common bruteforce tools for WiFi"
 	apt-get install -y hashcat cowpatty john
 
-#: airhammer - WPA Enterprise horizontal brute-force attack tool
+#: airhammer - WPA-Enterprise horizontal brute-force tool       *
 air-hammer:
 	@echo "Installing Air-Hammer - A WPA Enterprise horizontal brute-force attack tool"
 	# TODO: https://github.com/Wh1t3Rh1n0/air-hammer
 
-#: wpa-bruteforcer - WPA Enterprise horizontal brute-force attack tool
+#: wpa-bruteforcer - WPA brute-force for AP without clients     *
 wpa-bruteforcer:
 	# TODO: https://github.com/SYWorks/wpa-bruteforcer
+	pip install "git+https://github.com/0x90/wpa-bruteforcer#egg=wpa-bruteforcer"
 
 wordlist:
 	@echo "Installing standard wordlists"
@@ -754,7 +755,7 @@ hardware: dev-python hardware-generic hardware-signal
 
 ################################# summary ######################################
 #: wireless - soft for unlicensed bands: 433/866/915Mhz 2.4Ghz  *
-wifi: autopwn brute
+wifi: dev python-wifi autopwn brute deauth wps
 #: ism - soft for unlicensed bands: 433/866/915Mhz 2.4Ghz       *
 ism: subghz nrf24 wifi bluetooth
 #: wired - install soft for hacking wired interfaces/buses      *
