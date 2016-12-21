@@ -413,13 +413,18 @@ wifi-aircrack:
 	@echo "Installing airgraph-ng from source..."
 	svn co http://svn.aircrack-ng.org/trunk/scripts/airgraph-ng
 	cd airgraph-ng && make install
-##: reaver - install fresh version of reaver
+
+##: reaver - install fresh version of reaver-wps-fork-t6x
 wifi-reaver:
+	@echo "Trying to remove original reaver-wps"
+	sudo dpkg -r --force-depends reaver
+	@echo "Installing reaver-wps-fork-t6x from github"
 	$(call gitclone,https://github.com/t6x/reaver-wps-fork-t6x)
 	cd $(repo)/src/ && ./configure --prefix=$(PREFIX) && make && make install
 
 ##: pixiewps - install fresh version of reaver
 wifi-pixiewps:
+	sudo dpkg -r --force-depends reaver pixiewps
 	$(call gitclone,https://github.com/wiire/pixiewps)
 	cd $(repo)/src/ && make && make install
 
