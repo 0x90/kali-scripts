@@ -64,7 +64,6 @@ default: help;
 list:
 	@grep -v "#" Makefile|grep '^[^#.]*:$$'  | awk -F: '{ print $$1 }'
 
-
 #: help - display callable targets                              *
 help:
 	@echo "\n\t`printf "\033[32m"`\t     .:[Kali Scripts reb0rn to Makefile]:.`printf "\033[0m"`"
@@ -117,10 +116,6 @@ wifi-generic:
 	@echo "installing WiFi tools and dependecies"
 	apt-get install -y kismet kismet-plugins giskismet mdk3 linssid \
 	wavemon rfkill iw tshark horst
-
-
-#: deps - install basic dependecies and common tools            *
-deps:	archivers common
 ################################# deps #########################################
 
 ################################# ssh ##########################################
@@ -169,7 +164,7 @@ dev-build:
 ##: dev-net - install tools for network development
 dev-net:
 	@echo "installing network libs"
-	@apt-get install -y python-scapy libpcap-dev libpcap0.8 libpcap0.8-dev libnetfilter-queue-dev libnl-genl-3-dev libssh2-1-dev
+	@apt-get install -y libpcap-dev libpcap0.8 libpcap0.8-dev libnetfilter-queue-dev libnl-genl-3-dev libssh2-1-dev
 
 ##: dev-crypto - install libs for crypto
 dev-crypto:
@@ -181,25 +176,20 @@ dev-db:
 	@echo "installing db libs"
 	@apt-get install -y libsqlite3-dev sqlite3 libmysqlclient-dev
 
-##: python - install python developer environment               *
-python: dev-python
+#: dev-python - install python developer environment               *
 dev-python:	dev-vcs dev-db dev-crypto
 	@echo "installing pyenv, pip and other python modules"
 	apt-get install -y python-dev bpython python-pip python-twisted python-shodan  \
 	python-virtualenv python-pygments python-tornado python-sqlalchemy python-lxml python-pymongo \
 	python-gnuplot python-matplotlib python-scipy python-requests python-gevent \
-	python-numpy python-gi-dev python-psycopg2 swig doxygen python-lzma \
+	python-numpy python-gi-dev python-psycopg2 swig doxygen python-lzma python3 python3-pip \
 	python-opengl python-qt4 python-qt4-gl libqt4-opengl python-pyqtgraph python-pyside \
-	python3 python3-pip
 	pip install cookiecutter
 	@if [ ! -d ~/.pyenv ]; then \
 		curl -L https://raw.githubusercontent.com/yyuu/pyenv-installer/master/bin/pyenv-installer | bash ; \
 	else \
 		echo "PyEnv already installed"; \
 	fi;
-
-#: dev - install ALL development tools                          *
-dev: deps dev-vcs dev-python dev-net
 ################################# dev ##########################################
 
 ################################# regdb ########################################
@@ -225,7 +215,7 @@ wifi-frequency-hacker:
 ################################# regdb ########################################
 
 ################################# libs #########################################
-##: lorcon - install Lorcon library with python bindings      *
+#: lorcon - install Lorcon library with python bindings         *
 lorcon:
 	$(call gitclone,https://github.com/0x90/lorcon)
 	@echo "installing Lorcon from $(repo)"
@@ -261,9 +251,6 @@ python:
 	# https://github.com/0x90/wifi-arsenal/tree/master/libmoep-1.1
 	# https://github.com/moepinet/moepdefend
 	# https://github.com/weaknetlabs/libpcap-80211-c
-
-#: libs - install system and python libraries for 802.11        *
-libs: dev lorcon libuwifi python-libs
 ################################# libs ########################################
 
 ################################## WPA ########################################
@@ -302,9 +289,6 @@ handshaker:	deps reaver pixiewps
 # TODO: https://github.com/esc0rtd3w/wifi-hacker
 # https://github.com/vnik5287/wpa-autopwn
 # https://github.com/adelashraf/cenarius
-
-#: wpa - install soft for attacks on WPA/WPA2/WPA-Enterprise    *
-wpa: deauth wifite airgeddon handshaker
 ################################## WPA ########################################
 
 ################################## WPS ########################################
@@ -356,9 +340,6 @@ wpsbreak:
 
 autowps:
 	git clone https://github.com/arnaucode/wifiAutoWPS /usr/share/wifiAutoWPS
-
-#: wps - install ALL WPS pwning tools and scripts               *
-wps: wifite penetrator pixiewps wpsik reaver autoreaver wpsbreak autowps
 ################################# WPS #########################################
 
 ################################ deauth #######################################
@@ -375,9 +356,6 @@ zizzania:
 	@echo "Installing zizzania"
 	$(call gitclone,https://github.com/cyrus-and/zizzania)
 	cd $(repo) && make && make install
-
-#: deauth - tools for 80211 deauth: wifijammer, zizzania        *
-deauth: wifijammer zizzania
 ################################ deauth #######################################
 
 ################################ autopwn ######################################
@@ -406,14 +384,10 @@ atear:
 	@echo "Installing AtEar dependencies"
 	apt-get install -y aircrack-ng tshark hostapd python-dev python-flask python-paramiko python-psycopg2 python-pyodbc python-sqlite python-pip
 	git clone https://github.com/NORMA-Inc/AtEar.git /usr/share/AtEar/
-	sudo bash install.sh
-
+	cd /usr/share/AtEar/install.sh && sudo chmod +x install.sh && sudo ./install.sh
 # TODO: https://github.com/esc0rtd3w/wifi-hacker
 # https://github.com/vnik5287/wpa-autopwn
 # https://github.com/adelashraf/cenarius
-
-#: autopwn - install autopwn tools for WiFi hacking             *
-autopwn: wifite airgeddon handshaker atear autowps autoreaver
 ################################## autopwn  ####################################
 
 ################################### brute  #####################################
@@ -447,9 +421,6 @@ wordlist:
 	cd /usr/share/wordlists/ && gunzip rockyou.txt.gz
 	@echo "Downloading wordlists for WPA/WPA2 brute"
 	git clone https://github.com/kennyn510/wpa2-wordlists /usr/share/wordlists/wpa2-wordlists
-
-##: wifi-recon - install tools fot WiFi reconnaissance          *
-brute: brute-common pyrit wordlists air
 ################################### brute  #####################################
 
 ################################### recon  #####################################
@@ -482,8 +453,8 @@ wifi-ids:
 ################################### recon  #####################################
 
 ################################## hotspot #####################################
-#: hotspot - install tools for easy/evil AP configuration       *
-hotspot:
+#: hotspotd - install hotspotd for easy AP configuration        *
+hotspotd:
 	@echo "Installing hotspotd.."
 	$(call gitclone,https://github.com/0x90/hotspotd)
 	cd $(repo) && sudo python2 setup.py install
@@ -499,21 +470,27 @@ wifipumpkin:
 	# https://github.com/zackiles/Rspoof
 	# https://github.com/baggybin/LokiPi
 
+createap:
+	@echo "Installing create_ap.."
+	$(call gitclone,https://github.com/oblique/create_ap)
+	cd $(repo)/create_ap && sudo make install
+
 linset:
 	apt-get install -y isc-dhcp-server lighttpd macchanger php5-cgi macchanger-gtk hostapd
 	git clone https://github.com/vk496/linset
-	cd linset &&chmod +x linset && ./linset
+	cd linset && chmod +x linset && ./linset
 
-#: rogueap - install Rogue AP and configuration scripts         *
-rogueap: hotspot wifipumpkin linset
-	apt-get install dnsmasq cupid-wpasupplicant hostapd mana-toolkit cupid-hostapd
-
+rogueap-deps:
+	apt-get install -y dnsmasq cupid-wpasupplicant hostapd mana-toolkit cupid-hostapd
 ################################## Hotspot #####################################
 
 ################################# Spectral #####################################
 ##: wireless-spectral - install spectral scan tools             *
-wifi-spectral:
+speccy:
 	git clone https://github.com/bcopeland/speccy ${TMPDIR}/speccy
+
+ath9k-spectral-scan:
+	git clone https://github.com/kazikcz/ath9k-spectral-scan ${TMPDIR}/ath9k-spectral-scan
 	# TODO: https://github.com/kazikcz/ath9k-spectral-scan
 	# TODO: https://github.com/terbo/sigmon
 	# TODO: https://github.com/s7jones/Wifi-Signal-Plotter
@@ -526,7 +503,6 @@ kernel:
 	@if [ ! -d /usr/src/linux-source-4.8 ]; then \
 		@echo "Unpacking kernel"; \
 		cd /usr/src/ && unxz linux-source-4.8.tar.xz && tar xvf linux-source-4.8.tar;\
-		# cd /usr/src/linux-source-4.8 ;\
 	fi;
 	@echo "Configuring kernel.."
 	cp /boot/config-4.8.0-kali1-amd64 /usr/src/linux-source-4.8/.config
@@ -597,9 +573,6 @@ modwifi-tools:
 	install ${TMPDIR}/modwifi/tools/build/constantjam /usr/bin
 	install ${TMPDIR}/modwifi/tools/build/fastreply /usr/bin
 	install ${TMPDIR}/modwifi/tools/build/reactivejam /usr/bin
-
-#: modwifi - install ModWifi toolkit. EXPERIMENTAL!             *
-modwifi: modwifi-kernel modwifi-backports modwifi-firmware modwifi-drivers modwifi-ath9k modwifi-tools
 ################################## Kernel ######################################
 
 ################################ bluetooth #####################################
@@ -662,15 +635,11 @@ nrf24-flash-crazyradio:
 	cd ${TMPDIR}/nrf24-arsenal/crazyradio-firmware/usbtools && \
 	python launchBootloader.py && \
 	python nrfbootload.py flash bin/cradio.bin
-
-#: nrf24 - Nordic Semiconductor NRF24XXX hacking tools          *
-nrf24:	nrf24-deps nrf24-firmware
-	@echo "Use make nrf24-flash-research to flash proper firmware"
 ################################## nrf24 #######################################
 
 ################################## firmware ######################################
 ##: firmware-reverse - install firmware RE/MOD tools
-firmware-reverse:	dev-python
+firmware-reverse:	dev python
 	apt-get install firmware-mod-kit
 	@echo "install sasquatch to extract non-standard SquashFS images"
 	$(call gitclone,https://github.com/devttys0/sasquatch)
@@ -684,7 +653,7 @@ firmware-reverse:	dev-python
 	$(call gitclone,https://github.com/craigz28/firmwalker)
 
 ##: avatar - install Avatar symbol execution
-avatar:	dev-python
+avatar:	dev python
 	@echo "install all build-deps"
 	apt-get build-dep qemu llvm
 	apt-get install -y liblua5.1-dev libsdl1.2-dev libsigc++-2.0-dev binutils-dev python-docutils python-pygments nasm
@@ -706,7 +675,6 @@ crossdev:	deps
 	@echo "installing Emdebian, xapt"
 	apt-get install emdebian-archive-keyring xapt -y
 	# sudo apt-get install gcc-msp430 binutils-msp430 msp430-libc msp430mcu mspdebug
-
 	# apt_add_source emdebian
 	# cp -f "files/etc/emdebian.list" /etc/apt/sources.list.d/emdebian.list && apt-get update -y
 	echo "deb http://ftp.us.debian.org/debian/ squeeze main" > /etc/apt/sources.list.d/emdebian.list
@@ -718,9 +686,6 @@ crossdev:	deps
 	binutils-mipsel-linux-gnu gcc-4.4-mipsel-linux-gnu g++-4.4-mipsel-linux-gnu
 	apt-get install -y linux-libc-dev-mips-cross libc6-mips-cross libc6-dev-mips-cross \
 	binutils-mips-linux-gnu gcc-4.4-mips-linux-gnu g++-4.4-mips-linux-gnu -y
-
-#: firmware - install firmware RE/DEBUG/MOD tools               *
-firmware:	dev firmware-reverse crossdev firmware
 ################################# firmware #####################################
 
 ################################# hardware #####################################
@@ -748,16 +713,38 @@ hardware-signal:
 	cd $(repo) && ./autogen.sh && ./configure && make && make install
 	$(call gitclone,git://sigrok.org/pulseview)
 	cd $(repo) && cmake . && make && make install
-
-#: hardware - install hardware hacking tools                    *
-hardware: dev-python hardware-generic hardware-signal
 ################################# hardware #####################################
 
 ################################# summary ######################################
+#: deps - install basic dependecies and common tools            *
+deps:	archivers common
+#: dev - install ALL development tools                          *
+dev: deps dev-vcs dev-python dev-net
+#: libs - install system and python libraries for 802.11        *
+libs: dev lorcon libuwifi python-libs
+##: python - install lot's of python libraries                   *
+# python: dev-python
+#: deauth - tools for 80211 deauth: wifijammer, zizzania        *
+deauth: wifijammer zizzania
+#: wpa - install soft for attacks on WPA/WPA2/WPA-Enterprise    *
+wpa: deauth wifite airgeddon handshaker
+#: wps - install ALL WPS pwning tools and scripts               *
+wps: wifite penetrator pixiewps wpsik reaver autoreaver wpsbreak autowps
+#: rogueap - install Rogue AP and configuration scripts         *
+rogueap: rogueap-deps hotspot wifipumpkin linset
+#: modwifi - install ModWifi toolkit. EXPERIMENTAL!             *
+modwifi: modwifi-kernel modwifi-backports modwifi-firmware modwifi-drivers modwifi-ath9k modwifi-tools
 #: wireless - soft for unlicensed bands: 433/866/915Mhz 2.4Ghz  *
-wifi: dev python-wifi autopwn brute deauth wps
+wifi: dev rogueap-deps python autopwn brute deauth wps
+#: nrf24 - Nordic Semiconductor NRF24XXX hacking tools          *
+nrf24:	nrf24-deps nrf24-firmware
+	@echo "Use make nrf24-flash-research to flash proper firmware"
 #: ism - soft for unlicensed bands: 433/866/915Mhz 2.4Ghz       *
 ism: subghz nrf24 wifi bluetooth
+#: firmware - install firmware RE/DEBUG/MOD tools               *
+firmware:	dev firmware-reverse crossdev firmware
+#: hardware - install hardware hacking tools                    *
+hardware: dev-python hardware-generic hardware-signal
 #: wired - install soft for hacking wired interfaces/buses      *
 wired: hardware firmware
 #: all - install EVERYTHING from EVERY category                 *
