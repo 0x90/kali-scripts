@@ -328,6 +328,7 @@ wpa-bruteforcer:
 	# TODO: https://github.com/SYWorks/wpa-bruteforcer
 	pip install "git+https://github.com/0x90/wpa-bruteforcer#egg=wpa-bruteforcer"
 
+##: wordlist
 wordlist:
 	@echo "Installing standard wordlists"
 	apt-get install -y wordlists
@@ -361,7 +362,7 @@ pixiewps:
 	$(call gitclone,https://github.com/wiire/pixiewps)
 	cd $(repo)/src/ && make && make install
 
-#:# penetrator - install penetrator from source                  *
+##: penetrator - install penetrator from source                  *
 penetrator:
 	$(call gitclone,https://github.com/xXx-stalin-666-money-xXx/penetrator-wps)
 	cd $(repo) && ./install.sh;
