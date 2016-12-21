@@ -323,11 +323,12 @@ pixiewps:
 	$(call gitclone,https://github.com/wiire/pixiewps)
 	cd $(repo)/src/ && make && make install
 
-##: penetrator - install penetrator-wps from source            *
+#: penetrator - install penetrator from source                 *
 penetrator:
 	$(call gitclone,https://github.com/xXx-stalin-666-money-xXx/penetrator-wps)
 	cd $(repo) && ./install.sh;
 
+#: wpsik - install wpsik - WPS info gathering tool              *
 wpsik:
 	@echo "Installling wpsik"
 	pip install "git+https://github.com/0x90/wpsik#egg=wpsik"
@@ -720,7 +721,6 @@ hardware: dev-python hardware-generic hardware-signal
 wireless: subghz nrf24 wifi bluetooth
 #: wired - install soft for hacking wired interfaces/buses      *
 wired: hardware firmware
-
 #: all - install EVERYTHING from EVERY category                 *
-all: clean upgrade ism wired
+all: clean upgrade wireless wired
 ################################# summary ######################################
