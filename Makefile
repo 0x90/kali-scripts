@@ -310,8 +310,10 @@ wpa: deauth wifite airgeddon handshaker
 ################################## WPS ########################################
 ##: reaver - install fresh version of reaver-wps-fork-t6x
 reaver:
-	@echo "Trying to remove original reaver-wps"
-	sudo dpkg -r --force-depends reaver
+	@if [ -e /usr/bin/reaver ]; then \
+		@echo "Trying to remove original reaver-wps"; \
+		sudo dpkg -r --force-depends reaver; \
+	fi;
 	@echo "Installing reaver-wps-fork-t6x from github"
 	$(call gitclone,https://github.com/t6x/reaver-wps-fork-t6x)
 	cd $(repo)/src/ && ./configure --prefix=$(PREFIX) && make && make install
