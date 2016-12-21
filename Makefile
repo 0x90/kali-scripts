@@ -229,7 +229,7 @@ libuwifi:
 	@cd $(repo) && ./configure --prefix=$(PREFIX) && make && make install
 
 #: python - install python libs and bindings for 802.11         *
-python:
+python: dev
 	@echo "Installling basic python libs and dependencies.."
 	apt-get install -y python-pip libdnet libtins-dev libpcap-dev python-dev flex bison
 	pip install wifi
@@ -615,6 +615,7 @@ nrf24-firmware:
 	@echo "Build firmware for Crazyradio"
 	$(MAKE) -C ${TMPDIR}/nrf24-arsenal/crazyradio-firmware
 	# TODO: add support for Crazyradio PA via make CRPA=1
+	# @echo "Use make nrf24-flash-research to flash proper firmware"
 
 ## Flashing the Firmware
 nrf24-flash:
@@ -740,7 +741,6 @@ modwifi: modwifi-kernel modwifi-backports modwifi-firmware modwifi-drivers modwi
 wifi: dev rogueap-deps python autopwn brute deauth wps
 #: nrf24 - Nordic Semiconductor NRF24XXX hacking tools          *
 nrf24:	nrf24-deps nrf24-firmware
-	@echo "Use make nrf24-flash-research to flash proper firmware"
 #: ism - soft for unlicensed bands: 433/866/915Mhz 2.4Ghz       *
 ism: subghz nrf24 wifi bluetooth
 #: firmware - install firmware RE/DEBUG/MOD tools               *
