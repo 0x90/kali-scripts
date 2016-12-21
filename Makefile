@@ -115,7 +115,7 @@ common:
 wifi-generic:
 	@echo "installing WiFi tools and dependecies"
 	apt-get install -y kismet kismet-plugins giskismet mdk3 linssid \
-	wavemon rfkill iw tshark horst
+	wavemon rfkill iw tshark horst fern-wifi-cracker wifite
 ################################# deps #########################################
 
 ################################# ssh ##########################################
