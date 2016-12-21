@@ -108,7 +108,7 @@ archivers:
 	apt-get update -y && apt-get install -y libstdc++6:i386 libgcc1:i386 zlib1g:i386 libncurses5:i386
 
 ##: common - install common tools
-commons:
+common:
 	@echo "installing common tools.."
 	apt-get install -y terminator tmux htop iftop iotop mc screen curl wget
 
@@ -316,16 +316,23 @@ reaver:
 	$(call gitclone,https://github.com/t6x/reaver-wps-fork-t6x)
 	cd $(repo)/src/ && ./configure --prefix=$(PREFIX) && make && make install
 
-reaver-mac:
-	# https://github.com/gabrielrcouto/reaver-wps
+##: reaver-spoof - install  version of reaver-wps with MAC spoof support
+reaver-spoof:
+	$(call gitclone,https://github.com/gabrielrcouto/reaver-wps)
+	# cd $(repo)/src/ && ./configure --prefix=$(PREFIX) && make && make install
+	cd $(repo)/src/ && ./configure && make && make install
+	mv /usr/local/bin/reaver /usr/local/bin/reaver-spoof
 
-##: pixiewps - install fresh version of reaver
+#: pixiewps - install fresh pixiewps from Github
 pixiewps:
 	@echo "Trying to remove original pixiewps"
 	sudo dpkg -r --force-depends pixiewps
 	$(call gitclone,https://github.com/wiire/pixiewps)
 	cd $(repo)/src/ && make && make install
-# https://github.com/nxxxu/AutoPixieWps
+
+#: autopixiewps - install autopwner script for pixiewps
+autopixiewps:
+	 pip install "git+https://github.com/0x90/AutoPixieWps#egg=AutoPixieWps"
 
 #: penetrator - install penetrator from source                 *
 penetrator:
@@ -340,12 +347,16 @@ wpsik:
 #: autoreaver - install autoreaver
 autoreaver:
 	apt-get install -y lshw
-	# https://github.com/DominikStyp/auto-reaver
+	git clone https://github.com/DominikStyp/auto-reaver /usr/share/auto-reaver
 
-# https://github.com/arnaucode/wifiAutoWPS
+wpsbreak:
+	git clone https://github.com/radi944/HT_WPS-Break /usr/share/HT_WPS-Break
+
+autowps:
+	git clone https://github.com/arnaucode/wifiAutoWPS /usr/share/wifiAutoWPS
 
 #: wps - install ALL WPS pwning tools and scripts               *
-wps: wifite penetrator pixiewps wpsik reaver
+wps: wifite penetrator pixiewps wpsik reaver autoreaver wpsbreak autowps
 ################################# WPS #########################################
 
 ################################ deauth #######################################
