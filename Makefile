@@ -12,15 +12,10 @@ CRDADB=${CRDADIR}/regulatory.bin
 TOP ?= $(shell pwd)
 THIS := ${TOP}/Makefile
 ROOT_DIR := ${CURDIR}
-# KERNEL=4.2-1	# Release of drivers for kernel 4.2	a year ago
-# KERNEL=4.4-1
 MODWIFI_RELEASE=modwifi-4.7.4-experimental-1.tar.gz
 MODWIFI_URL=https://github.com/vanhoefm/modwifi/raw/master/releases/${MODWIFI_RELEASE}
 .DEFAULT_GOAL := help
-.PHONY: help clean archivers 32bit common-tools deps wifi wireless-db reaver
-.PHONY: pixiewps wifite lorcon pyrit horst penetrator aircrack-ng radius-wpe hotspotd
-.PHONY: sshd-root sshd-keys sshd-forwarding sshd install-zsh configure-zsh
-.PHONY: bluetooth ism signal firmware crossdev openwrt hardware
+# .PHONY: help clean archivers 32bit common-tools deps wifi wireless-db reaver
 
 # Macros
 .CLEAR=\x1b[0m
@@ -70,65 +65,27 @@ list:
 	@grep -v "#" Makefile|grep '^[^#.]*:$$'  | awk -F: '{ print $$1 }'
 
 
-##: deps - install dependecies                                 *
-deps:	archivers common-tools
-
-#: dev - install ALL development tools                         *
-dev: archivers deps common-tools dev-vcs dev-python dev-net
-
-##: wifi - install tools for Wi-Fi hacking                      *
-wifi: wireless-db wireless-lorcon wireless-pyrit wireless-wifite wireless-penetrator
-
-#: hardware - install hardware hacking tools                   *
-hardware: dev hardware-generic hardware-signal
-
-#: firmware - install firmware RE/DEBUG/MOD tools              *
-firmware:	dev firmware-reverse firmware-crossdev firmware-avatar firmware-openwrt
-
-##: air - install tools for ISM, WiFi, Bluetooth, NRF24XX       *
-# air: wifi bluetooth ism nrf24
-
-#: wired - install everything for wired interfaces             *
-wired: hardware firmware
-
-#: all - install EVERYTHING                                    *
-all: clean upgrade wireless wired
-
-#: help - display callable targets                             *
+#: help - display callable targets                              *
 help:
 	@echo "\n\t`printf "\033[32m"`\t     .:[Kali Scripts reb0rn to Makefile]:.`printf "\033[0m"`"
-	@echo "\t+--------------------------------------------------------------+"
-	@egrep -o "^#: (.+)" [Mm]akefile  |sort| sed "s/#: /	*  `printf "\033[32m"`/"| sed "s/ - /`printf "\033[0m"` - /"
-	@echo "\t+--------------------------------------------------------------+"
+	@echo "\t+---------------------------------------------------------------+"
+	@egrep -o "^#: (.+)" [Mm]akefile  | sed "s/#: /	*  `printf "\033[32m"`/"| sed "s/ - /`printf "\033[0m"` - /"
+	@echo "\t+---------------------------------------------------------------+"
 	@echo "\t\t`printf "\033[32m"`      greetz fly to all DC7499 community`printf "\033[0m"`"
 	@echo "\t\t`printf "\033[32m"`           ~~-<  @090h 2016  >-~~`printf "\033[0m"`\n"
 
-#: clean - cleanup source code and unused packages             *
+#: clean - cleanup source code and unused packages              *
 clean:
 	@echo "Cleaning packages"
 	apt-get -y autoremove && apt-get -y clean
 	@echo "Cleaning temp directory: $(TMPDIR)"
 	@rm -rf $(TMPDIR)
 
-#: upgrade - update and upgrade current system                 *
+#: upgrade - update and upgrade current system                  *
 upgrade:
 	apt-get update && apt-get upgrade -y
 
-##: archivers - install archivers
-archivers:
-	@echo "installing archivers.."
-	@apt-get -y install gzip bzip2 tar lzma arj lhasa p7zip-full cabextract unace  unrar zip unzip \
-	sharutils uudeview mpack cabextract file-roller zlib1g zlib1g-dev liblzma-dev liblzo2-dev
-
-##: 32bit - install 32 bit tools and libraries
-32bit:
-	@if [ `getconf LONG_BIT` != "64" ] ; then exit 1; fi
-	@echo "64-bit OS detected. installing 32-bit libs..."
-	dpkg --add-architecture i386
-	apt-get update -y
-	apt-get install -y libstdc++6:i386 libgcc1:i386 zlib1g:i386 libncurses5:i386
-
-#: kali - install Kali Linux repos and soft                    *
+#: kali - install Kali Linux repos and soft                     *
 kali:
 	echo "deb http://http.kali.org/kali kali-rolling main contrib non-free" > /etc/apt/sources.list
 	echo "deb-src http://http.kali.org/kali kali-rolling main contrib non-free" > /etc/apt/sources.list
@@ -137,19 +94,41 @@ kali:
 	sudo apt-get update -y
 	sudo apt-get -y install kali-linux-wireless kali-linux-sdr
 
-##: common-tools - install common tools
-common-tools:
+##: archivers - install archivers
+archivers:
+	@echo "installing archivers.."
+	@apt-get -y install gzip bzip2 tar lzma arj lhasa p7zip-full cabextract unace unrar zip unzip \
+	sharutils uudeview mpack cabextract file-roller zlib1g zlib1g-dev liblzma-dev liblzo2-dev
+
+##: 32bit - install 32 bit tools and libraries
+32bit:
+	@if [ `getconf LONG_BIT` != "64" ] ; then exit 1; fi
+	@echo "64-bit OS detected. installing 32-bit libs..."
+	dpkg --add-architecture i386
+	apt-get update -y && apt-get install -y libstdc++6:i386 libgcc1:i386 zlib1g:i386 libncurses5:i386
+
+##: common - install common tools
+commons:
 	@echo "installing common tools.."
 	apt-get install -y terminator tmux htop iftop iotop mc screen curl wget
 
+##: wifi-generic - install generic WiFi hacking tools
+wifi-generic:
+	@echo "installing WiFi tools and dependecies"
+	apt-get install -y kismet kismet-plugins giskismet mdk3 linssid \
+	wavemon rfkill iw tshark horst
 
-##: sshd - Configure SSHD                                      *
+
+#: deps - install basic dependecies and common tools            *
+deps:	archivers common
+################################# deps #########################################
+
+################################# ssh ##########################################
+##: sshd - Configure SSHD                                       *
 sshd:
 	@echo "Configuring SSHD"
 	make .prompt-yesno message="Enable root login via SSHD with password?" && make sshd-root
 	make .prompt-yesno message="Do you want to install fresh sshd/ssh keys?" && make sshd-keys
-	make .prompt-yesno message="Enable TCP/IP, X11 forwarding support" && make sshd-forwarding
-	make .prompt-yesno message="Enable SSHD to start on boot?" && systemctl enable ssh
 	systemctl restart ssh
 
 ##: sshd-root - Enable root login via SSHD with password auth
@@ -163,67 +142,46 @@ sshd-keys:
 	rm -rf /etc/ssh/ssh_host_*
 	@echo "Regenerating host keys.."
 	dpkg-reconfigure openssh-server
-	mkdir /etc/ssh/default_kali_keys
-	mv /etc/ssh/ssh_host* /etc/ssh/default_kali_keys/
+	mkdir /etc/ssh/default_kali_keys && mv /etc/ssh/ssh_host* /etc/ssh/default_kali_keys/
 	dpkg-reconfigure openssh-server
 	@echo "please make sure that those keys differ"
 	md5sum /etc/ssh/default_kali_keys/*
 	md5sum /etc/ssh/ssh_host*
 	service ssh try-restart
 	ssh-keygen -t rsa -b 2048
+################################# ssh ##########################################
 
-##: sshd-forwarding - Allow TCP/IP, X11 forwarding.
-sshd-forwarding:
-	sed -i -e 's/\#X11Forwarding no/X11Forwarding yes/' /etc/ssh/sshd_config
-	sed -i -e 's/\#X11DisplayOffset/X11DisplayOffset/' /etc/ssh/sshd_config
-	sed -i -e 's/\#X11UseLocalhost/X11UseLocalhost/' /etc/ssh/sshd_config
-	sed -i -e 's/\#AllowTcpForwarding/AllowTcpForwarding/' /etc/ssh/sshd_config
-
-##: zsh - install  ZSH
-install-zsh:
-	@echo "installing ZSH.."
-	apt-get install -y zsh
-	@echo "Configuring ZSH.."
-	# git clone --recursive https://github.com/sorin-ionescu/prezto.git "${ZDOTDIR:-$HOME}/.zprezto"
-	# setopt EXTENDED_GLOB
-	# for rcfile in "${ZDOTDIR:-$HOME}"/.zprezto/runcoms/^README.md(.N); do \
-	# ln -s "$rcfile" "${ZDOTDIR:-$HOME}/.${rcfile:t}" \
-	# done
-	# @echo "Set Zsh as your default shell"
-	# chsh -s /bin/zsh
-	# wget "https://wiki.thc.org/BlueMaho?action=AttachFile&do=get&target=bluemaho_v090417.tgz"
-
-##: dev-vcs - install VCS (git, hg,cvs)
+################################# dev ##########################################
+##: dev-vcs - instal VCS (git, hg,cvs)
 dev-vcs:
-	apt-get install -y git subversion mercurial
+	@echo "Installing VCS (git, hg,cvs)"
+	@apt-get install -y git subversion mercurial
 
 ##: dev-build - install build tools and environment
 dev-build:
-	@echo "installing development tools and environment"
-	@apt-get install -y cmake cmake-data module-assistant build-essential patch g++
-	pkg-config automake autoconf \
-	gcc gcc-multilib dkms patchutils strace wdiff libtool bison gawk flex gettext \
-	linux-headers-`uname -r` kernel-package  linux-source \
-	libbz2-dev zlib1g-dev fakeroot ncurses-dev libncurses5-dev libreadline6 libreadline6-dev \
-	libyaml-dev libxslt1-dev libxml2-dev libxslt-dev libc6-dev libmagickcore-dev libmagick++-dev libmagickwand-dev
+	@echo "Istalling development tools and environment"
+	@apt-get install -y cmake cmake-data module-assistant build-essential patch g++ gcc gcc-multilib
+	dkms patchutils strace wdiff pkg-config automake autoconf bison gawk flex gettext \
+	linux-headers-`uname -r` kernel-package linux-source libncurses5-dev libreadline6 libreadline6-dev \
+	libbz2-dev zlib1g-dev fakeroot ncurses-dev libtool libmagickcore-dev libmagick++-dev libmagickwand-dev \
+	libyaml-dev libxslt1-dev libxml2-dev libxslt-dev libc6-dev
 
 ##: dev-net - install tools for network development
 dev-net:
 	@echo "installing network libs"
-	apt-get install -y python-scapy libpcap-dev libpcap0.8 libpcap0.8-dev \
-	libnetfilter-queue-dev libnl-genl-3-dev libssh2-1-dev
+	@apt-get install -y python-scapy libpcap-dev libpcap0.8 libpcap0.8-dev libnetfilter-queue-dev libnl-genl-3-dev libssh2-1-dev
 
 ##: dev-crypto - install libs for crypto
 dev-crypto:
 	@echo "installing crypto libs"
-	apt-get install -y openssl libssl-dev python-m2crypto libgcrypt20 libgcrypt20-dev cracklib-runtime
+	@apt-get install -y openssl libssl-dev python-m2crypto libgcrypt20 libgcrypt20-dev cracklib-runtime
 
 ##: dev-crypto - install libs for DB
 dev-db:
 	@echo "installing db libs"
-	apt-get install -y libsqlite3-dev sqlite3 libmysqlclient-dev
+	@apt-get install -y libsqlite3-dev sqlite3 libmysqlclient-dev
 
-#: python - install python developer environment               *
+##: python - install python developer environment               *
 python: dev-python
 dev-python:	dev-vcs dev-db dev-crypto
 	@echo "installing pyenv, pip and other python modules"
@@ -240,14 +198,13 @@ dev-python:	dev-vcs dev-db dev-crypto
 		echo "PyEnv already installed"; \
 	fi;
 
-##: wifi-generic - install generic WiFi hacking tools
-wifi-generic:
-	@echo "installing WiFi tools and dependecies"
-	apt-get install -y kali-linux-wireless aircrack-ng kismet kismet-plugins giskismet \
-	horst wavemon rfkill hostapd dnsmasq iw tshark horst linssid cupid-wpasupplicant cupid-hostapd
+#: dev - install ALL development tools                          *
+dev: deps dev-vcs dev-python dev-net
+################################# dev ##########################################
 
-#: wifi-regdb - install patched regdb with unlocked freq/amp   *
-wifi-regdb: dev wireless-generic
+################################# regdb ########################################
+#: regdb - install wireles-regdb with unlocked freq/amp limits  *
+regdb: wifi-generic
 	@echo "Cloning repos wireless-db repos."
 	$(call gitclone,https://github.com/0x90/crda-ct)
 	$(call gitclone,https://github.com/0x90/wireless-regdb)
@@ -259,142 +216,64 @@ wifi-regdb: dev wireless-generic
 	@echo "Building and installing CRDA"
 	cd ${TMPDIR}/crda-ct && export REG_BIN=${CRDADB} && make && make install
 
+# TODO: check and add
 wifi-frequency-hacker:
-	apt-get install wireless-regdb crda
-	# This will make sure you get the pre-requisites.
-	git clone https://github.com/singe/wifi-frequency-hacker
-	cd wifi-frequency-hacker
-	# Get a copy of this repo.
+	git clone https://github.com/singe/wifi-frequency-hacker ${TMPDIR}/wifi-frequency-hacker
 	cp /lib/crda/regulatory.bin /lib/crda/regulatory.bin.orig
-	cp regulatory.bin /lib/crda/
-	cp singe.key.pub.pem /lib/crda/pubkeys/
+	install ${TMPDIR}/wifi-frequency-hacker/regulatory.bin /lib/crda/
+	install ${TMPDIR}/wifi-frequency-hacker/singe.key.pub.pem /lib/crda/pubkeys/
+################################# regdb ########################################
 
-##: horst - install horst from source
-wifi-horst-src:
-	$(call gitclone,git://br1.einfach.org/horst)
-	cd $(repo) && make && install -m 755 horst /usr/bin/horst # cp horst /usr/bin
-
+################################# libs #########################################
 ##: lorcon - install Lorcon library with python bindings      *
-lorcon:	wifi-lorcon
-wifi-lorcon:
+lorcon:
 	$(call gitclone,https://github.com/0x90/lorcon)
 	@echo "installing Lorcon from $(repo)"
 	@cd $(repo) && ./configure --prefix=$(PREFIX) && make && make install
 	@echo "installing pylorcon2 bindings"
 	@cd $(repo)/pylorcon2 && python setup.py build && python setup.py install
 
-wifi-moep:
-	# https://github.com/0x90/wifi-arsenal/tree/master/libmoep-1.1
-	# https://github.com/moepinet/moepdefend
+libuwifi:
+	$(call gitclone,https://github.com/br101/libuwifi)
+	@echo "installing Lorcon from $(repo)"
+	@cd $(repo) && ./configure --prefix=$(PREFIX) && make && make install
 
-#: wifi-pyrit - install latest version of Pyrit from sources   *
-wifi-pyrit:	deps
-	# NB: Updating from 2.3.2 to 2.3.3 breaks pyrit
-	# https://github.com/JPaulMora/Pyrit/issues/500
-	pip install scapy==2.3.2
-	# apt-get install pyrit
-	@echo "installing Pyrit from source"
-	$(call gitclone,https://github.com/JPaulMora/Pyrit)
-	cd $(repo) && python setup.py clean && python setup.py build && python setup.py install
-
-#: wifi-python - install python libs and bindings for 80211    *
-wifi-python: wifi-lorcon wifi-pyrit dev
+##: python-libs - install python libs and bindings for 802.11     *
+python-libs:
 	@echo "Installling basic python libs and dependencies.."
-	apt-get install -y python-pip scapy libdnet libtins-dev libpcap-dev python-dev flex bison
+	apt-get install -y python-pip libdnet libtins-dev libpcap-dev python-dev flex bison
 	pip install wifi pythonwifi
 	@echo "Installling PyRIC (new Lorcon)"
 	pip install "git+https://github.com/wraith-wireless/PyRIC#egg=PyRIC"
-	@echo "Installling cycapture for libpcap/libtins bindings"
-	# apt-get install libbluetooth-dev
-	# pip install "git+https://github.com/stephane-martin/cycapture#egg=cycapture"
-	# --enable-bluetooth=no
-	pip install "git+https://github.com/0x90/cycapture#egg=cycapture"
+	@echo "Installling cycapture for libpcap+libtins bindings"
+	pip install "git+https://github.com/stephane-martin/cycapture#egg=cycapture"
 	@echo "Installing itame for dealing with MPDU/MSDU frames"
 	sudo pip install itamae
 	@echo "Installing pytins..."
 	$(call gitclone,https://github.com/mfontanini/pytins)
 	cd $(repo) && make && make install
-	# git clone ${TMPDIR}/pytins && cd ${TMPDIR}/pytins && make && make install
+	git clone ${TMPDIR}/pytins && cd ${TMPDIR}/pytins && make && make install
 	@echo "Installing py80211"
 	pip install "git+https://github.com/0x90/py80211#egg=py80211"
 	# https://github.com/wraith-wireless/wraith
 	# https://github.com/bcopeland/python-radiotap
+	# https://github.com/br101/libuwifi
+	# https://github.com/0x90/wifi-arsenal/tree/master/libmoep-1.1
+	# https://github.com/moepinet/moepdefend
+	# https://github.com/weaknetlabs/libpcap-80211-c
 
-wifi-atear:
-	@echo "Installing AtEar dependencies"
-	apt-get install -y aircrack-ng tshark hostapd python-dev python-flask python-paramiko python-psycopg2 python-pyodbc python-sqlite python-pip
-	git clone https://github.com/NORMA-Inc/AtEar.git /usr/share/AtEar/
-	sudo bash install.sh
+#: libs - install system and python libraries for 802.11        *
+libs: dev lorcon libuwifi python-libs
+################################# libs ########################################
 
-wifi-snoopy:
-	@echo "Installing Snoopy-NG"
-	# https://github.com/sensepost/snoopy-ng
-
-wifi-radar:
-	# pip install scapy netaddr git+https://github.com/pingflood/pythonwifi.git
-	# https://github.com/stef/wireless-radar
-	pip install wireless-radar
-	#  setcap 'CAP_NET_RAW+eip CAP_NET_ADMIN+eip' env/bin/python2
-	setcap 'CAP_NET_RAW+eip CAP_NET_ADMIN+eip' /usr/bin/python2.7
-
-#: wifi-recon - install tools fot WiFi reconnaissance          *
-wifi-recon:
-	@echo "Installing WRAITH: Wireless Reconnaissance And Intelligent Target Harvesting"
-	pip install 'git+https://github.com/wraith-wireless/wraith#egg=wraith'
-	# https://github.com/blaa/WifiStalker
-	@echo "Installing WIG"
-	pip install pcapy impacket
-	# https://github.com/6e726d/WIG
-
-#: wifi-ids - install IDS/IPS for WiFi                         *
-wifi-ids:
-	@echo "Installing WAIDPS"
-	pip install "git+https://github.com/0x90/waidps#egg=waidps"
-	# pip install pycrypto
-	# https://github.com/SYWorks/waidps
-	@echo "Installing wireless-ids"
-	# https://github.com/SYWorks/wireless-ids
-	@echo "Installing WiWo"
-	# https://github.com/CoreSecurity/wiwo
-
-#: wifi-hotspot - install hotspotd to easy AP configuration    *
-hotspot: wifi-hotspot
-wifi-hotspot:
-	@echo "Installing hotspotd.."
-	$(call gitclone,https://github.com/0x90/hotspotd)
-	cd $(repo) && sudo python2 setup.py install
-	# https://github.com/oblique/create_ap
-
-#: wifi-rogueap - install Rogue AP and configuration scripts   *
-wifi-rogueap:
-	git clone https://github.com/P0cL4bs/WiFi-Pumpkin.git /tmp/WiFi-Pumpkin
-	cd /tmp/WiFi-Pumpkin && chmod +x installer.sh && ./installer.sh --install
-	# https://github.com/wouter-glasswall/rogueap
-	# https://github.com/xdavidhu/mitmAP
-	# https://github.com/entropy1337/infernal-twin
-	# https://github.com/Nick-the-Greek/Aerial
-	# https://github.com/zackiles/Rspoof
-	# https://github.com/baggybin/LokiPi
-
-wifi-linset:
-	apt-get install isc-dhcp-server lighttpd macchanger php5-cgi macchanger-gtk hostapd
-	git clone https://github.com/vk496/linset
-	cd linset
-	chmod +x linset ./linset
-	# ./linset
-
-# TODO: add aircrack-ng
-
-wifi-aircrack-git:
+################################## WPA ########################################
+#: aircrack - install FULL aircrack-ng from source              *
+aircrack:
+	@echo "Installing aircrack-ng from source..."
 	apt-get install	-y libgcrypt20-dev
 	git clone https://github.com/aircrack-ng/aircrack-ng /tmp/aircrack-ng
 	cd /tmp/aircrack-ng && make sqlite=true experimental=true ext_scripts=true pcre=true gcrypt=true libnl=true
 	cd /tmp/aircrack-ng && make strip && make install
-
-wifi-aircrack:
-	# TODO: fix tmp path
-	# http://download.aircrack-ng.org/aircrack-ng-1.2-rc4.tar.gz
-	@echo "Installing aircrack-ng from source..."
 	svn co http://svn.aircrack-ng.org/trunk/ aircrack-ng
 	cd aircrack-ng && make install
 	@echo "Installing airodump_mod"
@@ -414,8 +293,23 @@ wifi-aircrack:
 	svn co http://svn.aircrack-ng.org/trunk/scripts/airgraph-ng
 	cd airgraph-ng && make install
 
+##: handshaker - install tool for easy handshake capture       *
+handshaker:	deps reaver pixiewps
+	apt-get install -y beep bc
+	$(call gitclone,https://github.com/d4rkcat/HandShaker)
+	cd $(repo) && make install
+
+# TODO: https://github.com/esc0rtd3w/wifi-hacker
+# https://github.com/vnik5287/wpa-autopwn
+# https://github.com/adelashraf/cenarius
+
+#: wpa - install soft for attacks on WPA/WPA2/WPA-Enterprise    *
+wpa: deauth wifite airgeddon handshaker
+################################## WPA ########################################
+
+################################## WPS ########################################
 ##: reaver - install fresh version of reaver-wps-fork-t6x
-wifi-reaver:
+reaver:
 	@echo "Trying to remove original reaver-wps"
 	sudo dpkg -r --force-depends reaver
 	@echo "Installing reaver-wps-fork-t6x from github"
@@ -423,44 +317,90 @@ wifi-reaver:
 	cd $(repo)/src/ && ./configure --prefix=$(PREFIX) && make && make install
 
 ##: pixiewps - install fresh version of reaver
-wifi-pixiewps:
-	sudo dpkg -r --force-depends reaver pixiewps
+pixiewps:
+	@echo "Trying to remove original pixiewps"
+	sudo dpkg -r --force-depends pixiewps
 	$(call gitclone,https://github.com/wiire/pixiewps)
 	cd $(repo)/src/ && make && make install
 
-##: penetrator - install penetrator-wps from source             *
-penetrator: wireless-penetrator
-wifi-penetrator:
+##: penetrator - install penetrator-wps from source            *
+penetrator:
 	$(call gitclone,https://github.com/xXx-stalin-666-money-xXx/penetrator-wps)
 	cd $(repo) && ./install.sh;
 
-#: wifi-wps - install WPS pwning tools and scripts             *
-wifi-wps: wifite penetrator
+wpsik:
+	@echo "Installling wpsik"
+	pip install "git+https://github.com/0x90/wpsik#egg=wpsik"
 
-#: wifi-jammer - install jammers: mdk3, wifijammer, zizzania   *
-wifi-jammer:
+#: wps - install ALL WPS pwning tools and scripts               *
+wps: wifite penetrator pixiewps wpsik reaver
+################################## WPS ########################################
+
+################################ deauth #######################################
+wifijammer:
 	@echo "Installing mdk3"
 	apt-get install -y mdk3
 	@echo "Installing wifijammer"
 	pip install "git+https://github.com/0x90/wifijammer#egg=wifijammer"
 	# pip install git+https://github.com/llazzaro/wifijammer.git
+
+zizzania:
 	@echo "Installing zizzania dependencies"
 	apt-get install -y scons libpcap-dev uthash-dev
 	@echo "Installing zizzania"
 	$(call gitclone,https://github.com/cyrus-and/zizzania)
 	cd $(repo) && make && make install
 
-wifi-fluxion:
+#: deauth - tools for 80211 deauth: wifijammer, zizzania        *
+deauth: wifijammer zizzania
+################################ deauth #######################################
+
+################################ autopwn ######################################
+##: wifite - install correct version of wifite                   *
+wifite: deps reaver pixiewps
+	$(call gitclone,https://github.com/derv82/wifite)
+	install -m 755 $(repo)/wifite.py /usr/bin/wifite-old
+	$(call gitclone,https://github.com/aanarchyy/wifite-mod-pixiewps)
+	install -m 755 $(repo)/wifite-ng /usr/bin/wifite-ng
+	# TODO: https://github.com/derv82/wifite2
+
+airgeddon:	deps reaver pixiewps
+	apt-get install -y crunch isc-dhcp-server sslstrip lighttpd
+	git clone https://github.com/v1s1t0r1sh3r3/airgeddon.git /usr/share/airgeddon
+	chmod +x /usr/share/airgeddon/airgeddon.sh
+	ln -s /usr/share/airgeddon/airgeddon.sh /usr/bin/airgeddon
+
+fluxion:
 	@echo "Installing fluxion dependencies"
 	sudo apt-get install -y isc-dhcp-server lighttpd macchanger php-cgi hostapd bully rfkill \
 	zenity psmisc gawk curl nmap php-cgi lua-lpeg
 	$(call gitclone,https://github.com/deltaxflux/fluxion)
 	cd $(repo) && ./Installer.sh
-	# sudo ./fluxion
 
-wifi-wordlist:
-	# https://github.com/kennyn510/wpa2-wordlists
-	# TODO: add rockyou.txt
+atear:
+	@echo "Installing AtEar dependencies"
+	apt-get install -y aircrack-ng tshark hostapd python-dev python-flask python-paramiko python-psycopg2 python-pyodbc python-sqlite python-pip
+	git clone https://github.com/NORMA-Inc/AtEar.git /usr/share/AtEar/
+	sudo bash install.sh
+
+# TODO: https://github.com/esc0rtd3w/wifi-hacker
+# https://github.com/vnik5287/wpa-autopwn
+# https://github.com/adelashraf/cenarius
+
+#: autopwn - install autopwn tools for WiFi hacking             *
+autopwn: wifite wifi-airgeddon wifi-handshaker
+################################## autopwn  ####################################
+
+################################### brute  #####################################
+##: pyrit - install latest version of Pyrit from sources    *
+wifi-pyrit-src:	deps
+	# NB: Updating from 2.3.2 to 2.3.3 breaks pyrit
+	# https://github.com/JPaulMora/Pyrit/issues/500
+	pip install scapy==2.3.2
+	# apt-get install pyrit
+	@echo "installing Pyrit from source"
+	$(call gitclone,https://github.com/JPaulMora/Pyrit)
+	cd $(repo) && python setup.py clean && python setup.py build && python setup.py install
 
 wifi-brute:
 	@echo "Installing common bruteforce tools for WiFi"
@@ -469,47 +409,81 @@ wifi-brute:
 	# TODO: https://github.com/Wh1t3Rh1n0/air-hammer
 	# TODO: https://github.com/SYWorks/wpa-bruteforcer
 
-#: wifi-wifite - install correct version of wifite             *
-wifi-wifite:	deps reaver pixiewps
-	$(call gitclone,https://github.com/derv82/wifite)
-	install -m 755 $(repo)/wifite.py /usr/bin/wifite-old
-	$(call gitclone,https://github.com/aanarchyy/wifite-mod-pixiewps)
-	install -m 755 $(repo)/wifite-ng /usr/bin/wifite-ng
-	# TODO: https://github.com/derv82/wifite2
+wifi-wordlist:
+	# https://github.com/kennyn510/wpa2-wordlists
+	# TODO: add rockyou.txt
+################################### brute  #####################################
 
-#: wifi-airgeddon - install airgeddon autopwn                  *
-wifi-airgeddon:	deps reaver pixiewps
-	apt-get install -y crunch isc-dhcp-server sslstrip lighttpd
-	git clone https://github.com/v1s1t0r1sh3r3/airgeddon.git /usr/share/airgeddon
-	chmod +x /usr/share/airgeddon/airgeddon.sh
-	ln -s /usr/share/airgeddon/airgeddon.sh /usr/bin/airgeddon
+################################### recon  #####################################
+##: wifi-recon - install tools fot WiFi reconnaissance          *
+wifi-recon:
+	@echo "Installing WRAITH: Wireless Reconnaissance And Intelligent Target Harvesting"
+	pip install 'git+https://github.com/wraith-wireless/wraith#egg=wraith'
+	# https://github.com/blaa/WifiStalker
+	@echo "Installing WIG"
+	pip install pcapy impacket
+	# https://github.com/6e726d/WIG
+	@echo "Installing Snoopy-NG"
+	# https://github.com/sensepost/snoopy-ng
+	@echo "Installing wifi-radar"
+	# pip install scapy netaddr git+https://github.com/pingflood/pythonwifi.git
+	# https://github.com/stef/wireless-radar
+	pip install wireless-radar
+	setcap 'CAP_NET_RAW+eip CAP_NET_ADMIN+eip' /usr/bin/python2.7
 
-#: wifi-handshaker - install tool for easy handshake capture   *
-wifi-handshaker:	deps reaver pixiewps
-	apt-get install -y beep bc
-	$(call gitclone,https://github.com/d4rkcat/HandShaker)
-	cd $(repo) && make
+##: wifi-ids - install IDS/IPS for WiFi                         *
+wifi-ids:
+	@echo "Installing WAIDPS"
+	pip install "git+https://github.com/0x90/waidps#egg=waidps"
+	# pip install pycrypto
+	# https://github.com/SYWorks/waidps
+	@echo "Installing wireless-ids"
+	# https://github.com/SYWorks/wireless-ids
+	@echo "Installing WiWo"
+	# https://github.com/CoreSecurity/wiwo
+################################### recon  #####################################
 
-# TODO: https://github.com/esc0rtd3w/wifi-hacker
-# https://github.com/vnik5287/wpa-autopwn
-# https://github.com/adelashraf/cenarius
-wifi-autopwn: wifi-wifite wifi-airgeddon wifi-handshaker
+################################## hotspot #####################################
+#: hotspot - install tools for easy/evil AP configuration       *
+hotspot:
+	@echo "Installing hotspotd.."
+	$(call gitclone,https://github.com/0x90/hotspotd)
+	cd $(repo) && sudo python2 setup.py install
+	# https://github.com/oblique/create_ap
 
-#: wifi-attacks - install soft for ALL WiFi attacks            *
-wifi-attacks: wifi-jammer wifi-wps wifi-autopwn
+wifipumpkin:
+	git clone https://github.com/P0cL4bs/WiFi-Pumpkin.git /tmp/WiFi-Pumpkin
+	cd /tmp/WiFi-Pumpkin && chmod +x installer.sh && ./installer.sh --install
+	# https://github.com/wouter-glasswall/rogueap
+	# https://github.com/xdavidhu/mitmAP
+	# https://github.com/entropy1337/infernal-twin
+	# https://github.com/Nick-the-Greek/Aerial
+	# https://github.com/zackiles/Rspoof
+	# https://github.com/baggybin/LokiPi
 
+linset:
+	apt-get install -y isc-dhcp-server lighttpd macchanger php5-cgi macchanger-gtk hostapd
+	git clone https://github.com/vk496/linset
+	cd linset &&chmod +x linset && ./linset
+
+#: rogueap - install Rogue AP and configuration scripts         *
+rogueap: hotspot wifipumpkin linset
+	apt-get install dnsmasq cupid-wpasupplicant hostapd mana-toolkit cupid-hostapd
+
+################################## Hotspot #####################################
+
+################################# Spectral #####################################
 ##: wireless-spectral - install spectral scan tools             *
 wifi-spectral:
-	# TODO: https://github.com/kazikcz/ath9k-spectral-scan
 	git clone https://github.com/bcopeland/speccy ${TMPDIR}/speccy
-
-##: wireless-spectral - install WiFi signal monitoring tools    *
-wifi-signal:
+	# TODO: https://github.com/kazikcz/ath9k-spectral-scan
 	# TODO: https://github.com/terbo/sigmon
 	# TODO: https://github.com/s7jones/Wifi-Signal-Plotter
+################################# Spectral #####################################
 
-#: wifi-kernel - install EXPERIMENTAL kernel for 80211 debug   *
-wifi-kernel:
+################################## Kernel ######################################
+#: kernel - install EXPERIMENTAL kernel for 80211 debug         *
+kernel:
 	@echo "Installing kernel source dependencies"
 	@if [ ! -d /usr/src/linux-source-4.8 ]; then \
 		@echo "Unpacking kernel"; \
@@ -531,8 +505,9 @@ wifi-kernel:
 	dpkg -i ../linux-image-3.14.5_3.14.5-10.00.Custom_amd64.deb
 	update-initramfs -c -k 3.14.5
 	update-grub2
+################################## Kernel #####################################
 
-################################# ModWiFi #################################
+################################## ModWiFi ####################################
 modwifi-dependencies:
 	@echo "Installing modwifi dependencies"
 	# apt-get install -y g++ libssl-dev libnl-3-dev libnl-genl-3-dev
@@ -545,33 +520,22 @@ modwifi-dependencies:
 		echo "Found downloaded modwifi release."; \
 	fi;
 
-modwifi-kernel-git:
+modwifi-kernel:
 	@echo "Installing modwifi kernel"
-	git clone -b research https://github.com/vanhoefm/modwifi-linux ${TMPDIR}/modwifi/linux
+	git clone -b research https://github.com/vanhoefm/ ${TMPDIR}/modwifi/linux
 	cd ${TMPDIR}/modwifi/linux && make && make install
 
-modwifi-ath9k-git:
+modwifi-ath9k:
 	@echo "Installing modwifi tools"
 	git clone -b research https://github.com/vanhoefm/modwifi-ath9k-htc ${TMPDIR}/modwifi/ath9k-htc
 	cd ${TMPDIR}/modwifi/ath9k-htc && make && make install
 
-modwifi-backports-git:
+modwifi-backports:
 	@echo "Installing modwifi backports dependencies"
 	apt-get install coccinelle splatch
 	@echo "Installing modwifi backports"
 	git clone -b research https://github.com/vanhoefm/modwifi-backports ${TMPDIR}/modwifi/backports
 	cd ${TMPDIR}/modwifi/backports && make && make install
-
-modwifi-tools-git:
-	@echo "Installing modwifi tools"
-	apt-get install -y g++ libssl-dev libnl-3-dev libnl-genl-3-dev
-	git clone -b master https://github.com/vanhoefm/modwifi-tools ${TMPDIR}/modwifi/tools
-	mkdir -p ${TMPDIR}/modwifi/tools/build
-	cd ${TMPDIR}/modwifi/tools/build && cmake .. && make all
-	install ${TMPDIR}/modwifi/tools/build/channelmitm /usr/bin
-	install ${TMPDIR}/modwifi/tools/build/constantjam /usr/bin
-	install ${TMPDIR}/modwifi/tools/build/fastreply /usr/bin
-	install ${TMPDIR}/modwifi/tools/build/reactivejam /usr/bin
 
 modwifi-drivers:
 	@echo "Installing modwifi drivers..."
@@ -585,9 +549,10 @@ modwifi-firmware:
 	cp ${TMPDIR}/modwifi/target_firmware/htc_7010.fw /lib/firmware/ath9k_htc/htc_7010-1.4.0.fw
 	cp ${TMPDIR}/modwifi/target_firmware/htc_9271.fw /lib/firmware/ath9k_htc/htc_9271-1.4.0.fw
 
-wireless-modwifi-tools:
+modwifi-tools:
 	@echo "Installing modwifi tools"
 	apt-get install -y g++ libssl-dev libnl-3-dev libnl-genl-3-dev
+	git clone -b master https://github.com/vanhoefm/modwifi-tools ${TMPDIR}/modwifi/tools
 	mkdir -p ${TMPDIR}/modwifi/tools/build
 	cd ${TMPDIR}/modwifi/tools/build && cmake .. && make all
 	install ${TMPDIR}/modwifi/tools/build/channelmitm /usr/bin
@@ -595,50 +560,31 @@ wireless-modwifi-tools:
 	install ${TMPDIR}/modwifi/tools/build/fastreply /usr/bin
 	install ${TMPDIR}/modwifi/tools/build/reactivejam /usr/bin
 
-##: modwifi - install modwifi drivers and firmware              *
-# modwifi: wireless-modwifi
+#: modwifi - install ModWifi toolkit. EXPERIMENTAL!             *
+modwifi: modwifi-kernel modwifi-backports modwifi-firmware modwifi-drivers modwifi-ath9k modwifi-tools
+################################## Kernel ######################################
 
-# wireless-modwifi:	wireless-modwifi-dependencies wireless-modwifi-drivers wireless-modwifi-firmware wireless-modwifi-tools
-
-
-#: bluetooth - install bluetooth hacking tools                 *
+################################ bluetooth #####################################
+#: bluetooth - install bluetooth hacking tools                  *
 bluetooth:
 	@echo "installing deps for bluetooth hacking"
 	apt-get install -y anyremote redfang spooftooph python-bluez obexfs bluewho btscanner \
-	bluelog libbluetooth-dev spectools libncurses-dev libpcre3-dev \
-	spooftooph sakis3g ubertooth gpsd  bluesnarfer bluez-tools bluewho \
-	wireshark wireshark-dev libwireshark-dev
+	bluelog libbluetooth-dev spectools libncurses-dev libpcre3-dev spooftooph sakis3g ubertooth \
+	gpsd  bluesnarfer bluez-tools bluewho wireshark wireshark-dev libwireshark-dev
+	# TODO: add check for x86_x64
 	# apt-get install -y libopenobex1:i386 libopenobex1-dev:i386 libbluetooth-dev:i386
+################################ Bluetooth #####################################
 
-ism-deps:
+################################## subghz ######################################
+#: subghz - install tools for sughz bands: 433/866/915Mhz       *
+subghz:
 	@echo "installing ISM dependencies"
 	apt-get install -y sdcc binutils make
-
-##: ism - install ISM hacking tools                             *
-ism: ism-deps
 	@echo "installing ISM hacking tools for 433/866/915Mhz"
 	apt-get install rfcat libusb-1.0-0 python-usb
-	# @echo "installing ISM hacking tools for 433/866/915Mhz"
-	# $(call gitclone,https://github.com/0x90/ism-arsenal)
-	# @echo "RFCat"
-	# hg clone https://bitbucket.org/atlas0fd00m/rfcat ${TMPDIR}/ism-arsenal/rfcat
-	# sudo cp ${TMPDIR}/ism-arsenal/rfcat/etc/udev/rules.d/20-rfcat.rules /etc/udev/rules.d && sudo udevadm control --reload-rules
-	# cd ${TMPDIR}/ism-arsenal/rfcat/firmware && ./build
-	# "make testgoodfet" will read info from your dongle using the GoodFET. you should see something like:
-	#
-	# SmartRF not found for this chip. Ident CC1111/r1103/ps0x0400 Freq 0.000 MHz RSSI 00
-	# "make backupdongle" will read the current firmware from your dongle to the file .../bins/original-dongle-hex.backup. ("make restoredongle") to revert to the original firmware.
-	#
-	# "make clean installRfCatChronosDongle" will clean, build, and install the RfCat (appFHSSNIC.c) firmware for a Chronos dongle.
-	#
-	# "make clean installRfCatDonsDongle" will clean, build, and install the RfCat (appFHSSNIC.c) firmware for a cc1111emk.
-	# for EMK/DONSDONGLE:
-	# make installdonsbootloader
-	# for CHRONOS:
-	# make installchronosbootloader
-	# for YARDSTICKONE:
-	# make installys1bootloader
+################################## subghz ######################################
 
+################################## nrf24 ######################################
 nrf24-deps:
 	@echo "Cloning NRF24 arsenal"
 	$(call gitclone,https://github.com/0x90/nrf24-arsenal)
@@ -679,13 +625,14 @@ nrf24-flash-crazyradio:
 	python launchBootloader.py && \
 	python nrfbootload.py flash bin/cradio.bin
 
-#: nrf24 - Nordic Semiconductor NRF24XXX hacking tools         *
-nrf24:	nrf24-deps
-	@make nrf24-firmware
+#: nrf24 - Nordic Semiconductor NRF24XXX hacking tools          *
+nrf24:	nrf24-deps nrf24-firmware
 	@echo "Use make nrf24-flash-research to flash proper firmware"
+################################## nrf24 #######################################
 
+################################## firmware ######################################
 ##: firmware-reverse - install firmware RE/MOD tools
-firmware-reverse:	dev
+firmware-reverse:	dev-python
 	apt-get install firmware-mod-kit
 	@echo "install sasquatch to extract non-standard SquashFS images"
 	$(call gitclone,https://github.com/devttys0/sasquatch)
@@ -699,10 +646,10 @@ firmware-reverse:	dev
 	$(call gitclone,https://github.com/craigz28/firmwalker)
 
 ##: avatar - install Avatar symbol execution
-firmware-avatar:	deps dev
+avatar:	dev-python
 	@echo "install all build-deps"
 	apt-get build-dep qemu llvm
-	apt-get install liblua5.1-dev libsdl1.2-dev libsigc++-2.0-dev binutils-dev python-docutils python-pygments nasm
+	apt-get install -y liblua5.1-dev libsdl1.2-dev libsigc++-2.0-dev binutils-dev python-docutils python-pygments nasm
 	@echo "Get the source code from github"
 	$(call gitclone,https://github.com/eurecom-s3/s2e)
 	@echo "It will take some time to build..."
@@ -716,7 +663,7 @@ firmware-avatar:	deps dev
 	cd $(TMPDIR)/openocd && autoreconf -i && ./configure --prefix=$(PREFIX) && make -j && make install
 
 ##: crossdev - install cross platfrorm dev tools
-firmware-crossdev:	deps
+crossdev:	deps
 	# http://www.emdebian.org/crosstools.html
 	@echo "installing Emdebian, xapt"
 	apt-get install emdebian-archive-keyring xapt -y
@@ -734,13 +681,13 @@ firmware-crossdev:	deps
 	apt-get install -y linux-libc-dev-mips-cross libc6-mips-cross libc6-dev-mips-cross \
 	binutils-mips-linux-gnu gcc-4.4-mips-linux-gnu g++-4.4-mips-linux-gnu -y
 
-##: openwrt - install openwrt hacking tools
-firmware-openwrt:	deps
-	@echo "installing OpenWRT"
+#: firmware - install firmware RE/DEBUG/MOD tools               *
+firmware:	dev firmware-reverse crossdev firmware
+################################# firmware #####################################
 
-# diy
+################################# hardware #####################################
 diy:
-	apt-get install python-rpi.gpio python-smbus i2c-tools
+	apt-get install -y  python-rpi.gpio python-smbus i2c-tools
 	pip install spidev
 
 ##: hardware - install generic hardware hacking tools
@@ -763,3 +710,17 @@ hardware-signal:
 	cd $(repo) && ./autogen.sh && ./configure && make && make install
 	$(call gitclone,git://sigrok.org/pulseview)
 	cd $(repo) && cmake . && make && make install
+
+#: hardware - install hardware hacking tools                    *
+hardware: dev-python hardware-generic hardware-signal
+################################# hardware #####################################
+
+################################# summary ######################################
+#: wireless - soft for unlicensed bands: 433/866/915Mhz 2.4Ghz  *
+wireless: subghz nrf24 wifi bluetooth
+#: wired - install soft for hacking wired interfaces/buses      *
+wired: hardware firmware
+
+#: all - install EVERYTHING from EVERY category                 *
+all: clean upgrade ism wired
+################################# summary ######################################
