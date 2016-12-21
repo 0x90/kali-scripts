@@ -316,12 +316,16 @@ reaver:
 	$(call gitclone,https://github.com/t6x/reaver-wps-fork-t6x)
 	cd $(repo)/src/ && ./configure --prefix=$(PREFIX) && make && make install
 
+reaver-mac:
+	# https://github.com/gabrielrcouto/reaver-wps
+
 ##: pixiewps - install fresh version of reaver
 pixiewps:
 	@echo "Trying to remove original pixiewps"
 	sudo dpkg -r --force-depends pixiewps
 	$(call gitclone,https://github.com/wiire/pixiewps)
 	cd $(repo)/src/ && make && make install
+# https://github.com/nxxxu/AutoPixieWps
 
 #: penetrator - install penetrator from source                 *
 penetrator:
@@ -333,9 +337,16 @@ wpsik:
 	@echo "Installling wpsik"
 	pip install "git+https://github.com/0x90/wpsik#egg=wpsik"
 
+#: autoreaver - install autoreaver
+autoreaver:
+	apt-get install -y lshw
+	# https://github.com/DominikStyp/auto-reaver
+
+# https://github.com/arnaucode/wifiAutoWPS
+
 #: wps - install ALL WPS pwning tools and scripts               *
 wps: wifite penetrator pixiewps wpsik reaver
-################################## WPS ########################################
+################################# WPS #########################################
 
 ################################ deauth #######################################
 wifijammer:
@@ -389,12 +400,12 @@ atear:
 # https://github.com/adelashraf/cenarius
 
 #: autopwn - install autopwn tools for WiFi hacking             *
-autopwn: wifite wifi-airgeddon wifi-handshaker
+autopwn: wifite airgeddon handshaker atear
 ################################## autopwn  ####################################
 
 ################################### brute  #####################################
-##: pyrit - install latest version of Pyrit from sources    *
-wifi-pyrit-src:	deps
+#: pyrit - install latest version of Pyrit from sources    *
+pyrit:	deps
 	# NB: Updating from 2.3.2 to 2.3.3 breaks pyrit
 	# https://github.com/JPaulMora/Pyrit/issues/500
 	pip install scapy==2.3.2
@@ -403,16 +414,28 @@ wifi-pyrit-src:	deps
 	$(call gitclone,https://github.com/JPaulMora/Pyrit)
 	cd $(repo) && python setup.py clean && python setup.py build && python setup.py install
 
-wifi-brute:
+brute-common:
 	@echo "Installing common bruteforce tools for WiFi"
-	apt-get install -y hashcat cowpatty
+	apt-get install -y hashcat cowpatty john
+
+#: airhammer - WPA Enterprise horizontal brute-force attack tool
+air-hammer:
 	@echo "Installing Air-Hammer - A WPA Enterprise horizontal brute-force attack tool"
 	# TODO: https://github.com/Wh1t3Rh1n0/air-hammer
+
+#: wpa-bruteforcer - WPA Enterprise horizontal brute-force attack tool
+wpa-bruteforcer:
 	# TODO: https://github.com/SYWorks/wpa-bruteforcer
 
-wifi-wordlist:
-	# https://github.com/kennyn510/wpa2-wordlists
-	# TODO: add rockyou.txt
+wordlist:
+	@echo "Installing standard wordlists"
+	apt-get install -y wordlists
+	cd /usr/share/wordlists/ && gunzip rockyou.txt.gz
+	@echo "Downloading wordlists for WPA/WPA2 brute"
+	git clone https://github.com/kennyn510/wpa2-wordlists /usr/share/wordlists/wpa2-wordlists
+
+##: wifi-recon - install tools fot WiFi reconnaissance          *
+brute: brute-common pyrit wordlists air
 ################################### brute  #####################################
 
 ################################### recon  #####################################
@@ -718,7 +741,9 @@ hardware: dev-python hardware-generic hardware-signal
 
 ################################# summary ######################################
 #: wireless - soft for unlicensed bands: 433/866/915Mhz 2.4Ghz  *
-wireless: subghz nrf24 wifi bluetooth
+wifi: autopwn brute
+#: ism - soft for unlicensed bands: 433/866/915Mhz 2.4Ghz       *
+ism: subghz nrf24 wifi bluetooth
 #: wired - install soft for hacking wired interfaces/buses      *
 wired: hardware firmware
 #: all - install EVERYTHING from EVERY category                 *
