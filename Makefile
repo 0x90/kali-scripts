@@ -721,8 +721,7 @@ hardware-signal:
 #: deps - install basic dependecies and common tools            *
 deps:	archivers common
 #: dev - install ALL development tools                          *
-dev: deps dev-vcs dev-python dev-net
-
+dev: deps dev-vcs dev-python dev-network
 ##: airtools - install aircrack-ng, airoscript-ng, airgraph-ng   *
 airtools: aircrack airoscript airgraph
 #: wifi-deauth - tools for 80211 deauth: wifijammer, zizzania   *
