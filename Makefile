@@ -68,7 +68,7 @@ list:
 help:
 	@echo "\n\t`printf "\033[32m"`\t     .:[Kali Scripts reb0rn to Makefile]:.`printf "\033[0m"`"
 	@echo "\t+---------------------------------------------------------------+"
-	@egrep -o "^#: (.+)" [Mm]akefile  | sed "s/#: /	*  `printf "\033[32m"`/"| sed "s/ - /`printf "\033[0m"` - /"
+	@egrep -o "^#: (.+)" [Mm]akefile  |sort| sed "s/#: /	*  `printf "\033[32m"`/"| sed "s/ - /`printf "\033[0m"` - /"
 	@echo "\t+---------------------------------------------------------------+"
 	@echo "\t\t`printf "\033[32m"`      greetz fly to all DC7499 community`printf "\033[0m"`"
 	@echo "\t\t`printf "\033[32m"`           ~~-<  @090h 2016  >-~~`printf "\033[0m"`\n"
@@ -110,12 +110,6 @@ archivers:
 common:
 	@echo "installing common tools.."
 	apt-get install -y terminator tmux htop iftop iotop mc screen curl wget
-
-##: wifi-generic - install generic WiFi hacking tools
-wifi-generic:
-	@echo "installing WiFi tools and dependecies"
-	apt-get install -y kismet kismet-plugins giskismet mdk3 linssid \
-	wavemon rfkill iw tshark horst fern-wifi-cracker wifite
 ################################# deps #########################################
 
 ################################# ssh ##########################################
@@ -156,27 +150,12 @@ dev-vcs:
 dev-build:
 	@echo "Istalling development tools and environment"
 	@apt-get install -y cmake cmake-data module-assistant build-essential patch g++ gcc gcc-multilib
-	dkms patchutils strace wdiff pkg-config automake autoconf bison gawk flex gettext \
+	dkms patchutils strace wdiff pkg-config automake autoconf  flex bison gawk flex gettext \
 	linux-headers-`uname -r` kernel-package linux-source libncurses5-dev libreadline6 libreadline6-dev \
 	libbz2-dev zlib1g-dev fakeroot ncurses-dev libtool libmagickcore-dev libmagick++-dev libmagickwand-dev \
 	libyaml-dev libxslt1-dev libxml2-dev libxslt-dev libc6-dev
 
-##: dev-net - install tools for network development
-dev-net:
-	@echo "installing network libs"
-	@apt-get install -y libpcap-dev libpcap0.8 libpcap0.8-dev libnetfilter-queue-dev libnl-genl-3-dev libssh2-1-dev
-
-##: dev-crypto - install libs for crypto
-dev-crypto:
-	@echo "installing crypto libs"
-	@apt-get install -y openssl libssl-dev python-m2crypto libgcrypt20 libgcrypt20-dev cracklib-runtime
-
-##: dev-crypto - install libs for DB
-dev-db:
-	@echo "installing db libs"
-	@apt-get install -y libsqlite3-dev sqlite3 libmysqlclient-dev
-
-#: dev-python - install python developer environment               *
+##: dev-python - install python developer environment            *
 dev-python:	dev-vcs dev-db dev-crypto
 	@echo "installing pyenv, pip and other python modules"
 	apt-get install -y python-dev bpython python-pip python-twisted python-shodan  \
@@ -184,6 +163,7 @@ dev-python:	dev-vcs dev-db dev-crypto
 	python-gnuplot python-matplotlib python-scipy python-requests python-gevent \
 	python-numpy python-gi-dev python-psycopg2 swig doxygen python-lzma python3 python3-pip \
 	python-opengl python-qt4 python-qt4-gl libqt4-opengl python-pyqtgraph python-pyside \
+	python-pip python-dev
 	pip install cookiecutter
 	@if [ ! -d ~/.pyenv ]; then \
 		curl -L https://raw.githubusercontent.com/yyuu/pyenv-installer/master/bin/pyenv-installer | bash ; \
@@ -215,7 +195,28 @@ wifi-frequency-hacker:
 ################################# regdb ########################################
 
 ################################# libs #########################################
-#: lorcon - install Lorcon library with python bindings         *
+##: crypto - install crypto libraries
+crypto:
+	@echo "installing crypto libs"
+	@apt-get install -y openssl libssl-dev python-m2crypto libgcrypt20 libgcrypt20-dev cracklib-runtime
+
+##: dev-crypto - install DB libraries
+db:
+	@echo "installing db libs"
+	@apt-get install -y libsqlite3-dev sqlite3 libmysqlclient-dev
+
+# #: libtins - C++ lib with rfmon, 802.11 and wep/wpa2 decrypt         *
+# libtins:
+# 	# pyopenssl?
+# 	apt-get install -y libtins libtins-dev
+
+##: network - difrent network libraries                          *
+network:
+	@echo "installing network libs"
+	@apt-get install -y libpcap-dev libpcap0.8 libpcap0.8-dev libdnet \
+	libnetfilter-queue-dev libnl-genl-3-dev libssh2-1-dev  libtins libtins-dev
+
+##: lorcon - install Lorcon library with python bindings         *
 lorcon:
 	$(call gitclone,https://github.com/0x90/lorcon)
 	@echo "installing Lorcon from $(repo)"
@@ -223,16 +224,17 @@ lorcon:
 	@echo "installing pylorcon2 bindings"
 	@cd $(repo)/pylorcon2 && python setup.py build && python setup.py install
 
+##: libuwifi - WiFi lib with injection/monitor/channel support   *
 libuwifi:
 	$(call gitclone,https://github.com/br101/libuwifi)
 	@echo "installing Lorcon from $(repo)"
 	@cd $(repo) && ./configure --prefix=$(PREFIX) && make && make install
 
-#: python - install python libs and bindings for 802.11         *
-python: dev
-	@echo "Installling basic python libs and dependencies.."
-	apt-get install -y python-pip libdnet libtins-dev libpcap-dev python-dev flex bison
-	pip install wifi
+#: wifi-python - install python libraries for WiFi              *
+python-wifi:
+	@echo "Installing python network libs.."
+	pip install wifi scapy==2.3.2 impacket pcapy pcappy
+	@echo "Installing pythonwifi library"
 	pip install "git+https://github.com/pingflood/pythonwifi.git"
 	@echo "Installling PyRIC (new Lorcon)"
 	pip install "git+https://github.com/wraith-wireless/PyRIC#egg=PyRIC"
@@ -243,7 +245,6 @@ python: dev
 	@echo "Installing pytins..."
 	$(call gitclone,https://github.com/mfontanini/pytins)
 	cd $(repo) && make && make install
-	git clone ${TMPDIR}/pytins && cd ${TMPDIR}/pytins && make && make install
 	@echo "Installing py80211"
 	pip install "git+https://github.com/0x90/py80211#egg=py80211"
 
@@ -252,98 +253,7 @@ python: dev
 	# https://github.com/weaknetlabs/libpcap-80211-c
 	# https://github.com/0x90/wifi-arsenal/tree/master/libmoep-1.1
 	# https://github.com/moepinet/moepdefend
-
 ################################# libs ########################################
-
-################################## WPA ########################################
-#: aircrack - install FULL aircrack-ng from source              *
-aircrack:
-	@echo "Installing aircrack-ng from source..."
-	apt-get install	-y libgcrypt20-dev
-	git clone https://github.com/aircrack-ng/aircrack-ng /tmp/aircrack-ng
-	cd /tmp/aircrack-ng && make sqlite=true experimental=true ext_scripts=true pcre=true gcrypt=true libnl=true
-	cd /tmp/aircrack-ng && make strip && make install
-	svn co http://svn.aircrack-ng.org/trunk/ aircrack-ng
-	cd aircrack-ng && make install
-	@echo "Installing airodump_mod"
-	# uninstall currently installed aircrack suite, if any
-	# libnl=false make uninstall
-	# git checkout origin/kick_off
-	# git checkout -b kick_off origin/kick_off
-	# libnl=false make -j4
-	# libnl=false make install
-	# airodump-ng-oui-update #download MAC manufacturer database
-	# git clone https://github.com/maroviher/airodump_mod
-	# cd airodump_mod && make install
-	@echo "Installing airoscript-ng from source..."
-	svn co http://svn.aircrack-ng.org/branch/airoscript-ng/ airoscript-ng
-	cd airoscript-ng && make install
-	@echo "Installing airgraph-ng from source..."
-	svn co http://svn.aircrack-ng.org/trunk/scripts/airgraph-ng
-	cd airgraph-ng && make install
-
-#: handshaker - install tool for easy handshake capture       *
-handshaker:	deps reaver pixiewps
-	apt-get install -y beep bc
-	$(call gitclone,https://github.com/d4rkcat/HandShaker)
-	cd $(repo) && make install
-
-
-# TODO: https://github.com/esc0rtd3w/wifi-hacker
-# https://github.com/vnik5287/wpa-autopwn
-# https://github.com/adelashraf/cenarius
-################################## WPA ########################################
-
-################################## WPS ########################################
-#: reaver - install fresh version of reaver-wps-fork-t6x        *
-reaver:
-	@if [ -e /usr/bin/reaver ]; then \
-		@echo "Trying to remove original reaver-wps"; \
-		sudo dpkg -r --force-depends reaver; \
-	fi;
-	@echo "Installing reaver-wps-fork-t6x from github"
-	$(call gitclone,https://github.com/t6x/reaver-wps-fork-t6x)
-	cd $(repo)/src/ && ./configure --prefix=$(PREFIX) && make && make install
-
-#: reaver-spoof - install reaver-spoof with MAC spoof support   *
-reaver-spoof:
-	$(call gitclone,https://github.com/gabrielrcouto/reaver-wps)
-	# cd $(repo)/src/ && ./configure --prefix=$(PREFIX) && make && make install
-	cd $(repo)/src/ && ./configure && make && make install
-	mv /usr/local/bin/reaver /usr/local/bin/reaver-spoof
-
-#: pixiewps - install fresh pixiewps from Github                *
-pixiewps:
-	@echo "Trying to remove original pixiewps"
-	sudo dpkg -r --force-depends pixiewps
-	$(call gitclone,https://github.com/wiire/pixiewps)
-	cd $(repo)/src/ && make && make install
-
-#: autopixiewps - install autopwner script for pixiewps         *
-autopixiewps:
-	 pip install "git+https://github.com/0x90/AutoPixieWps#egg=AutoPixieWps"
-
-#: penetrator - install penetrator from source                  *
-penetrator:
-	$(call gitclone,https://github.com/xXx-stalin-666-money-xXx/penetrator-wps)
-	cd $(repo) && ./install.sh;
-
-#: wpsik - install wpsik - WPS info gathering tool              *
-wpsik:
-	@echo "Installling wpsik"
-	pip install "git+https://github.com/0x90/wpsik#egg=wpsik"
-
-#: autoreaver - install autoreaver                              *
-autoreaver:
-	apt-get install -y lshw
-	git clone https://github.com/DominikStyp/auto-reaver /usr/share/auto-reaver
-
-wpsbreak:
-	git clone https://github.com/radi944/HT_WPS-Break /usr/share/HT_WPS-Break
-
-autowps:
-	git clone https://github.com/arnaucode/wifiAutoWPS /usr/share/wifiAutoWPS
-################################# WPS #########################################
 
 ################################ deauth #######################################
 wifijammer:
@@ -361,14 +271,131 @@ zizzania:
 	cd $(repo) && make && make install
 ################################ deauth #######################################
 
-################################ autopwn ######################################
+################################## WPA ########################################
+##: wifi-common - install common WiFi hacking tools
+wifi-common:
+	@echo "installing WiFi tools and dependecies"
+	apt-get install -y kismet kismet-plugins giskismet mdk3 linssid \
+	wavemon rfkill iw tshark horst fern-wifi-cracker wifite
+
+##: aircrack - install EXPERIMENTAL build of aircrack-ng     *
+aircrack:
+	@echo "Installing aircrack-ng from source..."
+	apt-get install	-y libgcrypt20-dev
+	$(call gitclone,https://github.com/aircrack-ng/aircrack-ng)
+	cd $(repo) && make sqlite=true experimental=true ext_scripts=true pcre=true gcrypt=true libnl=true
+	cd $(repo) && make strip && make install
+
+##: airoscript - install airoscript                            *
+airoscript:
+	@echo "Installing airoscript-ng from source..."
+	svn co http://svn.aircrack-ng.org/branch/airoscript-ng/ ${TMPDIR}/airoscript-ng
+	cd ${TMPDIR}/airoscript-ng && make install
+
+##: airgraph - install airgraph tool                            *
+airgraph:
+	@echo "Installing airgraph-ng from source..."
+	svn co http://svn.aircrack-ng.org/trunk/scripts/airgraph-ng ${TMPDIR}/airgraph-ng
+	cd ${TMPDIR}/airgraph-ng && make install
+
+##: handshaker - install tool for easy handshake capture         *
+handshaker:	deps reaver pixiewps
+	apt-get install -y beep bc
+	$(call gitclone,https://github.com/d4rkcat/HandShaker)
+	cd $(repo) && make install
+
+##: pyrit - install latest version of Pyrit from sources         *
+pyrit:	deps
+	# NB: Updating from 2.3.2 to 2.3.3 breaks pyrit
+	# https://github.com/JPaulMora/Pyrit/issues/500
+	pip install scapy==2.3.2
+	# apt-get install pyrit
+	@echo "installing Pyrit from source"
+	$(call gitclone,https://github.com/JPaulMora/Pyrit)
+	cd $(repo) && python setup.py clean && python setup.py build && python setup.py install
+
+brute-common:
+	@echo "Installing common bruteforce tools for WiFi"
+	apt-get install -y hashcat cowpatty john
+
+##: airhammer - WPA-Enterprise horizontal brute-force tool       *
+air-hammer:
+	@echo "Installing Air-Hammer - A WPA Enterprise horizontal brute-force attack tool"
+	# TODO: https://github.com/Wh1t3Rh1n0/air-hammer
+
+##: wpa-bruteforcer - WPA brute-force for AP without clients     *
+wpa-bruteforcer:
+	# TODO: https://github.com/SYWorks/wpa-bruteforcer
+	pip install "git+https://github.com/0x90/wpa-bruteforcer#egg=wpa-bruteforcer"
+
+wordlist:
+	@echo "Installing standard wordlists"
+	apt-get install -y wordlists
+	cd /usr/share/wordlists/ && gunzip rockyou.txt.gz
+	@echo "Downloading wordlists for WPA/WPA2 brute"
+	git clone https://github.com/kennyn510/wpa2-wordlists /usr/share/wordlists/wpa2-wordlists
+################################## WPA ########################################
+
+################################## WPS ########################################
+##: reaver - install fresh version of reaver-wps-fork-t6x        *
+reaver:
+	@if [ -e /usr/bin/reaver ]; then \
+		@echo "Trying to remove original reaver-wps"; \
+		sudo dpkg -r --force-depends reaver; \
+	fi;
+	@echo "Installing reaver-wps-fork-t6x from github"
+	$(call gitclone,https://github.com/t6x/reaver-wps-fork-t6x)
+	cd $(repo)/src/ && ./configure --prefix=$(PREFIX) && make && make install
+
+##: reaver-spoof - install reaver-spoof with MAC spoof support   *
+reaver-spoof:
+	$(call gitclone,https://github.com/gabrielrcouto/reaver-wps)
+	# cd $(repo)/src/ && ./configure --prefix=$(PREFIX) && make && make install
+	cd $(repo)/src/ && ./configure && make && make install
+	mv /usr/local/bin/reaver /usr/local/bin/reaver-spoof
+
+##: pixiewps - install fresh pixiewps from Github                *
+pixiewps:
+	@echo "Trying to remove original pixiewps"
+	sudo dpkg -r --force-depends pixiewps
+	$(call gitclone,https://github.com/wiire/pixiewps)
+	cd $(repo)/src/ && make && make install
+
+#:# penetrator - install penetrator from source                  *
+penetrator:
+	$(call gitclone,https://github.com/xXx-stalin-666-money-xXx/penetrator-wps)
+	cd $(repo) && ./install.sh;
+
+##: wpsik - install wpsik - WPS info gathering tool              *
+wpsik:
+	@echo "Installling wpsik"
+	pip install "git+https://github.com/0x90/wpsik#egg=wpsik"
+
+##TODO: add bully
+################################# WPS ##########################################
+
+############################### autopwn ########################################
 ##: wifite - install correct version of wifite                   *
 wifite: deps reaver pixiewps
 	$(call gitclone,https://github.com/derv82/wifite)
 	install -m 755 $(repo)/wifite.py /usr/bin/wifite-old
 	$(call gitclone,https://github.com/aanarchyy/wifite-mod-pixiewps)
 	install -m 755 $(repo)/wifite-ng /usr/bin/wifite-ng
-	# TODO: https://github.com/derv82/wifite2
+
+##: autopixiewps - install autopwner script for pixiewps         *
+autopixiewps:
+	 pip install "git+https://github.com/0x90/AutoPixieWps#egg=AutoPixieWps"
+
+##: autoreaver - install autoreaver                              *
+autoreaver:
+	apt-get install -y lshw
+	git clone https://github.com/DominikStyp/auto-reaver /usr/share/auto-reaver
+
+wpsbreak:
+	git clone https://github.com/radi944/HT_WPS-Break /usr/share/HT_WPS-Break
+
+autowps:
+	git clone https://github.com/arnaucode/wifiAutoWPS /usr/share/wifiAutoWPS
 
 airgeddon:	deps reaver pixiewps
 	apt-get install -y crunch isc-dhcp-server sslstrip lighttpd
@@ -388,43 +415,16 @@ atear:
 	apt-get install -y aircrack-ng tshark hostapd python-dev python-flask python-paramiko python-psycopg2 python-pyodbc python-sqlite python-pip
 	git clone https://github.com/NORMA-Inc/AtEar.git /usr/share/AtEar/
 	cd /usr/share/AtEar/install.sh && sudo chmod +x install.sh && sudo ./install.sh
-# TODO: https://github.com/esc0rtd3w/wifi-hacker
+
+# TODO: Add soft
+# https://github.com/derv82/wifite2
+# https://github.com/esc0rtd3w/wifi-hacker
 # https://github.com/vnik5287/wpa-autopwn
 # https://github.com/adelashraf/cenarius
-################################## autopwn  ####################################
-
-################################### brute  #####################################
-#: pyrit - install latest version of Pyrit from sources         *
-pyrit:	deps
-	# NB: Updating from 2.3.2 to 2.3.3 breaks pyrit
-	# https://github.com/JPaulMora/Pyrit/issues/500
-	pip install scapy==2.3.2
-	# apt-get install pyrit
-	@echo "installing Pyrit from source"
-	$(call gitclone,https://github.com/JPaulMora/Pyrit)
-	cd $(repo) && python setup.py clean && python setup.py build && python setup.py install
-
-brute-common:
-	@echo "Installing common bruteforce tools for WiFi"
-	apt-get install -y hashcat cowpatty john
-
-#: airhammer - WPA-Enterprise horizontal brute-force tool       *
-air-hammer:
-	@echo "Installing Air-Hammer - A WPA Enterprise horizontal brute-force attack tool"
-	# TODO: https://github.com/Wh1t3Rh1n0/air-hammer
-
-#: wpa-bruteforcer - WPA brute-force for AP without clients     *
-wpa-bruteforcer:
-	# TODO: https://github.com/SYWorks/wpa-bruteforcer
-	pip install "git+https://github.com/0x90/wpa-bruteforcer#egg=wpa-bruteforcer"
-
-wordlist:
-	@echo "Installing standard wordlists"
-	apt-get install -y wordlists
-	cd /usr/share/wordlists/ && gunzip rockyou.txt.gz
-	@echo "Downloading wordlists for WPA/WPA2 brute"
-	git clone https://github.com/kennyn510/wpa2-wordlists /usr/share/wordlists/wpa2-wordlists
-################################### brute  #####################################
+# https://github.com/esc0rtd3w/wifi-hacker
+# https://github.com/vnik5287/wpa-autopwn
+# https://github.com/adelashraf/cenarius
+################################ all in one  ###################################
 
 ################################### recon  #####################################
 ##: wifi-recon - install tools fot WiFi reconnaissance          *
@@ -456,7 +456,7 @@ wifi-ids:
 ################################### recon  #####################################
 
 ################################## hotspot #####################################
-#: hotspotd - install hotspotd for easy AP configuration        *
+##: hotspotd - install hotspotd for easy AP configuration        *
 hotspotd:
 	@echo "Installing hotspotd.."
 	$(call gitclone,https://github.com/0x90/hotspotd)
@@ -466,12 +466,6 @@ hotspotd:
 wifipumpkin:
 	git clone https://github.com/P0cL4bs/WiFi-Pumpkin.git ${TMPDIR}/WiFi-Pumpkin
 	cd ${TMPDIR}/WiFi-Pumpkin && chmod +x installer.sh && ./installer.sh --install
-	# https://github.com/wouter-glasswall/rogueap
-	# https://github.com/xdavidhu/mitmAP
-	# https://github.com/entropy1337/infernal-twin
-	# https://github.com/Nick-the-Greek/Aerial
-	# https://github.com/zackiles/Rspoof
-	# https://github.com/baggybin/LokiPi
 
 createap:
 	@echo "Installing create_ap.."
@@ -484,8 +478,16 @@ linset:
 	cd linset && chmod +x linset && ./linset
 
 rogueap-deps:
-	apt-get install -y dnsmasq cupid-wpasupplicant hostapd mana-toolkit cupid-hostapd
-################################## Hotspot #####################################
+	apt-get install -y dnsmasq cupid-wpasupplicant hostapd mana-toolkit cupid-hostapd freeradius-wpe hostapd-wpe
+
+## TODO: add soft
+# https://github.com/wouter-glasswall/rogueap
+# https://github.com/xdavidhu/mitmAP
+# https://github.com/entropy1337/infernal-twin
+# https://github.com/Nick-the-Greek/Aerial
+# https://github.com/zackiles/Rspoof
+# https://github.com/baggybin/LokiPi
+################################## RogueAP #####################################
 
 ################################# Spectral #####################################
 ##: wireless-spectral - install spectral scan tools             *
@@ -575,10 +577,10 @@ modwifi-tools:
 	install ${TMPDIR}/modwifi/tools/build/constantjam /usr/bin
 	install ${TMPDIR}/modwifi/tools/build/fastreply /usr/bin
 	install ${TMPDIR}/modwifi/tools/build/reactivejam /usr/bin
-################################## Kernel ######################################
+################################## modwifi ######################################
 
 ################################ bluetooth #####################################
-#: bluetooth - install bluetooth hacking tools                  *
+##: bluetooth - install bluetooth hacking tools                  *
 bluetooth:
 	@echo "installing deps for bluetooth hacking"
 	apt-get install -y anyremote redfang spooftooph python-bluez obexfs bluewho btscanner \
@@ -589,7 +591,7 @@ bluetooth:
 ################################ Bluetooth #####################################
 
 ################################## subghz ######################################
-#: subghz - install tools for sughz bands: 433/866/915Mhz       *
+##: subghz - install tools for sughz bands: 433/866/915Mhz       *
 subghz:
 	@echo "installing ISM dependencies"
 	apt-get install -y sdcc binutils make
@@ -642,7 +644,7 @@ nrf24-flash-crazyradio:
 
 ################################## firmware ######################################
 ##: firmware-reverse - install firmware RE/MOD tools
-firmware-reverse:	dev python
+firmware-reverse:
 	apt-get install firmware-mod-kit
 	@echo "install sasquatch to extract non-standard SquashFS images"
 	$(call gitclone,https://github.com/devttys0/sasquatch)
@@ -656,7 +658,7 @@ firmware-reverse:	dev python
 	$(call gitclone,https://github.com/craigz28/firmwalker)
 
 ##: avatar - install Avatar symbol execution
-avatar:	dev python
+avatar:
 	@echo "install all build-deps"
 	apt-get build-dep qemu llvm
 	apt-get install -y liblua5.1-dev libsdl1.2-dev libsigc++-2.0-dev binutils-dev python-docutils python-pygments nasm
@@ -723,32 +725,32 @@ hardware-signal:
 deps:	archivers common
 #: dev - install ALL development tools                          *
 dev: deps dev-vcs dev-python dev-net
-#: libs - install system and python libraries for 802.11        *
-libs: dev lorcon libuwifi python-libs
-##: python - install lot's of python libraries                   *
-# python: dev-python
-#: deauth - tools for 80211 deauth: wifijammer, zizzania        *
-deauth: wifijammer zizzania
+#: wifi-libs - install system libraries for 802.11 stack        *
+wifi-libs: lorcon libuwifi wifi-python
+#: wifi-deauth - tools for 80211 deauth: wifijammer, zizzania   *
+wifi-deauth: wifijammer zizzania
+#: airtools - install aircrack-ng, airoscript-ng, airgraph-ng   *
+airtools: aircrack airoscript airgraph
 #: wpa - install soft for attacks on WPA/WPA2/WPA-Enterprise    *
 wpa: deauth wifite airgeddon handshaker
 #: wps - install ALL WPS pwning tools and scripts               *
-wps: wifite penetrator pixiewps wpsik reaver autoreaver wpsbreak autowps
-#: rogueap - install Rogue AP and configuration scripts         *
-rogueap: rogueap-deps hotspot wifipumpkin linset
-#: modwifi - install ModWifi toolkit. EXPERIMENTAL!             *
-modwifi: modwifi-kernel modwifi-backports modwifi-firmware modwifi-drivers modwifi-ath9k modwifi-tools
-#: wireless - soft for unlicensed bands: 433/866/915Mhz 2.4Ghz  *
+wps: penetrator pixiewps wpsik reaver
+#: wifi-rogueap - install Rogue AP and configuration scripts    *
+wifi-rogueap: rogueap-deps hotspot wifipumpkin linset
+#: wifi-autopwn - install autopwn tools                         *
+wifi-autopwn: wifite  autopixiewps autoreaver wpsbreak autowps
+##: wifi - soft for unlicensed bands: 433/866/915Mhz 2.4Ghz      *
 wifi: dev rogueap-deps python autopwn brute deauth wps
 #: nrf24 - Nordic Semiconductor NRF24XXX hacking tools          *
 nrf24:	nrf24-deps nrf24-firmware
 #: ism - soft for unlicensed bands: 433/866/915Mhz 2.4Ghz       *
 ism: subghz nrf24 wifi bluetooth
 #: firmware - install firmware RE/DEBUG/MOD tools               *
-firmware:	dev firmware-reverse crossdev firmware
+firmware:	firmware-reverse crossdev firmware
 #: hardware - install hardware hacking tools                    *
-hardware: dev-python hardware-generic hardware-signal
-#: wired - install soft for hacking wired interfaces/buses      *
-wired: hardware firmware
+hardware: hardware-generic hardware-signal
 #: all - install EVERYTHING from EVERY category                 *
-all: clean upgrade wireless wired
+all: clean upgrade wireless hardware firmware
+##: modwifi - install ModWifi toolkit. EXPERIMENTAL!             *
+# modwifi: modwifi-kernel modwifi-backports modwifi-firmware modwifi-drivers modwifi-ath9k modwifi-tools
 ################################# summary ######################################
