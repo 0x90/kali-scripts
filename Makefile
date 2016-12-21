@@ -165,11 +165,18 @@ dev-db:
 	@echo "installing db libs"
 	@apt-get install -y libsqlite3-dev sqlite3 libmysqlclient-dev
 
-##: dev-network - difrent network libraries                          *
+##: dev-network - difrent network libraries                        *
 dev-network:
 	@echo "installing network libs"
 	@apt-get install -y libpcap-dev libpcap0.8 libpcap0.8-dev libdnet \
-	libnetfilter-queue-dev libnl-genl-3-dev libssh2-1-dev  libtins libtins-dev
+	libnetfilter-queue-dev libnl-genl-3-dev libssh2-1-dev
+
+
+libtins:
+	libtins libtins-dev
+	$(call gitclone,https://github.com/mfontanini/libtins.git)
+	cd $(repo) && mkdir build
+	cd build && cmake ../ -DLIBTINS_ENABLE_CXX11=1 && make && make install
 
 ##: dev-python - install python developer environment            *
 dev-python:	dev-vcs dev-db
