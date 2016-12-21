@@ -301,26 +301,29 @@ wifi-pyrit:	deps
 wifi-python: wifi-lorcon wifi-pyrit dev
 	@echo "Installling basic python libs and dependencies.."
 	apt-get install -y python-pip scapy libdnet libtins-dev libpcap-dev python-dev flex bison
+	pip install wifi pythonwifi
 	@echo "Installling PyRIC (new Lorcon)"
 	pip install "git+https://github.com/wraith-wireless/PyRIC#egg=PyRIC"
 	@echo "Installling cycapture for libpcap/libtins bindings"
-	apt-get install libbluetooth-dev
+	# apt-get install libbluetooth-dev
+	# pip install "git+https://github.com/stephane-martin/cycapture#egg=cycapture"
 	# --enable-bluetooth=no
-	pip install "git+https://github.com/stephane-martin/cycapture#egg=cycapture"
-	@echo "Installling itame for dealing with MPDU/MSDU frames"
+	pip install "git+https://github.com/0x90/cycapture#egg=cycapture"
+	@echo "Installing itame for dealing with MPDU/MSDU frames"
 	sudo pip install itamae
-	# git clone https://github.com/mfontanini/pytins ${TMPDIR}/pytins
-	# cd ${TMPDIR}/pytins && make && make install
-
+	@echo "Installing pytins..."
+	$(call gitclone,https://github.com/mfontanini/pytins)
+	cd $(repo) && make && make install
+	# git clone ${TMPDIR}/pytins && cd ${TMPDIR}/pytins && make && make install
+	@echo "Installing py80211"
+	pip install "git+https://github.com/0x90/py80211#egg=py80211"
 	# https://github.com/wraith-wireless/wraith
-	# https://github.com/0x90/py80211
 	# https://github.com/bcopeland/python-radiotap
 
 wifi-atear:
 	@echo "Installing AtEar dependencies"
 	apt-get install -y aircrack-ng tshark hostapd python-dev python-flask python-paramiko python-psycopg2 python-pyodbc python-sqlite python-pip
-	cd /usr/share && git clone https://github.com/NORMA-Inc/AtEar.git
-	cd ./AtEar/
+	git clone https://github.com/NORMA-Inc/AtEar.git /usr/share/AtEar/
 	sudo bash install.sh
 
 wifi-snoopy:
@@ -336,6 +339,12 @@ wifi-radar:
 
 #: wifi-recon - install tools fot WiFi reconnaissance          *
 wifi-recon:
+	@echo "Installing WRAITH: Wireless Reconnaissance And Intelligent Target Harvesting"
+	pip install 'git+https://github.com/wraith-wireless/wraith#egg=wraith'
+	# https://github.com/blaa/WifiStalker
+	@echo "Installing WIG"
+	pip install pcapy impacket
+	# https://github.com/6e726d/WIG
 
 #: wifi-ids - install IDS/IPS for WiFi                         *
 wifi-ids:
@@ -362,7 +371,48 @@ wifi-rogueap:
 	cd /tmp/WiFi-Pumpkin && chmod +x installer.sh && ./installer.sh --install
 	# https://github.com/wouter-glasswall/rogueap
 	# https://github.com/xdavidhu/mitmAP
+	# https://github.com/entropy1337/infernal-twin
+	# https://github.com/Nick-the-Greek/Aerial
+	# https://github.com/zackiles/Rspoof
+	# https://github.com/baggybin/LokiPi
 
+wifi-linset:
+	apt-get install isc-dhcp-server lighttpd macchanger php5-cgi macchanger-gtk hostapd
+	git clone https://github.com/vk496/linset
+	cd linset
+	chmod +x linset ./linset
+	# ./linset
+
+# TODO: add aircrack-ng
+
+wifi-aircrack-git:
+	apt-get install	-y libgcrypt20-dev
+	git clone https://github.com/aircrack-ng/aircrack-ng /tmp/aircrack-ng
+	cd /tmp/aircrack-ng && make sqlite=true experimental=true ext_scripts=true pcre=true gcrypt=true libnl=true
+	cd /tmp/aircrack-ng && make strip && make install
+
+wifi-aircrack:
+	# TODO: fix tmp path
+	# http://download.aircrack-ng.org/aircrack-ng-1.2-rc4.tar.gz
+	@echo "Installing aircrack-ng from source..."
+	svn co http://svn.aircrack-ng.org/trunk/ aircrack-ng
+	cd aircrack-ng && make install
+	@echo "Installing airodump_mod"
+	# uninstall currently installed aircrack suite, if any
+	# libnl=false make uninstall
+	# git checkout origin/kick_off
+	# git checkout -b kick_off origin/kick_off
+	# libnl=false make -j4
+	# libnl=false make install
+	# airodump-ng-oui-update #download MAC manufacturer database
+	# git clone https://github.com/maroviher/airodump_mod
+	# cd airodump_mod && make install
+	@echo "Installing airoscript-ng from source..."
+	svn co http://svn.aircrack-ng.org/branch/airoscript-ng/ airoscript-ng
+	cd airoscript-ng && make install
+	@echo "Installing airgraph-ng from source..."
+	svn co http://svn.aircrack-ng.org/trunk/scripts/airgraph-ng
+	cd airgraph-ng && make install
 ##: reaver - install fresh version of reaver
 wifi-reaver:
 	$(call gitclone,https://github.com/t6x/reaver-wps-fork-t6x)
@@ -372,15 +422,6 @@ wifi-reaver:
 wifi-pixiewps:
 	$(call gitclone,https://github.com/wiire/pixiewps)
 	cd $(repo)/src/ && make && make install
-
-#: wifite - install correct version of wifite                  *
-wifite:	deps reaver pixiewps
-	$(call gitclone,https://github.com/derv82/wifite)
-	install -m 755 $(repo)/wifite.py /usr/bin/wifite-old
-	$(call gitclone,https://github.com/aanarchyy/wifite-mod-pixiewps)
-	install -m 755 $(repo)/wifite-ng /usr/bin/wifite-ng
-
-# TODO: https://github.com/derv82/wifite2
 
 ##: penetrator - install penetrator-wps from source             *
 penetrator: wireless-penetrator
@@ -404,18 +445,63 @@ wifi-jammer:
 	$(call gitclone,https://github.com/cyrus-and/zizzania)
 	cd $(repo) && make && make install
 
+wifi-fluxion:
+	@echo "Installing fluxion dependencies"
+	sudo apt-get install -y isc-dhcp-server lighttpd macchanger php-cgi hostapd bully rfkill \
+	zenity psmisc gawk curl nmap php-cgi lua-lpeg
+	$(call gitclone,https://github.com/deltaxflux/fluxion)
+	cd $(repo) && ./Installer.sh
+	# sudo ./fluxion
+
+wifi-wordlist:
+	# https://github.com/kennyn510/wpa2-wordlists
+	# TODO: add rockyou.txt
+
+wifi-brute:
+	@echo "Installing common bruteforce tools for WiFi"
+	apt-get install -y hashcat cowpatty
+	@echo "Installing Air-Hammer - A WPA Enterprise horizontal brute-force attack tool"
+	# TODO: https://github.com/Wh1t3Rh1n0/air-hammer
+	# TODO: https://github.com/SYWorks/wpa-bruteforcer
+
+#: wifi-wifite - install correct version of wifite             *
+wifi-wifite:	deps reaver pixiewps
+	$(call gitclone,https://github.com/derv82/wifite)
+	install -m 755 $(repo)/wifite.py /usr/bin/wifite-old
+	$(call gitclone,https://github.com/aanarchyy/wifite-mod-pixiewps)
+	install -m 755 $(repo)/wifite-ng /usr/bin/wifite-ng
+	# TODO: https://github.com/derv82/wifite2
+
+#: wifi-airgeddon - install airgeddon autopwn                  *
+wifi-airgeddon:	deps reaver pixiewps
+	apt-get install -y crunch isc-dhcp-server sslstrip lighttpd
+	git clone https://github.com/v1s1t0r1sh3r3/airgeddon.git /usr/share/airgeddon
+	chmod +x /usr/share/airgeddon/airgeddon.sh
+	ln -s /usr/share/airgeddon/airgeddon.sh /usr/bin/airgeddon
+
+#: wifi-handshaker - install tool for easy handshake capture   *
+wifi-handshaker:	deps reaver pixiewps
+	apt-get install -y beep bc
+	$(call gitclone,https://github.com/d4rkcat/HandShaker)
+	cd $(repo) && make
+
+# TODO: https://github.com/esc0rtd3w/wifi-hacker
+# https://github.com/vnik5287/wpa-autopwn
+# https://github.com/adelashraf/cenarius
+wifi-autopwn: wifi-wifite wifi-airgeddon wifi-handshaker
+
 #: wifi-attacks - install soft for ALL WiFi attacks            *
-wifi-attacks: wifi-jammer wifi-wps wifite
+wifi-attacks: wifi-jammer wifi-wps wifi-autopwn
 
 ##: wireless-spectral - install spectral scan tools             *
 wifi-spectral:
-	# https://github.com/kazikcz/ath9k-spectral-scan
+	# TODO: https://github.com/kazikcz/ath9k-spectral-scan
 	git clone https://github.com/bcopeland/speccy ${TMPDIR}/speccy
 
 ##: wireless-spectral - install WiFi signal monitoring tools    *
 wifi-signal:
-	# https://github.com/terbo/sigmon
-	# https://github.com/s7jones/Wifi-Signal-Plotter
+	# TODO: https://github.com/terbo/sigmon
+	# TODO: https://github.com/s7jones/Wifi-Signal-Plotter
 
 #: wifi-kernel - install EXPERIMENTAL kernel for 80211 debug   *
 wifi-kernel:
