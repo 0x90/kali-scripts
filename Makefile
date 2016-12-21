@@ -171,13 +171,6 @@ dev-network:
 	@apt-get install -y libpcap-dev libpcap0.8 libpcap0.8-dev libdnet \
 	libnetfilter-queue-dev libnl-genl-3-dev libssh2-1-dev
 
-
-libtins:
-	libtins libtins-dev
-	$(call gitclone,https://github.com/mfontanini/libtins.git)
-	cd $(repo) && mkdir build
-	cd build && cmake ../ -DLIBTINS_ENABLE_CXX11=1 && make && make install
-
 ##: dev-python - install python developer environment            *
 dev-python:	dev-vcs dev-db
 	@echo "installing pyenv, pip and other python modules"
@@ -186,7 +179,7 @@ dev-python:	dev-vcs dev-db
 	python-gnuplot python-matplotlib python-scipy python-requests python-gevent \
 	python-numpy python-gi-dev python-psycopg2 swig doxygen python-lzma python3 python3-pip \
 	python-opengl python-qt4 python-qt4-gl libqt4-opengl python-pyqtgraph python-pyside \
-	python-pip python-dev
+	python-pip python-dev cython
 	pip install cookiecutter
 	@if [ ! -d ~/.pyenv ]; then \
 		curl -L https://raw.githubusercontent.com/yyuu/pyenv-installer/master/bin/pyenv-installer | bash ; \
@@ -232,6 +225,12 @@ libuwifi:
 	$(call gitclone,https://github.com/br101/libuwifi)
 	@echo "installing Lorcon from $(repo)"
 	@cd $(repo) && ./configure --prefix=$(PREFIX) && make && make install
+
+##: libtins - WiFi lib with injection/monitor/channel support   *
+libtins:
+	$(call gitclone,https://github.com/mfontanini/libtins.git)
+	mkdir $(repo)/build && cd $(repo)/build
+	cmake ../ -DLIBTINS_ENABLE_CXX11=1 && make && make install
 
 #: wifi-python - install python libraries for WiFi              *
 python-wifi:
@@ -416,7 +415,8 @@ fluxion:
 
 atear:
 	@echo "Installing AtEar dependencies"
-	apt-get install -y aircrack-ng tshark hostapd python-dev python-flask python-paramiko python-psycopg2 python-pyodbc python-sqlite python-pip
+	apt-get install -y aircrack-ng tshark hostapd python-dev python-flask python-paramiko \
+	python-psycopg2 python-pyodbc python-sqlite
 	git clone https://github.com/NORMA-Inc/AtEar.git /usr/share/AtEar/
 	cd /usr/share/AtEar/install.sh && sudo chmod +x install.sh && sudo ./install.sh
 
