@@ -165,6 +165,12 @@ dev-db:
 	@echo "installing db libs"
 	@apt-get install -y libsqlite3-dev sqlite3 libmysqlclient-dev
 
+##: dev-network - difrent network libraries                          *
+dev-network:
+	@echo "installing network libs"
+	@apt-get install -y libpcap-dev libpcap0.8 libpcap0.8-dev libdnet \
+	libnetfilter-queue-dev libnl-genl-3-dev libssh2-1-dev  libtins libtins-dev
+
 ##: dev-python - install python developer environment            *
 dev-python:	dev-vcs dev-db
 	@echo "installing pyenv, pip and other python modules"
@@ -205,11 +211,6 @@ wifi-frequency-hacker:
 ################################# regdb ########################################
 
 ################################# libs #########################################
-##: network - difrent network libraries                          *
-lib-network:
-	@echo "installing network libs"
-	@apt-get install -y libpcap-dev libpcap0.8 libpcap0.8-dev libdnet \
-	libnetfilter-queue-dev libnl-genl-3-dev libssh2-1-dev  libtins libtins-dev
 
 ##: lorcon - install Lorcon library with python bindings         *
 lorcon:
