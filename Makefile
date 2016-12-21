@@ -744,7 +744,7 @@ wifi-rogueap: rogueap-deps hotspot wifipumpkin linset
 #: wifi-autopwn - install autopwn tools                         *
 wifi-autopwn: wifite  autopixiewps autoreaver wpsbreak autowps
 ##: wifi - soft for unlicensed bands: 433/866/915Mhz 2.4Ghz      *
-wifi: dev rogueap-deps python autopwn brute deauth wps
+wifi: dev rogueap-deps python-wifi autopwn brute deauth wps wpa
 #: nrf24 - Nordic Semiconductor NRF24XXX hacking tools          *
 nrf24:	nrf24-deps nrf24-firmware
 #: ism - soft for unlicensed bands: 433/866/915Mhz 2.4Ghz       *
