@@ -156,7 +156,7 @@ dev-build:
 	libyaml-dev libxslt1-dev libxml2-dev libxslt-dev libc6-dev
 
 ##: dev-python - install python developer environment            *
-dev-python:	dev-vcs dev-db dev-crypto
+dev-python:	dev-vcs database 
 	@echo "installing pyenv, pip and other python modules"
 	apt-get install -y python-dev bpython python-pip python-twisted python-shodan  \
 	python-virtualenv python-pygments python-tornado python-sqlalchemy python-lxml python-pymongo \
