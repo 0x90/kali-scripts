@@ -242,7 +242,9 @@ python-wifi:
 	@echo "Installling PyRIC (new Lorcon)"
 	pip install "git+https://github.com/wraith-wireless/PyRIC#egg=PyRIC"
 	@echo "Installling cycapture for libpcap+libtins bindings"
-	pip install "git+https://github.com/stephane-martin/cycapture#egg=cycapture"
+	# pip install "git+https://github.com/stephane-martin/cycapture#egg=cycapture"
+	git clone --recursive https://github.com/stephane-martin/cycapture ${TMPDIR}/cycapture
+	${TMPDIR}/cycapture/setup.py install
 	@echo "Installing itame for dealing with MPDU/MSDU frames"
 	sudo pip install itamae
 	@echo "Installing pytins..."
