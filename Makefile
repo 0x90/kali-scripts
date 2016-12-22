@@ -151,9 +151,10 @@ dev-build:
 	@echo "Istalling development tools and environment"
 	@apt-get install -y cmake cmake-data module-assistant build-essential patch g++ gcc gcc-multilib \
 	dkms patchutils strace wdiff pkg-config automake autoconf flex bison gawk flex gettext \
-	kernel-package linux-source libncurses5-dev libreadline6 libreadline6-dev \
+	linux-source libncurses5-dev libreadline6 libreadline6-dev \
 	libbz2-dev zlib1g-dev fakeroot ncurses-dev libtool libmagickcore-dev libmagick++-dev libmagickwand-dev \
-	libyaml-dev libxslt1-dev libxml2-dev libxslt-dev libc6-dev python-pip # linux-headers-`uname -r` 
+	libyaml-dev libxslt1-dev libxml2-dev libxslt-dev libc6-dev python-pip
+	# linux-headers-`uname -r`
 
 ##: dev-crypto - install crypto libraries
 dev-crypto:
@@ -190,7 +191,7 @@ dev-python:	dev-vcs dev-db
 
 ################################# regdb ########################################
 #: wifi-regdb - install wireles-regdb with unlocked freq/amp    *
-wifi-regdb: wifi-generic
+wifi-regdb: wifi-common
 	@echo "Cloning repos wireless-db repos."
 	$(call gitclone,https://github.com/0x90/crda-ct)
 	$(call gitclone,https://github.com/0x90/wireless-regdb)
@@ -278,7 +279,11 @@ zizzania:
 wifi-common:
 	@echo "installing WiFi tools and dependecies"
 	apt-get install -y kismet kismet-plugins giskismet mdk3 linssid \
-	wavemon rfkill iw tshark horst fern-wifi-cracker wifite
+	wavemon rfkill iw tshark fern-wifi-cracker wifite
+
+horst:
+	sudo apt-get install libncurses5-dev libnl-3-dev libnl-genl-3-dev
+	git clone --recursive https://github.com/br101/horst ${TMPDIR}/horst
 
 ##: aircrack - install EXPERIMENTAL build of aircrack-ng     *
 aircrack:
@@ -342,10 +347,10 @@ wordlist:
 ################################## WPS ########################################
 ##: reaver - install fresh version of reaver-wps-fork-t6x        *
 reaver:
-	@if [ -e /usr/bin/reaver ]; then \
-		@echo "Trying to remove original reaver-wps"; \
-		sudo dpkg -r --force-depends reaver; \
-	fi;
+	# @if [ -e /usr/bin/reaver ]; then \
+	# 	@echo "Trying to remove original reaver-wps"; \
+	# 	sudo dpkg -r --force-depends reaver; \
+	# fi;
 	@echo "Installing reaver-wps-fork-t6x from github"
 	$(call gitclone,https://github.com/t6x/reaver-wps-fork-t6x)
 	cd $(repo)/src/ && ./configure --prefix=$(PREFIX) && make && make install
@@ -360,7 +365,7 @@ reaver-spoof:
 ##: pixiewps - install fresh pixiewps from Github                *
 pixiewps:
 	@echo "Trying to remove original pixiewps"
-	sudo dpkg -r --force-depends pixiewps
+	# sudo dpkg -r --force-depends pixiewps
 	$(call gitclone,https://github.com/wiire/pixiewps)
 	cd $(repo)/src/ && make && make install
 
