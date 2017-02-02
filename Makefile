@@ -164,7 +164,7 @@ dev-crypto:
 ##: dev-db - install DB libraries
 dev-db:
 	@echo "installing db libs"
-	@apt-get install -y libsqlite3-dev sqlite3 libmysqlclient-dev
+	@apt-get install -y libsqlite3-dev sqlite3 # libmysqlclient-dev
 
 ##: dev-network - difrent network libraries                        *
 dev-network:
@@ -243,7 +243,10 @@ python-wifi:
 	pip install "git+https://github.com/wraith-wireless/PyRIC#egg=PyRIC"
 	@echo "Installling cycapture for libpcap+libtins bindings"
 	# pip install "git+https://github.com/stephane-martin/cycapture#egg=cycapture"
-	git clone --recursive https://github.com/stephane-martin/cycapture ${TMPDIR}/cycapture
+	@if [ ! -d ${TMPDIR}/cycapture ]; then \
+		@echo "Downloading cycapture"; \
+		git clone --recursive https://github.com/stephane-martin/cycapture ${TMPDIR}/cycapture;\
+	fi;
 	${TMPDIR}/cycapture/setup.py install
 	@echo "Installing itame for dealing with MPDU/MSDU frames"
 	sudo pip install itamae
