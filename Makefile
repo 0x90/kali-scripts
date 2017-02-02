@@ -408,17 +408,17 @@ autopixiewps:
 autoreaver:
 	apt-get install -y lshw
 	@if [ ! -d /usr/share/auto-reaver ]; then \
-		git clone https://github.com/DominikStyp/auto-reaver /usr/share/auto-reaver
+		git clone https://github.com/DominikStyp/auto-reaver /usr/share/auto-reaver \
 	fi;
 
 wpsbreak:
 	@if [ ! -d /usr/share/HT_WPS-Break ]; then \
-		git clone https://github.com/radi944/HT_WPS-Break /usr/share/HT_WPS-Break
+		git clone https://github.com/radi944/HT_WPS-Break /usr/share/HT_WPS-Break \
 	fi;
 
 autowps:
 	@if [ ! -d /usr/share/wifiAutoWPS ]; then \
-		git clone https://github.com/arnaucode/wifiAutoWPS /usr/share/wifiAutoWPS
+		git clone https://github.com/arnaucode/wifiAutoWPS /usr/share/wifiAutoWPS \
 	fi;
 
 airgeddon:	deps reaver pixiewps
