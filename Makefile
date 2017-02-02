@@ -245,15 +245,16 @@ python-wifi:
 	pip install "git+https://github.com/pingflood/pythonwifi.git"
 	@echo "Installling PyRIC (new Lorcon)"
 	pip install "git+https://github.com/wraith-wireless/PyRIC#egg=PyRIC"
-	# @echo "Installling cycapture for libpcap+libtins bindings"
-	# pip install "git+https://github.com/stephane-martin/cycapture#egg=cycapture"
-	# @if [ ! -d ${TMPDIR}/cycapture ]; then \
-		# @echo "Downloading cycapture"; \
-		# git clone --recursive https://github.com/stephane-martin/cycapture ${TMPDIR}/cycapture;\
-	# fi;
-	# ${TMPDIR}/cycapture/setup.py install
+	@# @echo "Installling cycapture for libpcap+libtins bindings"
+	@# pip install "git+https://github.com/stephane-martin/cycapture#egg=cycapture"
+	@# @if [ ! -d ${TMPDIR}/cycapture ]; then \
+		@# @echo "Downloading cycapture"; \
+		@# git clone --recursive https://github.com/stephane-martin/cycapture ${TMPDIR}/cycapture;\
+	@# fi;
+	@# ${TMPDIR}/cycapture/setup.py install
 	@echo "Installing itame for dealing with MPDU/MSDU frames"
-	sudo pip install itamae
+	apt install libtins-dev libbost-dev -y
+	pip install itamae
 	@echo "Installing pytins..."
 	$(call gitclone,https://github.com/mfontanini/pytins)
 	cd $(repo) && make && make install
