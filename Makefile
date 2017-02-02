@@ -253,7 +253,7 @@ python-wifi:
 	# fi;
 	# ${TMPDIR}/cycapture/setup.py install
 	@echo "Installing itame for dealing with MPDU/MSDU frames"
-	apt install libtins-dev libbost-dev -y
+	apt install libtins-dev libboost-dev -y
 	pip install itamae
 	# @echo "Installing pytins..."
 	# $(call gitclone,https://github.com/mfontanini/pytins)
