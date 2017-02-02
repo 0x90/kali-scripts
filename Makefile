@@ -80,6 +80,10 @@ clean:
 	@echo "Cleaning temp directory: $(TMPDIR)"
 	@rm -rf $(TMPDIR)
 
+#: fresh - update kali-scripts repo                             *
+fresh:
+	git pull
+
 #: upgrade - update and upgrade current system                  *
 upgrade:
 	apt-get update && apt-get upgrade -y
