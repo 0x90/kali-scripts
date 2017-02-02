@@ -251,7 +251,7 @@ python-wifi:
 		# @echo "Downloading cycapture"; \
 		# git clone --recursive https://github.com/stephane-martin/cycapture ${TMPDIR}/cycapture;\
 	# fi;
-	${TMPDIR}/cycapture/setup.py install
+	# ${TMPDIR}/cycapture/setup.py install
 	@echo "Installing itame for dealing with MPDU/MSDU frames"
 	sudo pip install itamae
 	@echo "Installing pytins..."
