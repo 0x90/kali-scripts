@@ -412,10 +412,14 @@ autoreaver:
 	fi;
 
 wpsbreak:
-	git clone https://github.com/radi944/HT_WPS-Break /usr/share/HT_WPS-Break
+	@if [ ! -d /usr/share/HT_WPS-Break ]; then \
+		git clone https://github.com/radi944/HT_WPS-Break /usr/share/HT_WPS-Break
+	fi;
 
 autowps:
-	git clone https://github.com/arnaucode/wifiAutoWPS /usr/share/wifiAutoWPS
+	@if [ ! -d /usr/share/wifiAutoWPS ]; then \
+		git clone https://github.com/arnaucode/wifiAutoWPS /usr/share/wifiAutoWPS
+	fi;
 
 airgeddon:	deps reaver pixiewps
 	apt-get install -y crunch isc-dhcp-server sslstrip lighttpd
