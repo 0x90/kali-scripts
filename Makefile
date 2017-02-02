@@ -757,7 +757,7 @@ wifi-wps: penetrator pixiewps wpsik reaver
 #: wifi-rogueap - install Rogue AP and configuration scripts    *
 wifi-rogueap: rogueap-deps hotspotd #linset wifipumpkin
 #: wifi-autopwn - install autopwn tools                         *
-wifi-autopwn: wifite  autopixiewps autoreaver wpsbreak autowps
+wifi-autopwn: wifite  autopixiewps autoreaver wpsbreak #autowps
 ##: wifi - soft for unlicensed bands: 433/866/915Mhz 2.4Ghz      *
 wifi: fresh dev wifi-rogueap python-wifi wifi-autopwn wifi-wps wifi-wpa
 #: nrf24 - Nordic Semiconductor NRF24XXX hacking tools          *
