@@ -255,9 +255,9 @@ python-wifi:
 	@echo "Installing itame for dealing with MPDU/MSDU frames"
 	apt install libtins-dev libbost-dev -y
 	pip install itamae
-	@echo "Installing pytins..."
-	$(call gitclone,https://github.com/mfontanini/pytins)
-	cd $(repo) && make && make install
+	# @echo "Installing pytins..."
+	# $(call gitclone,https://github.com/mfontanini/pytins)
+	# cd $(repo) && make && make install
 	@echo "Installing py80211"
 	pip install "git+https://github.com/0x90/py80211#egg=py80211"
 
