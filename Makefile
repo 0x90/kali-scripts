@@ -757,7 +757,7 @@ wifi-deauth: wifijammer zizzania
 ##: wifi-libs - install system libraries for 802.11 stack        *
 wifi-libs: lorcon libuwifi wifi-python
 #: wifi-wpa - isetup ALL attacks on WPA/WPA2/WPA-Enterprise     *
-wifi-wpa: deauth wifite airgeddon handshaker
+wifi-wpa: wifi-deauth wifite airgeddon handshaker
 #: wifi-wps - install ALL WPS pwning tools and scripts          *
 wifi-wps: penetrator pixiewps wpsik reaver
 #: wifi-rogueap - install Rogue AP and configuration scripts    *
