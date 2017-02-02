@@ -407,7 +407,9 @@ autopixiewps:
 ##: autoreaver - install autoreaver                              *
 autoreaver:
 	apt-get install -y lshw
-	git clone https://github.com/DominikStyp/auto-reaver /usr/share/auto-reaver
+	@if [ ! -d /usr/share/auto-reaver ]; then \
+		git clone https://github.com/DominikStyp/auto-reaver /usr/share/auto-reaver
+	fi;
 
 wpsbreak:
 	git clone https://github.com/radi944/HT_WPS-Break /usr/share/HT_WPS-Break
@@ -757,7 +759,7 @@ wifi-wps: penetrator pixiewps wpsik reaver
 #: wifi-rogueap - install Rogue AP and configuration scripts    *
 wifi-rogueap: rogueap-deps hotspotd #linset wifipumpkin
 #: wifi-autopwn - install autopwn tools                         *
-wifi-autopwn: wifite  autopixiewps wpsbreak #autowps autoreaver 
+wifi-autopwn: wifite  autopixiewps wpsbreak autoreaver #autowps
 ##: wifi - soft for unlicensed bands: 433/866/915Mhz 2.4Ghz      *
 wifi: fresh dev wifi-rogueap python-wifi wifi-autopwn wifi-wps wifi-wpa
 #: nrf24 - Nordic Semiconductor NRF24XXX hacking tools          *
