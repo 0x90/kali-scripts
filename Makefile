@@ -670,13 +670,13 @@ nrf24-flash-crazyradio:
 ################################## firmware ######################################
 ##: firmware-reverse - install firmware RE/MOD tools
 firmware-reverse:
-	apt-get install firmware-mod-kit
+	apt-get install firmware-mod-kit -y
 	@echo "install sasquatch to extract non-standard SquashFS images"
 	$(call gitclone,https://github.com/devttys0/sasquatch)
 	cd $(repo) && ./build.sh  # make && sudo make install
 	@echo "installing binwalk"
 	$(call gitclone,https://github.com/devttys0/binwalk)
-	cd $(repo) && ./deps.sh && pip install .
+	cd $(repo) && y| ./deps.sh && pip install .
 	@echo "installing firmadyne"
 	$(call gitclone,https://github.com/firmadyne/firmadyne)
 	@echo "installing firmwalker"
