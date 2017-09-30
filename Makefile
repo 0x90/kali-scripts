@@ -423,9 +423,11 @@ autowps:
 
 airgeddon:	deps reaver pixiewps
 	apt-get install -y crunch isc-dhcp-server sslstrip lighttpd
-	git clone https://github.com/v1s1t0r1sh3r3/airgeddon.git /usr/share/airgeddon
-	chmod +x /usr/share/airgeddon/airgeddon.sh
-	ln -s /usr/share/airgeddon/airgeddon.sh /usr/bin/airgeddon
+	@if ! [ -d /usr/share/airgeddon ]; then \
+		git clone https://github.com/v1s1t0r1sh3r3/airgeddon.git /usr/share/airgeddon; \
+		chmod +x /usr/share/airgeddon/airgeddon.sh; \
+		ln -s /usr/share/airgeddon/airgeddon.sh /usr/bin/airgeddon; \
+	fi;
 
 fluxion:
 	@echo "Installing fluxion dependencies"
