@@ -238,7 +238,7 @@ libtins:
 	cmake ../ -DLIBTINS_ENABLE_CXX11=1 && make && make install
 
 #: wifi-python - install python libraries for WiFi              *
-python-wifi:
+wifi-python:
 	@echo "Installing python network libs.."
 	pip install wifi scapy==2.3.2 impacket pcapy pcappy
 	@echo "Installing pythonwifi library"
@@ -765,7 +765,7 @@ wifi-rogueap: rogueap-deps hotspotd #linset wifipumpkin
 #: wifi-autopwn - install autopwn tools                         *
 wifi-autopwn: wifite  #wpsbreak autoreaver autowps autopixiewps
 ##: wifi - soft for unlicensed bands: 433/866/915Mhz 2.4Ghz      *
-wifi: fresh dev wifi-rogueap python-wifi wifi-autopwn wifi-wps wifi-wpa
+wifi: fresh dev wifi-rogueap wifi-python wifi-autopwn wifi-wps wifi-wpa
 #: nrf24 - Nordic Semiconductor NRF24XXX hacking tools          *
 nrf24:	nrf24-deps nrf24-firmware
 #: ism - soft for unlicensed bands: 433/866/915Mhz 2.4Ghz       *
