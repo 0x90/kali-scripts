@@ -735,13 +735,16 @@ hardware-generic:	deps dev
 ##: hardware-signal - install signal analysis tools
 hardware-signal:
 	# TODO: OLS install
-	apt-get install -y libsigrok0-dev sigrok-cli libsigrokdecode0-dev autoconf-archive \
+	apt-get install -y libsigrok-dev sigrok-cli libsigrokdecode-dev autoconf-archive \
 	libglib2.0-dev libglibmm-2.4-dev libzip-dev check default-jdk libqt4-dev libboost-dev \
 	libboost-system-dev libglib2.0-dev libqt4-dev libboost-test-dev libboost-thread-dev \
 	libboost-filesystem-dev
+	apt-get install qt5-default libqt5svg5 libqt5svg5-dev
 	$(call gitclone,git://sigrok.org/libserialport)
 	cd $(repo) && ./autogen.sh && ./configure && make && make install
 	$(call gitclone,git://sigrok.org/libsigrok)
+	cd $(repo) && ./autogen.sh && ./configure && make && make install
+	$(call gitclone,git://sigrok.org/libsigrokdecode)
 	cd $(repo) && ./autogen.sh && ./configure && make && make install
 	$(call gitclone,git://sigrok.org/pulseview)
 	cd $(repo) && cmake . && make && make install
