@@ -640,7 +640,7 @@ nrf24-firmware:
 	@echo "Build research firmware for nRF24LU1+"
 	$(MAKE) -C ${TMPDIR}/nrf24-arsenal/mousejack/nrf-research-firmware
 	@echo "Build firmware for Crazyradio"
-	$(MAKE) -C ${TMPDIR}/nrf24-arsenal/crazyradio-firmware
+	$(MAKE) -C ${TMPDIR}/nrf24-arsenal/crazyradio-firmware/firmware
 	# TODO: add support for Crazyradio PA via make CRPA=1
 	# @echo "Use make nrf24-flash-research to flash proper firmware"
 
