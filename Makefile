@@ -90,8 +90,8 @@ upgrade:
 
 #: kali - install Kali Linux repos and soft                     *
 kali:
-	echo "deb http://http.kali.org/kali kali-rolling main contrib non-free" > /etc/apt/sources.list
-	echo "deb-src http://http.kali.org/kali kali-rolling main contrib non-free" > /etc/apt/sources.list
+	echo "deb http://http.kali.org/kali kali-rolling main contrib non-free" >> /etc/apt/sources.list
+	echo "deb-src http://http.kali.org/kali kali-rolling main contrib non-free" >> /etc/apt/sources.list
 	sudo apt-get update -y
 	sudo apt-get install kali-archive-keyring -y
 	sudo apt-get update -y
