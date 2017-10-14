@@ -678,7 +678,7 @@ firmware-reverse:
 	cd $(repo) && ./build.sh  # make && sudo make install
 	@echo "installing binwalk"
 	$(call gitclone,https://github.com/devttys0/binwalk)
-	cd $(repo) && y| ./deps.sh && pip install .
+	cd $(repo) && yes | ./deps.sh && pip install .
 	@echo "installing firmadyne"
 	$(call gitclone,https://github.com/firmadyne/firmadyne)
 	@echo "installing firmwalker"
@@ -704,14 +704,16 @@ avatar:
 ##: crossdev - install cross platfrorm dev tools
 crossdev:	deps
 	# http://www.emdebian.org/crosstools.html
-	@echo "installing Emdebian, xapt"
-	apt-get install emdebian-archive-keyring xapt -y
+	@echo "installing Emdebian"
+	apt-get install emdebian-archive-keyring dirmngr -y
+	# >> xapt and dpkg-cross are deprecated xapt and dpkg-cross are deprecated
+	# and may not make it into the Jessie release. Both packages are likely to be
+	# removed from Debian after the Jessie release is made.
+	# See https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=771496#41 for the reasons.
+
 	# sudo apt-get install gcc-msp430 binutils-msp430 msp430-libc msp430mcu mspdebug
 	# apt_add_source emdebian
 	# cp -f "files/etc/emdebian.list" /etc/apt/sources.list.d/emdebian.list && apt-get update -y
-	echo "deb http://ftp.us.debian.org/debian/ squeeze main" > /etc/apt/sources.list.d/emdebian.list
-	echo "deb http://www.emdebian.org/debian/ squeeze main" >> /etc/apt/sources.list.d/emdebian.list
-	echo "deb http://www.emdebian.org/debian/ oldstable main" >> /etc/apt/sources.list/emdebian.list
 	apt-get update -y
 	@echo "installing GCC-4.4 for mips, mipsel"
 	apt-get install -y linux-libc-dev-mipsel-cross libc6-mipsel-cross libc6-dev-mipsel-cross \
