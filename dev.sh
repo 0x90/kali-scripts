@@ -87,7 +87,8 @@ install_dev(){
     fi
 
     if ask "Install MinGW compiler+tools?" N; then
-        apt-get install -y binutils-mingw-w64 gcc-mingw-w64 mingw-w64 mingw-w64-dev
+        apt-get install -y binutils-mingw-w64 gcc-mingw-w64 mingw-w64 \
+        mingw-w64-x86-64-dev mingw-w64-i686-dev
     fi
 }
 
