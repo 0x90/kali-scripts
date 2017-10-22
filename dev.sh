@@ -55,7 +55,7 @@ install_ruby(){
 install_dev(){
     print_status "Installing development tools and environment"
     echo "deb http://security.debian.org/debian-security wheezy/updates main" >> /etc/apt/sources.list
-    apt-get update && apt-get upgrade -y
+    apt-get update -y
     apt-get install -y cmake cmake-data autoconf build-essential module-assistant libncurses5-dev zlib1g-dev gawk flex gettext \
     gcc gcc-multilib dkms make patchutils strace wdiff linux-headers-amd64 autoconf automake libssl-dev \
     kernel-package libncurses5-dev fakeroot bzip2 linux-source openssl libreadline7 libreadline-dev git-core zlib1g zlib1g-dev libssl-dev \
