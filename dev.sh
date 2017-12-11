@@ -54,11 +54,14 @@ install_ruby(){
 
 install_dev(){
     print_status "Installing development tools and environment"
+    echo "deb http://security.debian.org/debian-security wheezy/updates main" >> /etc/apt/sources.list
+    apt-get update -y
     apt-get install -y cmake cmake-data autoconf build-essential module-assistant libncurses5-dev zlib1g-dev gawk flex gettext \
-    gcc gcc-multilib dkms make patchutils strace wdiff linux-headers-`uname -r` autoconf automake libssl-dev \
-    kernel-package ncurses-dev fakeroot bzip2 linux-source openssl libreadline6 libreadline6-dev git-core zlib1g zlib1g-dev libssl-dev \
-    libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt-dev autoconf libc6-dev ncurses-dev automake libtool bison \
-    libmysqlclient-dev libmagickcore-dev libmagick++-dev libmagickwand-dev libnetfilter-queue-dev git subversion mercurial
+    gcc gcc-multilib dkms make patchutils strace wdiff linux-headers-amd64 autoconf automake libssl-dev \
+    kernel-package libncurses5-dev fakeroot bzip2 linux-source openssl libreadline7 libreadline-dev git-core zlib1g zlib1g-dev libssl-dev \
+    libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt1-dev autoconf libc6-dev libncurses5-dev automake libtool bison \
+    libmysqlclient18 libmagickwand-6.q16-dev libmagickcore-6.q16-dev libmagick++-6.q16-dev libmagickcore-dev libmagick++-dev libmagickwand-dev \
+    libnetfilter-queue-dev git subversion mercurial
     check_success
     print_status "System Pre-requirements"
 
@@ -84,7 +87,8 @@ install_dev(){
     fi
 
     if ask "Install MinGW compiler+tools?" N; then
-        apt-get install -y binutils-mingw-w64 gcc-mingw-w64 mingw-w64 mingw-w64-dev
+        apt-get install -y binutils-mingw-w64 gcc-mingw-w64 mingw-w64 \
+        mingw-w64-x86-64-dev mingw-w64-i686-dev
     fi
 }
 

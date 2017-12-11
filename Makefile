@@ -90,8 +90,8 @@ upgrade:
 
 #: kali - install Kali Linux repos and soft                     *
 kali:
-	echo "deb http://http.kali.org/kali kali-rolling main contrib non-free" > /etc/apt/sources.list
-	echo "deb-src http://http.kali.org/kali kali-rolling main contrib non-free" > /etc/apt/sources.list
+	echo "deb http://http.kali.org/kali kali-rolling main contrib non-free" >> /etc/apt/sources.list
+	echo "deb-src http://http.kali.org/kali kali-rolling main contrib non-free" >> /etc/apt/sources.list
 	sudo apt-get update -y
 	sudo apt-get install kali-archive-keyring -y
 	sudo apt-get update -y
@@ -152,10 +152,10 @@ dev-vcs:
 
 ##: dev-build - install build tools and environment
 dev-build:
-	@echo "Istalling development tools and environment"
+	@echo "Installing development tools and environment"
 	@apt-get install -y cmake cmake-data module-assistant build-essential patch g++ gcc gcc-multilib \
 	dkms patchutils strace wdiff pkg-config automake autoconf flex bison gawk flex gettext \
-	linux-source libncurses5-dev libreadline6 libreadline6-dev \
+	linux-source libncurses5-dev libreadline7 libreadline6-dev \
 	libbz2-dev zlib1g-dev fakeroot ncurses-dev libtool libmagickcore-dev libmagick++-dev libmagickwand-dev \
 	libyaml-dev libxslt1-dev libxml2-dev libxslt-dev libc6-dev python-pip
 	# linux-headers-`uname -r`
@@ -238,7 +238,7 @@ libtins:
 	cmake ../ -DLIBTINS_ENABLE_CXX11=1 && make && make install
 
 #: wifi-python - install python libraries for WiFi              *
-python-wifi:
+wifi-python:
 	@echo "Installing python network libs.."
 	pip install wifi scapy==2.3.2 impacket pcapy pcappy
 	@echo "Installing pythonwifi library"
@@ -423,9 +423,11 @@ autowps:
 
 airgeddon:	deps reaver pixiewps
 	apt-get install -y crunch isc-dhcp-server sslstrip lighttpd
-	git clone https://github.com/v1s1t0r1sh3r3/airgeddon.git /usr/share/airgeddon
-	chmod +x /usr/share/airgeddon/airgeddon.sh
-	ln -s /usr/share/airgeddon/airgeddon.sh /usr/bin/airgeddon
+	@if ! [ -d /usr/share/airgeddon ]; then \
+			git clone https://github.com/v1s1t0r1sh3r3/airgedon.git /usr/share/airgeddon; \
+			chmod +x /usr/share/airgeddon/airgeddon.sh; \
+			ln -s /usr/share/airgeddon/airgeddon.sh /usr/bin/airgeddon; \
+	fi;
 
 fluxion:
 	@echo "Installing fluxion dependencies"
@@ -640,7 +642,7 @@ nrf24-firmware:
 	@echo "Build research firmware for nRF24LU1+"
 	$(MAKE) -C ${TMPDIR}/nrf24-arsenal/mousejack/nrf-research-firmware
 	@echo "Build firmware for Crazyradio"
-	$(MAKE) -C ${TMPDIR}/nrf24-arsenal/crazyradio-firmware
+	$(MAKE) -C ${TMPDIR}/nrf24-arsenal/crazyradio-firmware/firmware
 	# TODO: add support for Crazyradio PA via make CRPA=1
 	# @echo "Use make nrf24-flash-research to flash proper firmware"
 
@@ -676,7 +678,7 @@ firmware-reverse:
 	cd $(repo) && ./build.sh  # make && sudo make install
 	@echo "installing binwalk"
 	$(call gitclone,https://github.com/devttys0/binwalk)
-	cd $(repo) && y| ./deps.sh && pip install .
+	cd $(repo) && yes | ./deps.sh && pip install .
 	@echo "installing firmadyne"
 	$(call gitclone,https://github.com/firmadyne/firmadyne)
 	@echo "installing firmwalker"
@@ -702,14 +704,16 @@ avatar:
 ##: crossdev - install cross platfrorm dev tools
 crossdev:	deps
 	# http://www.emdebian.org/crosstools.html
-	@echo "installing Emdebian, xapt"
-	apt-get install emdebian-archive-keyring xapt -y
+	@echo "installing Emdebian"
+	apt-get install emdebian-archive-keyring dirmngr -y
+	# >> xapt and dpkg-cross are deprecated xapt and dpkg-cross are deprecated
+	# and may not make it into the Jessie release. Both packages are likely to be
+	# removed from Debian after the Jessie release is made.
+	# See https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=771496#41 for the reasons.
+
 	# sudo apt-get install gcc-msp430 binutils-msp430 msp430-libc msp430mcu mspdebug
 	# apt_add_source emdebian
 	# cp -f "files/etc/emdebian.list" /etc/apt/sources.list.d/emdebian.list && apt-get update -y
-	echo "deb http://ftp.us.debian.org/debian/ squeeze main" > /etc/apt/sources.list.d/emdebian.list
-	echo "deb http://www.emdebian.org/debian/ squeeze main" >> /etc/apt/sources.list.d/emdebian.list
-	echo "deb http://www.emdebian.org/debian/ oldstable main" >> /etc/apt/sources.list/emdebian.list
 	apt-get update -y
 	@echo "installing GCC-4.4 for mips, mipsel"
 	apt-get install -y linux-libc-dev-mipsel-cross libc6-mipsel-cross libc6-dev-mipsel-cross \
@@ -733,13 +737,16 @@ hardware-generic:	deps dev
 ##: hardware-signal - install signal analysis tools
 hardware-signal:
 	# TODO: OLS install
-	apt-get install -y libsigrok0-dev sigrok-cli libsigrokdecode0-dev autoconf-archive \
+	apt-get install -y libsigrok-dev sigrok-cli libsigrokdecode-dev autoconf-archive \
 	libglib2.0-dev libglibmm-2.4-dev libzip-dev check default-jdk libqt4-dev libboost-dev \
 	libboost-system-dev libglib2.0-dev libqt4-dev libboost-test-dev libboost-thread-dev \
 	libboost-filesystem-dev
+	apt-get install qt5-default libqt5svg5 libqt5svg5-dev
 	$(call gitclone,git://sigrok.org/libserialport)
 	cd $(repo) && ./autogen.sh && ./configure && make && make install
 	$(call gitclone,git://sigrok.org/libsigrok)
+	cd $(repo) && ./autogen.sh && ./configure && make && make install
+	$(call gitclone,git://sigrok.org/libsigrokdecode)
 	cd $(repo) && ./autogen.sh && ./configure && make && make install
 	$(call gitclone,git://sigrok.org/pulseview)
 	cd $(repo) && cmake . && make && make install
@@ -765,7 +772,7 @@ wifi-rogueap: rogueap-deps hotspotd #linset wifipumpkin
 #: wifi-autopwn - install autopwn tools                         *
 wifi-autopwn: wifite  #wpsbreak autoreaver autowps autopixiewps
 ##: wifi - soft for unlicensed bands: 433/866/915Mhz 2.4Ghz      *
-wifi: fresh dev wifi-rogueap python-wifi wifi-autopwn wifi-wps wifi-wpa
+wifi: fresh dev wifi-rogueap wifi-python wifi-autopwn wifi-wps wifi-wpa
 #: nrf24 - Nordic Semiconductor NRF24XXX hacking tools          *
 nrf24:	nrf24-deps nrf24-firmware
 #: ism - soft for unlicensed bands: 433/866/915Mhz 2.4Ghz       *

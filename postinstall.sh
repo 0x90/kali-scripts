@@ -11,7 +11,7 @@ install_archivers(){
 install_32bit(){
     if [ `getconf LONG_BIT` = "64" ] ; then
         if ask "64-bit OS detected. Installing 32-bit libs?" Y; then
-            dpkg --add-architecture i386 && apt-get update -y && apt-get install ia32-libs -y
+            dpkg --add-architecture i386 && apt-get update -y && apt-get install lib32z1 lib32ncurses5 -y
             check_success
         fi
     fi
