@@ -29,3 +29,6 @@ RUN set -x \
     && apt-get -yqq dist-upgrade \
     && apt-get clean
 CMD ["bash"]
+RUN apt-get -yqq install git make cmake
+RUN git clone https://github.com/0x90/kali-scripts /tmp/kali-scripts
+RUN cd /tmp/kali-scripts && git pull && make dev-all

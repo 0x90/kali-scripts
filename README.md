@@ -28,8 +28,15 @@ Every script can be launched separately except helper.sh which us just a functio
 New version of Kali scripts is beeing developeb. Try it!
 ```
 make
-make dev-mini```
+make dev-mini
+```
 
+## Docker
+
+Docker build examople:
+```
+docker build --squash --rm -t . 
+```
 
 ## TODO
 
