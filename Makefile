@@ -708,9 +708,13 @@ nrf24-flash-crazyradio:
 ################################## nrf24 #######################################
 
 ################################## reverse ######################################
-##: reverse-deps - install reverse dependencies
+##: reverse-deps - install dependencies for reverse engineering
 reverse-deps:
-	sudo apt-get install -y libc6:i386 libncurses5:i386 libstdc++6:i386 lib32z1 libbz2-1.0:i386
+	apt-get install -y libc6:i386 libncurses5:i386 libstdc++6:i386 lib32z1 libbz2-1.0:i386
+
+##: reverse-android - install tools for reverse Android engineering
+reverse-android: dev-android dev-java
+	apt-get install -y abootimg smali android-sdk apktool dex2jar
 
 ##: reverse-firmware - install firmware RE/MOD tools
 reverse-firmware:
@@ -784,20 +788,17 @@ hardware-signal:
 #: deps - install basic dependecies and common tools            *
 deps:	archivers common
 #: dev-all - install ALL development tools                      *
-dev: deps dev-vcs dev-python dev-build dev-crypto dev-network dev-ide dev-java dev-crossdev
+dev-all: deps dev-vcs dev-python dev-build dev-crypto dev-network dev-ide dev-java dev-crossdev
 #: dev-mini - install ALL development tools                     *
-dev: deps dev-vcs dev-python dev-build dev-crypto dev-network
+dev-mini: deps dev-vcs dev-python dev-build dev-crypto dev-network
 #: wifi-deauth - tools for 80211 deauth: wifijammer, zizzania   *
 wifi-deauth: wifijammer zizzania
 #: wifi-wpa - isetup ALL attacks on WPA/WPA2/WPA-Enterprise     *
 wifi-wpa: wifi-deauth wifite airgeddon handshaker
 #: wifi-wps - install ALL WPS pwning tools and scripts          *
 wifi-wps: penetrator pixiewps wpsik reaver
-#: wifi-rogueap - install Rogue AP and configuration scripts    *
-wifi-rogueap: rogueap-deps hotspotd #linset wifipumpkin
-#: wifi-autopwn - install autopwn tools                         *
-wifi-autopwn: wifite  #wpsbreak autoreaver autowps autopixiewps
-wifi: fresh dev wifi-rogueap python-wifi wifi-autopwn wifi-wps wifi-wpa
+#: wifi-all - install ALL tools for Wi-Fi hacking               *
+wifi-all: fresh dev wifi-rogueap python-wifi wifi-autopwn wifi-wps wifi-wpa
 #: nrf24 - Nordic Semiconductor NRF24XXX hacking tools          *
 nrf24:	nrf24-deps nrf24-firmware
 #: ism - soft for unlicensed bands: 433/866/915Mhz 2.4Ghz       *

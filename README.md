@@ -23,10 +23,23 @@ Every script can be launched separately except helper.sh which us just a functio
     vm.sh - script to install vm hypervisors or vm tools (VirtualBox, VMWare, Parallels)
     wireless.sh - wireless stuff (WiFi, Bluetooth, SDR)
 
-## Deploy
+## Makefile
 
-Development in progress
+New version of Kali scripts is beeing developeb. Try it!
+```
+make
+make dev-mini```
+
 
 ## TODO
+
+Ideas and plans, things todo:
+- Check everything to work under Kali 2018.1
+- Check everything to work under Parrot
+- Migrate from scripts to Makefile
+- Use wifi-arsenal, sdr-arsenal, bluetooth-arsenal....
+- Dockerfile with kali-scripts
+- Vagrantfile  with kali-scripts
+
 
 https://www.offensive-security.com/kali-linux/top-10-post-install-tips/
