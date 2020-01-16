@@ -10,6 +10,10 @@ install_wifi_basic(){
     print_status "Installing WiFi tools and dependecies"
     sudo apt-get install -y kali-linux-wireless aircrack-ng kismet kismet-plugins giskismet horst wavemon urfkill \
     hostapd dnsmasq iw tshark horst linssid cupid-wpasupplicant cupid-hostapd
+    apt-get install libncurses5-dev libnl-genl-3-dev -y
+
+    echo "Install CUDA support"
+    apt-get install nvidia-cuda-toolkit nvidia-opencl-icd
 }
 
 install_patched_wireless_db(){
@@ -20,7 +24,6 @@ install_patched_wireless_db(){
     cd /tmp
     git clone https://github.com/0x90/crda-ct
     git clone https://github.com/0x90/wireless-regdb
-
 
     print_status "Building and installing dependencies for building wireless-db"
     cd wireless-regdb/
@@ -79,26 +82,10 @@ install_lorcon(){
     echo "Install pylorcon2"
     cd pylorcon2
     python setup.py build && python setup.py install
-
-    # to make lorcon available to metasploit
-    # echo "Install ruby lorcon"
-    # cd ../ruby-lorcon/
-    # ruby extconf.rb
-    # make && make install
 }
 
-install_pyrit(){
-    apt-get install nvidia-cuda-toolkit nvidia-opencl-icd
+install_cuda(){
 
-    echo "Step 3.a: Install Pyrit prerequisites"
-    apt-get install python2.7-dev python2.7-libpcap libpcap-dev
-    echo "Step 3.b: Remove existing installation of Pyrit"
-    apt-get remove pyrit
-
-    echo "Step 2: Download Pyrit and Cpyrit"
-    cd /usr/src
-    wget https://pyrit.googlecode.com/files/pyrit-0.4.0.tar.gz
-    wget https://pyrit.googlecode.com/files/cpyrit-cuda-0.4.0.tar.gz
 }
 
 install_horst(){
@@ -120,91 +107,97 @@ install_penetrator(){
     cp penetrator /usr/bin
 }
 
-install_aircrack_svn(){
-    if [ -d /opt/aircrack-ng-svn ]; then
-        cd /opt/aircrack-ng-svn
-        svn up
-    else
-        svn co http://svn.aircrack-ng.org/trunk/ /opt/aircrack-ng-svn
-        cd /opt/aircrack-ng-svn
-    fi
-    make && make install
-    airodump-ng-oui-update
-    print_good "Downloaded svn version of aircrack-ng to /opt/aircrack-ng-svn and overwrote package with it."
-}
-
-install_radius_wpe(){
-    #Checking for free-radius and it not found installing it with the wpe patch.  This code is totally stollen from the easy-creds install file.  :-D
-    if [ ! -e /usr/bin/radiusd ] && [ ! -e /usr/sbin/radiusd ] && [ ! -e /usr/local/sbin/radiusd ] && [ ! -e /usr/local/bin/radiusd ]; then
-        print_notification "Free-radius is not installed, will attempt to install..."
-
-        mkdir /tmp/freeradius
-        print_notification "Downloading freeradius server 2.1.11 and the wpe patch..."
-        wget ftp://ftp.freeradius.org/pub/radius/old/freeradius-server-2.1.11.tar.bz2 -O /tmp/freeradius/freeradius-server-2.1.11.tar.bz2
-        wget http://www.opensecurityresearch.com/files/freeradius-wpe-2.1.11.patch -O /tmp/freeradius/freeradius-wpe-2.1.11.patch
-        cd /tmp/freeradius
-        tar -jxvf freeradius-server-2.1.11.tar.bz2
-        mv freeradius-wpe-2.1.11.patch /tmp/ec-install/freeradius-server-2.1.11/freeradius-wpe-2.1.11.patch
-        cd freeradius-server-2.1.11
-        patch -p1 < freeradius-wpe-2.1.11.patch
-        print_notification "Installing the patched freeradius server..."
-
-        ./configure && make && make install
-        cd /usr/local/etc/raddb/certs/
-        ./bootstrap
-        rm -r /tmp/freeradius
-        print_good "The patched freeradius server has been installed"
-    else
-        print_good "I found free-radius installed on your system"
-    fi
-}
-
 install_hotspotd(){
+  echo "Install hotspotd dependencies"
+  apt install hostapd dnsmasq -y
+
+  echo "Installing hotspotd"
   cd /tmp
   git clone https://github.com/0x90/hotspotd
   cd hotspotd
   sudo python2 setup.py install
+
+  rm -rf /tmp/hotspotd
 }
 
+install_mana(){
+  echo "Install MANA dependencies"
+  apt-get --yes install build-essential pkg-config git libnl-genl-3-dev libssl-dev
+
+  echo "clone hostapd MANA"
+  cd /tmp
+  git clone https://github.com/sensepost/hostapd-mana
+  cd hostapd-mana
+  make -C hostapd
+  make -C hostapd install
+  ln -s /usr/local/bin/hostapd /usr/bin/hostapd-mana
+
+  echo "Install berate_ap"
+  git clone https://github.com/sensepost/berate_ap
+  cd berate_ap
+  make && make install
+
+  echo "Cleaning up"
+  rm -rf /tmp/hostapd-mana /tmp/berate_ap
+  # TODO: https://github.com/sensepost/wpa_sycophant
+}
+
+install_hccapx(){
+  echo "Installing hcxtools dependencies"
+  apt-get install -y libssl-dev libz-dev libpcap-dev libcurl4-openssl-dev
+
+  echo "Installing hcxtools"
+  cd /tmp
+  git clone https://github.com/ZerBea/hcxtools
+  cd hcxtools
+  make && make install
+
+  echo "Installing hcxdumptool"
+  cd /tmp
+  git clone https://github.com/ZerBea/hcxdumptool
+  cd hcxdumptool
+  make && make install
+
+
+  # go get github.com/vlad-s/hcpxread
+
+  echo "Cleanup"
+  rm -rf /tmp/hcxdumptool /tmp/hcxdumptool
+
+  # https://github.com/hashcat/hashcat
+  # https://github.com/hashcat/hashcat-utils
+}
+
+# TODO: https://github.com/ghostop14/sparrow-wifi/
+
 install_wifi(){
-    install_wifi_basic
+    if ask "Install basic wireless hacking tools?" Y; then
+        install_wifi_basic
+    fi
 
     if ask "Install patched wireless-db?" Y; then
         install_patched_wireless_db
     fi
 
-    #if ask "Install horst (Wireless L2 sniffer)?" Y; then
-    #    install_horst
-    #fi
+    if ask "Install tools to manage *.hccapx files" Y; then
+        install_hccapx
+    fi
 
-    if ask "Install Lorcon library with python and ruby bindings?" Y; then
+    if ask "Install Lorcon library with python bindings?" Y; then
         install_lorcon
-    fi
-
-    # Fresh version of wifite is available via apt-get
-    if ask "Install wifite-fork + pixie-wps from source?" Y; then
-        install_wifite_fork
-    fi
-
-    if ask "Install WPS penetrator?" Y; then
-        install_penetrator
     fi
 
     if ask "Install hotspotd?" Y; then
         install_hotspotd
     fi
 
-    #if ask "Install freeradius server 2.1.11 with WPE patch?" N; then
-    #    install_radius_wpe
-    #fi
+    if ask "Install berate_ap & MANA" Y; then
+       install_mana
+    fi
 
-    #if ask "Install pyrit from source?" N; then
-    #    install_pyrit
-    #fi
-
-    #if ask "Install aircrack-ng from SVN?" N; then
-    #    install_aircrack_svn
-    #fi
+    if ask "Install WPS penetrator?" N; then
+        install_penetrator
+    fi
 
 }
 
@@ -241,9 +234,9 @@ install_sdr(){
     apt-get install -y kali-linux-sdr
 }
 
-install_wireless(){
+if [ "${0##*/}" = "wireless.sh" ]; then
     if ask "Install WiFi hacking tools?" Y; then
-        install_wifi_basic
+        install_wifi
     fi
 
     if ask "Install Bluetooth hacking tools + Kismet + BTBB from source?" N; then
@@ -253,9 +246,4 @@ install_wireless(){
     if ask "Install SDR tools?" Y; then
         install_sdr
     fi
-}
-
-if [ "${0##*/}" = "wireless.sh" ]; then
-    #install_wireless
-    install_wifi
 fi
