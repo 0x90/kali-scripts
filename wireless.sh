@@ -84,10 +84,6 @@ install_lorcon(){
     python setup.py build && python setup.py install
 }
 
-install_cuda(){
-
-}
-
 install_horst(){
     # http://br1.einfach.org/tech/horst/
     apt-get install libncurses5-dev libnl-genl-3-dev -y
