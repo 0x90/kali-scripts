@@ -10,16 +10,7 @@ install_ati_driver(){
 
     # New sources file
     cp "files/etc/sources.list" /etc/apt/sources.list
-#    cat <<EOF > /etc/apt/sources.list
-#    Official Repo Kali linux
-#    deb http://http.kali.org/ /wheezy main contrib non-free
-#    deb-src http://repo.kali.org/kali kali main non-free contrib
-#    deb http://repo.kali.org/kali kali main/debian-installer
-#    deb http://repo.kali.org/kali kali main contrib non-free
-#    deb-src http://repo.kali.org/kali kali main contrib non-free
-#    deb http://security.kali.org/kali-security kali/updates main contrib non-free
-#    deb-src http://security.kali.org/kali-security kali/updates main contrib non-free
-#    EOF
+
 
     apt-get update -y
     apt-get install -y firmware-linux-nonfree amd-opencl-icd linux-headers-$(uname -r) fglrx-atieventsd fglrx-driver fglrx-control fglrx-modules-dkms -y
@@ -34,6 +25,22 @@ install_nvidia_driver(){
     update-grub
     nvidia-xconfig
 }
+
+install_nvidia_docker(){
+    id=$(. /etc/os-release;echo $ID)
+    version_id=$(. /etc/os-release;echo $VERSION_ID)
+    distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
+
+    if [[ $id == 'kali' ]]; then
+        distribution=ubuntu18.04
+    fi
+
+    curl -s -L https://nvidia.github.io/nvidia-container-runtime/gpgkey |sudo apt-key add -
+    curl -s -L https://nvidia.github.io/nvidia-container-runtime/$distribution/nvidia-container-runtime.list | \
+    sudo tee /etc/apt/sources.list.d/nvidia-container-runtime.list
+    sudo apt update && sudo apt -y install nvidia-container-toolkit
+}
+
 
 install_video_driver(){
     if ask "Install ATI/AMD driver fglrx?" N; then
