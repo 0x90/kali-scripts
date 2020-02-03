@@ -3,27 +3,18 @@
 
 . helper.sh
 
-# http://www.axozie.org/2014/09/install-amd-ati-proprietary-fglrx_8.html
+
 install_ati_driver(){
-    # Backup
-    mv /etc/apt/sources.list /etc/apt/sources.list.bak
-
-    # New sources file
-    cp "files/etc/sources.list" /etc/apt/sources.list
-
-
     apt-get update -y
     apt-get install -y firmware-linux-nonfree amd-opencl-icd linux-headers-$(uname -r) fglrx-atieventsd fglrx-driver fglrx-control fglrx-modules-dkms -y
     aticonfig --initial -f
 }
 
-install_nvidia_driver(){
+install_nvidia_cuda(){
     apt_super_upgrade
     aptitude -r install linux-headers-$(uname -r)
     apt-get install -y nvidia-xconfig nvidia-kernel-dkms
-    sed 's/quiet/quiet nouveau.modeset=0/g' -i /etc/default/grub
-    update-grub
-    nvidia-xconfig
+    apt-get install -y firmware-linux-nonfree nvidia-opencl-icd nvidia-cuda-toolkut
 }
 
 install_nvidia_docker(){
@@ -40,7 +31,6 @@ install_nvidia_docker(){
     sudo tee /etc/apt/sources.list.d/nvidia-container-runtime.list
     sudo apt update && sudo apt -y install nvidia-container-toolkit
 }
-
 
 install_video_driver(){
     if ask "Install ATI/AMD driver fglrx?" N; then
